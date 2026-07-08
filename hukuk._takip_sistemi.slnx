@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Çözüm Öğeleri/">
+    <File Path=".gitignore" />
+  </Folder>
+  <Project Path="Business/Business.csproj" />
+  <Project Path="Core/Core.csproj" />
+  <Project Path="DataAccess/DataAccess.csproj" />
+  <Project Path="Entity/Entity.csproj" />
+  <Project Path="Web/Web.csproj" />
+</Solution>

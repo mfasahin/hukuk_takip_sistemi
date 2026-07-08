@@ -1,0 +1,20 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build klasörleri
+bin/
+obj/
+
+# Paketler
+packages/
+*.nupkg
+
+# Veritabanı dosyaları
+*.mdf
+*.ldf
+
+# Log ve temp
+*.log
+*.tmp

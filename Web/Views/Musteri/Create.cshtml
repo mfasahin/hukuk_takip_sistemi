@@ -1,0 +1,18 @@
+﻿@model Entity.Concrete.Musteri
+
+@using (Html.BeginForm())
+{
+    <div>
+        @Html.LabelFor(m => m.MUST_NO)
+        @Html.TextBoxFor(m => m.MUST_NO)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.MUST_AD)
+        @Html.TextBoxFor(m => m.MUST_AD)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.MUST_SOYAD)
+        @Html.TextBoxFor(m => m.MUST_SOYAD)
+    </div>
+    <button type="submit">Kaydet</button>
+}
