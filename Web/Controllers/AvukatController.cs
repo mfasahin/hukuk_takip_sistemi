@@ -3,6 +3,7 @@ using Business.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
 
+
 using Entity.Concrete;
 using System;
 using System.Collections.Generic;
@@ -12,14 +13,14 @@ using System.Web.Mvc;
 
 namespace Web.Controllers
 {
-    public class MusteriController : Controller
+    public class AvukatController : Controller
     {
-        MusteriManager _musteriManager = new MusteriManager(new EfMusteriDal());
+        AvukatManager _avukatManager = new AvukatManager(new EfAvukatDal());
 
         public ActionResult Index()
         {
-            var musteriler = _musteriManager.GetAll();
-            return View(musteriler);
+            var avukatlar = _avukatManager.GetAll();
+            return View(avukatlar);
         }
 
         public ActionResult Create()
@@ -28,9 +29,9 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(Musteri musteri)
+        public ActionResult Create(Avukat avukat)
         {
-            _musteriManager.Add(musteri);
+            _avukatManager.Add(avukat);
             return RedirectToAction("Index");
         }
     }

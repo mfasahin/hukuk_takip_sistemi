@@ -9,6 +9,7 @@ namespace Entity.Concrete
 {
     public class Musteri
     {
+        [Key] 
         public int MUSTERI_ID { get; set; }   // PK
 
         [Required]

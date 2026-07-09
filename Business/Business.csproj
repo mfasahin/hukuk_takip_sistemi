@@ -41,8 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\IAvukatService.cs" />
     <Compile Include="Abstract\IMusteriService.cs" />
-    <Compile Include="Class1.cs" />
+    <Compile Include="Concrete\AvukatManager.cs" />
     <Compile Include="Concrete\MusteriManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

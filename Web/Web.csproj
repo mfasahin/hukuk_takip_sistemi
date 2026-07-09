@@ -127,6 +127,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AvukatController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MusteriController.cs" />
     <Compile Include="Global.asax.cs">
@@ -187,6 +188,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Musteri\Index.cshtml" />
     <Content Include="Views\Musteri\Create.cshtml" />
+    <Content Include="Views\Avukat\Index.cshtml" />
+    <Content Include="Views\Avukat\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -2,7 +2,7 @@
 using DataAccess.Abstract;
 using Entity.Concrete;
 
-namespace DataAccess.Concrete.EntityFramework
+namespace DataAccess.Concrete
 {
     public class EfMusteriDal : EfEntityRepositoryBase<Musteri, AppDbContext>, IMusteriDal
     {

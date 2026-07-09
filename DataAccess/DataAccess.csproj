@@ -51,13 +51,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\IAvukatDal.cs" />
     <Compile Include="Abstract\IMusteriDal.cs" />
-    <Compile Include="Class1.cs" />
-    <Compile Include="Concrete\EntityFramework\AppDbContext.cs" />
-    <Compile Include="Concrete\EntityFramework\EfMusteriDal.cs" />
+    <Compile Include="Concrete\AppDbContext.cs" />
+    <Compile Include="Concrete\EfAvukatDal.cs" />
+    <Compile Include="Concrete\EfMusteriDal.cs" />
     <Compile Include="Migrations\202607081340255_InitialCreate.cs" />
     <Compile Include="Migrations\202607081340255_InitialCreate.Designer.cs">
       <DependentUpon>202607081340255_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202607090720471_CreateAvukatTable.cs" />
+    <Compile Include="Migrations\202607090720471_CreateAvukatTable.Designer.cs">
+      <DependentUpon>202607090720471_CreateAvukatTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -79,6 +84,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202607081340255_InitialCreate.resx">
       <DependentUpon>202607081340255_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202607090720471_CreateAvukatTable.resx">
+      <DependentUpon>202607090720471_CreateAvukatTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
