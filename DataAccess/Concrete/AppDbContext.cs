@@ -21,5 +21,7 @@ namespace DataAccess.Concrete
 
         public DbSet<Urun> Urunler { get; set; }
 
+        public DbSet<Ihtar> Ihtarlar { get; set; }
+
     }
 }
