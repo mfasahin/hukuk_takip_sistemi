@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Concrete\Avukat.cs" />
     <Compile Include="Concrete\Musteri.cs" />
+    <Compile Include="Concrete\Sube.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -2,9 +2,9 @@
   <Folder Name="/Çözüm Öğeleri/">
     <File Path=".gitignore" />
   </Folder>
-  <Project Path="Business/Business.csproj" />
-  <Project Path="Core/Core.csproj" />
-  <Project Path="DataAccess/DataAccess.csproj" />
-  <Project Path="Entity/Entity.csproj" />
-  <Project Path="Web/Web.csproj" />
+  <Project Path="Business/Business.csproj" Id="9e5cd594-b804-4f89-82ae-a73cd7a5ffd0" />
+  <Project Path="Core/Core.csproj" Id="74de74e2-cc78-4680-bc43-9e70dc9d75f1" />
+  <Project Path="DataAccess/DataAccess.csproj" Id="2fdb55f8-9460-40df-9d67-d4cd7a802477" />
+  <Project Path="Entity/Entity.csproj" Id="201c2ab2-1003-4cf9-b154-eca3850456ab" />
+  <Project Path="Presentation/Presentation.csproj" Id="43d06c53-cadb-4120-bf11-0ad094ab1876" />
 </Solution>

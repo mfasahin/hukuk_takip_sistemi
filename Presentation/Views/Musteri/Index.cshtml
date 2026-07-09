@@ -1,0 +1,25 @@
+﻿@model List<Entity.Concrete.Musteri>
+
+<h2>Müşteri Listesi</h2>
+<table class="table">
+    <tr>
+        <th>ID</th>
+        <th>No</th>
+        <th>Ad</th>
+        <th>Soyad</th>
+    </tr>
+    @foreach (var m in Model)
+    {
+        <tr>
+            <td>@m.MUSTERI_ID</td>
+            <td>@m.MUST_NO</td>
+            <td>@m.MUST_AD</td>
+            <td>@m.MUST_SOYAD</td>
+        </tr>
+    }
+</table>
+
+
+
+
+

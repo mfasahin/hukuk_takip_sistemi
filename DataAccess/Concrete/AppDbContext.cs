@@ -7,13 +7,15 @@ namespace DataAccess.Concrete
     {
         public AppDbContext() : base("DefaultConnection")
         {
-
+            
         }
 
 
         public DbSet<Musteri> Musteriler { get; set; }
 
         public DbSet<Avukat> Avukatlar { get; set; }
+
+        public DbSet<Sube> Subeler { get; set; }
 
 
     }
