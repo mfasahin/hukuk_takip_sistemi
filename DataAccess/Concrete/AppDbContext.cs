@@ -23,5 +23,11 @@ namespace DataAccess.Concrete
 
         public DbSet<Ihtar> Ihtarlar { get; set; }
 
+        public DbSet<IhtarUrun> IhtarUrunler { get; set; }
+
+        public DbSet<Icra> Icralar { get; set; }
+
+        public DbSet<Mahkeme> IcraMahkemeler { get; set; }
+
     }
 }
