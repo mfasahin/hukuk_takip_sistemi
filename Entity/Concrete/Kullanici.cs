@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Entity.Concrete
 {
-    public class Kullanıcı
+    public class Kullanici
     {
         [Key]
         public int KULLANICI_ID { get; set; } //PK

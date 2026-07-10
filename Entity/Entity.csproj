@@ -52,8 +52,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Concrete\Avukat.cs" />
+    <Compile Include="Concrete\Icra.cs" />
+    <Compile Include="Concrete\Icra_Mahkeme.cs" />
+    <Compile Include="Concrete\Ihtar.cs" />
+    <Compile Include="Concrete\Ihtar_Urun.cs" />
+    <Compile Include="Concrete\Kullanici.cs" />
     <Compile Include="Concrete\Musteri.cs" />
     <Compile Include="Concrete\Sube.cs" />
+    <Compile Include="Concrete\Urun.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

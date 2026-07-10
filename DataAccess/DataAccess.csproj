@@ -52,10 +52,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\IAvukatDal.cs" />
+    <Compile Include="Abstract\IhtarDal.cs" />
     <Compile Include="Abstract\IMusteriDal.cs" />
     <Compile Include="Abstract\ISubeDal.cs" />
     <Compile Include="Concrete\AppDbContext.cs" />
     <Compile Include="Concrete\EfAvukatDal.cs" />
+    <Compile Include="Concrete\EfIhtarDal.cs" />
     <Compile Include="Concrete\EfMusteriDal.cs" />
     <Compile Include="Concrete\EfSubeDal.cs" />
     <Compile Include="Migrations\202607081340255_InitialCreate.cs" />
@@ -69,6 +71,14 @@
     <Compile Include="Migrations\202607091312381_CreateSubeTable.cs" />
     <Compile Include="Migrations\202607091312381_CreateSubeTable.Designer.cs">
       <DependentUpon>202607091312381_CreateSubeTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202607091404350_InitialCreate1.cs" />
+    <Compile Include="Migrations\202607091404350_InitialCreate1.Designer.cs">
+      <DependentUpon>202607091404350_InitialCreate1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202607100553013_CreateKullaniciTable.cs" />
+    <Compile Include="Migrations\202607100553013_CreateKullaniciTable.Designer.cs">
+      <DependentUpon>202607100553013_CreateKullaniciTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -96,6 +106,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202607091312381_CreateSubeTable.resx">
       <DependentUpon>202607091312381_CreateSubeTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202607091404350_InitialCreate1.resx">
+      <DependentUpon>202607091404350_InitialCreate1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202607100553013_CreateKullaniciTable.resx">
+      <DependentUpon>202607100553013_CreateKullaniciTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

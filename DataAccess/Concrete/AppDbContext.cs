@@ -17,7 +17,7 @@ namespace DataAccess.Concrete
 
         public DbSet<Sube> Subeler { get; set; }
 
-        public DbSet<Kullanıcı> Kullanıcılar { get; set; }
+        public DbSet<Kullanici> Kullanıcılar { get; set; }
 
         public DbSet<Urun> Urunler { get; set; }
 
