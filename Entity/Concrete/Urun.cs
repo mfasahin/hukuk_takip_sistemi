@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Entity.Concrete
 {
+    [Table("URUN", Schema = "dbo")]
     public class Urun
     {
         [Key]
@@ -21,8 +23,6 @@ namespace Entity.Concrete
         public string URUN_KOD { get; set; } // NOT NULL
 
         public DateTime? SON_GECERLILIK_TAR { get; set; } 
-
-
 
         public DateTime? GRS_TAR_ZMN { get; set; }
         public int? GRS_KULLANICI_ID { get; set; }

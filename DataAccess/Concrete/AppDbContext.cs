@@ -11,23 +11,23 @@ namespace DataAccess.Concrete
         }
 
 
-        public DbSet<Musteri> Musteriler { get; set; }
+        public DbSet<Musteri> MUSTERI { get; set; }
 
-        public DbSet<Avukat> Avukatlar { get; set; }
+        public DbSet<Avukat> AVUKAT { get; set; }
 
-        public DbSet<Sube> Subeler { get; set; }
+        public DbSet<Sube> SUBE { get; set; }
 
-        public DbSet<Kullanici> Kullanıcılar { get; set; }
+        public DbSet<Kullanici> KULLANICI { get; set; }
 
-        public DbSet<Urun> Urunler { get; set; }
+        public DbSet<Urun> URUN { get; set; }
 
-        public DbSet<Ihtar> Ihtarlar { get; set; }
+        public DbSet<Ihtar> IHTAR { get; set; }
 
-        public DbSet<IhtarUrun> IhtarUrunler { get; set; }
+        public DbSet<IhtarUrun> IHTAR_URUN { get; set; }
 
-        public DbSet<Icra> Icralar { get; set; }
+        public DbSet<Icra> ICRA { get; set; }
 
-        public DbSet<Mahkeme> IcraMahkemeler { get; set; }
+        public DbSet<Mahkeme> ICRA_MAHKEME { get; set; }
 
     }
 }

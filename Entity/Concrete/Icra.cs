@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Entity.Concrete
 {
+    [Table("ICRA", Schema = "dbo")]
     public class Icra
     {
         [Key]
@@ -19,7 +21,7 @@ namespace Entity.Concrete
         public int MAHKEME_ID { get; set; } // FK
 
         [Required]
-        public DateTime ICRA_TAKIP_TAR { get; set; } // NOT NULL
+        public DateTime ICRA_TAKIP_TAR { get; set; } // NOT NULL araştır. zaman da eklenebilir
 
         [Required]
         [StringLength(15)]

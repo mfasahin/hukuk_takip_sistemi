@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
 
 namespace Entity.Concrete
 {
+    [Table("MUSTERI", Schema = "dbo")]
     public class Musteri
     {
         [Key] 
@@ -27,7 +29,7 @@ namespace Entity.Concrete
         public string MUST_KIMLIK_NO { get; set; }
 
         [StringLength(10)]
-        public string MUST_VKNO { get; set; }
+        public string MUST_VKN_NO { get; set; } //düzeltildi
 
         [StringLength(50)]
         public string MUST_EPOSTA { get; set; }

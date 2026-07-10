@@ -24,6 +24,7 @@ namespace Presentation.Controllers
             return View(musteriler);
         }
 
+        [HttpGet]
         public ActionResult Create()
         {
             return View();
@@ -36,7 +37,7 @@ namespace Presentation.Controllers
             return RedirectToAction("Index");
         }
 
-        // Güncelleme POST
+        // Güncelleme POST dan önce GET, EDİT YERİNE UPDATE
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Musteri musteri)
@@ -66,7 +67,7 @@ namespace Presentation.Controllers
         // Silme POST
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Delete(int id) // YANLIŞ
         {
             var musteri = _musteriManager.GetById(id);
             _musteriManager.Delete(musteri);

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Entity.Concrete
 {
+    [Table("SUBE", Schema = "dbo")]
     public class Sube
     {
         [Key]
@@ -20,18 +22,14 @@ namespace Entity.Concrete
         [StringLength(25)]
         public string SUBE_ADI { get; set; } // NOT NULL
 
-        
         [StringLength(25)]
         public string SUBE_BOLGE { get; set; } 
 
-        
         [StringLength(75)]
         public string SUBE_ADRES { get; set; } 
 
-  
         [StringLength(15)]
         public string SUBE_TEL_NO { get; set; }
-
 
         public DateTime? GRS_TAR_ZMN { get; set; }
         public int? GRS_KULLANICI_ID { get; set; }

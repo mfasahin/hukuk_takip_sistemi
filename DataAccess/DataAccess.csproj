@@ -80,6 +80,10 @@
     <Compile Include="Migrations\202607100553013_CreateKullaniciTable.Designer.cs">
       <DependentUpon>202607100553013_CreateKullaniciTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202607101102177_FixTableName.cs" />
+    <Compile Include="Migrations\202607101102177_FixTableName.Designer.cs">
+      <DependentUpon>202607101102177_FixTableName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -112,6 +116,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202607100553013_CreateKullaniciTable.resx">
       <DependentUpon>202607100553013_CreateKullaniciTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202607101102177_FixTableName.resx">
+      <DependentUpon>202607101102177_FixTableName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
