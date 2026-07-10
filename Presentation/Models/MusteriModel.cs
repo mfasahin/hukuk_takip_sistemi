@@ -19,7 +19,7 @@ namespace Presentation.Models
         public string MUST_KIMLIK_NO { get; set; }
 
 
-        public string MUST_VKN_NO { get; set; } //düzeltildi
+        public string MUST_VKNO { get; set; } //düzeltildi
 
         public string MUST_EPOSTA { get; set; }
 

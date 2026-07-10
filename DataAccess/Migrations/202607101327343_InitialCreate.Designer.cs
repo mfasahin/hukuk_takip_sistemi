@@ -7,13 +7,13 @@ namespace DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.5.2")]
-    public sealed partial class CreateSubeTable : IMigrationMetadata
+    public sealed partial class InitialCreate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(CreateSubeTable));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
         
         string IMigrationMetadata.Id
         {
-            get { return "202607091312381_CreateSubeTable"; }
+            get { return "202607101327343_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

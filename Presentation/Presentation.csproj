@@ -134,6 +134,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AvukatModel.cs" />
+    <Compile Include="Models\IcraMahkemeModel.cs" />
+    <Compile Include="Models\IcraModel.cs" />
+    <Compile Include="Models\IhtarModel.cs" />
+    <Compile Include="Models\IhtarUrunModel.cs" />
     <Compile Include="Models\KullaniciModel.cs" />
     <Compile Include="Models\MusteriModel.cs" />
     <Compile Include="Models\SubeModel.cs" />

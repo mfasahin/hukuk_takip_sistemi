@@ -11,7 +11,7 @@ namespace DataAccess.Concrete
         }
 
 
-        public DbSet<Musteri> MUSTERI { get; set; }
+        public DbSet<Musteri> Musteri { get; set; }
 
         public DbSet<Avukat> AVUKAT { get; set; }
 
@@ -26,7 +26,7 @@ namespace DataAccess.Concrete
         public DbSet<IhtarUrun> IHTAR_URUN { get; set; }
 
         public DbSet<Icra> ICRA { get; set; }
-
+        
         public DbSet<Mahkeme> ICRA_MAHKEME { get; set; }
 
     }

@@ -28,8 +28,9 @@ namespace Entity.Concrete
         [StringLength(11)]
         public string MUST_KIMLIK_NO { get; set; }
 
+        [Column("MUST_VKNO")]
         [StringLength(10)]
-        public string MUST_VKN_NO { get; set; } //düzeltildi
+        public string MUST_VKNO { get; set; } //düzeltildi
 
         [StringLength(50)]
         public string MUST_EPOSTA { get; set; }

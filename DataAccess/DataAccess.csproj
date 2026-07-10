@@ -60,29 +60,9 @@
     <Compile Include="Concrete\EfIhtarDal.cs" />
     <Compile Include="Concrete\EfMusteriDal.cs" />
     <Compile Include="Concrete\EfSubeDal.cs" />
-    <Compile Include="Migrations\202607081340255_InitialCreate.cs" />
-    <Compile Include="Migrations\202607081340255_InitialCreate.Designer.cs">
-      <DependentUpon>202607081340255_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202607090720471_CreateAvukatTable.cs" />
-    <Compile Include="Migrations\202607090720471_CreateAvukatTable.Designer.cs">
-      <DependentUpon>202607090720471_CreateAvukatTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202607091312381_CreateSubeTable.cs" />
-    <Compile Include="Migrations\202607091312381_CreateSubeTable.Designer.cs">
-      <DependentUpon>202607091312381_CreateSubeTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202607091404350_InitialCreate1.cs" />
-    <Compile Include="Migrations\202607091404350_InitialCreate1.Designer.cs">
-      <DependentUpon>202607091404350_InitialCreate1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202607100553013_CreateKullaniciTable.cs" />
-    <Compile Include="Migrations\202607100553013_CreateKullaniciTable.Designer.cs">
-      <DependentUpon>202607100553013_CreateKullaniciTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202607101102177_FixTableName.cs" />
-    <Compile Include="Migrations\202607101102177_FixTableName.Designer.cs">
-      <DependentUpon>202607101102177_FixTableName.cs</DependentUpon>
+    <Compile Include="Migrations\202607101327343_InitialCreate.cs" />
+    <Compile Include="Migrations\202607101327343_InitialCreate.Designer.cs">
+      <DependentUpon>202607101327343_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -102,23 +82,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202607081340255_InitialCreate.resx">
-      <DependentUpon>202607081340255_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202607090720471_CreateAvukatTable.resx">
-      <DependentUpon>202607090720471_CreateAvukatTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202607091312381_CreateSubeTable.resx">
-      <DependentUpon>202607091312381_CreateSubeTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202607091404350_InitialCreate1.resx">
-      <DependentUpon>202607091404350_InitialCreate1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202607100553013_CreateKullaniciTable.resx">
-      <DependentUpon>202607100553013_CreateKullaniciTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202607101102177_FixTableName.resx">
-      <DependentUpon>202607101102177_FixTableName.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202607101327343_InitialCreate.resx">
+      <DependentUpon>202607101327343_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
