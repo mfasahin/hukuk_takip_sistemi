@@ -1,11 +1,7 @@
 ﻿using Business.Abstract;
 using DataAccess.Abstract;
 using Entity.Concrete;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
@@ -19,7 +15,7 @@ namespace Business.Concrete
         }
 
         public List<Ihtar> GetAll()
-        { 
+        {
             return _ıhtarDal.GetAll();
         }
 
@@ -40,7 +36,7 @@ namespace Business.Concrete
 
         public Ihtar GetById(int id)
         {
-            return _ıhtarDal.Get(Ihtar => Ihtar.IHTAR_ID  == id);
+            return _ıhtarDal.Get(Ihtar => Ihtar.IHTAR_ID == id);
         }
 
     }
