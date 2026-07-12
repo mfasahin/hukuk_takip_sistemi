@@ -1,26 +1,30 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
-using DataAccess.Abstract;
 using DataAccess.Concrete;
-
 using Entity.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Presentation.Controllers
 {
     public class MusteriController : Controller
     {
-        MusteriManager _musteriManager = new MusteriManager(new EfMusteriDal());
+        private readonly IMusteriService _musteriService;
+
+        public MusteriController(IMusteriService musteriService)
+        {
+            _musteriService = musteriService;
+        }
+
+         /*public MusteriController() : this(new MusteriManager(new EfMusteriDal()))
+         {
+         }*/
+
 
         // Listeleme
         public ActionResult Index()
         {
-            var musteriler = _musteriManager.GetAll();
+            var musteriler = _musteriService.GetAll();
             return View(musteriler);
         }
 
@@ -33,7 +37,7 @@ namespace Presentation.Controllers
         [HttpPost]
         public ActionResult Create(Musteri musteri)
         {
-            _musteriManager.Add(musteri);
+            _musteriService.Add(musteri);
             return RedirectToAction("Index");
         }
 
@@ -44,7 +48,7 @@ namespace Presentation.Controllers
         {
             if (ModelState.IsValid)
             {
-                _musteriManager.Update(musteri);
+                _musteriService.Update(musteri);
                 return RedirectToAction("Index");
             }
             return View(musteri);
@@ -57,7 +61,7 @@ namespace Presentation.Controllers
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            var musteri = _musteriManager.GetById(id.Value);
+            var musteri = _musteriService.GetById(id.Value);
             if (musteri == null)
                 return HttpNotFound();
 
@@ -65,12 +69,12 @@ namespace Presentation.Controllers
         }
 
         // Silme POST
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id) // YANLIŞ
         {
-            var musteri = _musteriManager.GetById(id);
-            _musteriManager.Delete(musteri);
+            var musteri = _musteriService.GetById(id);
+            _musteriService.Delete(musteri);
             return RedirectToAction("Index");
         }
 

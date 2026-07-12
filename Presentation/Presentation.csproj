@@ -52,10 +52,25 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.5.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=10.0.0.9, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.10.0.9\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=10.0.0.9, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.10.0.9\lib\net462\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=10.0.0.9, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.10.0.9\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.1.2\lib\net462\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.4.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.6.3\lib\net462\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -125,23 +140,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\DependencyResolverConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\AvukatController.cs" />
+    <Compile Include="Controllers\Avukat\AvukatController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\MusteriController.cs" />
+    <Compile Include="Controllers\Musteri\MusteriController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AvukatModel.cs" />
-    <Compile Include="Models\IcraMahkemeModel.cs" />
-    <Compile Include="Models\IcraModel.cs" />
-    <Compile Include="Models\IhtarModel.cs" />
-    <Compile Include="Models\IhtarUrunModel.cs" />
-    <Compile Include="Models\KullaniciModel.cs" />
-    <Compile Include="Models\MusteriModel.cs" />
-    <Compile Include="Models\SubeModel.cs" />
-    <Compile Include="Models\UrunModel.cs" />
+    <Compile Include="Models\Avukat\AvukatModel.cs" />
+    <Compile Include="Models\IcraMahkeme\IcraMahkemeModel.cs" />
+    <Compile Include="Models\Icra\IcraModel.cs" />
+    <Compile Include="Models\Ihtar\IhtarModel.cs" />
+    <Compile Include="Models\IhtarUrun\IhtarUrunModel.cs" />
+    <Compile Include="Models\Kullanici\KullaniciModel.cs" />
+    <Compile Include="Models\Musteri\MusteriModel.cs" />
+    <Compile Include="Models\Sube\SubeModel.cs" />
+    <Compile Include="Models\Urun\UrunModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -206,6 +222,9 @@
     <Folder Include="App_Data\" />
     <Folder Include="Content\bootstrap\" />
     <Folder Include="Content\jquery\" />
+    <Folder Include="Controllers\Icra\" />
+    <Folder Include="Controllers\Ihtar\" />
+    <Folder Include="Controllers\Urun\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

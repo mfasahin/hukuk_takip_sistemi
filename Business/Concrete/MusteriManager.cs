@@ -7,7 +7,7 @@ namespace Business.Concrete
 {
     public class MusteriManager : IMusteriService
     {
-        private IMusteriDal _musteriDal;
+        private readonly IMusteriDal _musteriDal;
 
         public MusteriManager(IMusteriDal musteriDal)
         {
