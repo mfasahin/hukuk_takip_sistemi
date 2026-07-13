@@ -1,11 +1,11 @@
 ﻿using Business.Abstract;
 using DataAccess.Abstract;
+using DataAccess.Concrete;
 using Entity.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Business.Concrete
 {
@@ -32,7 +32,6 @@ namespace Business.Concrete
         {
             _avukatDal.Update(avukat);
         }
-
         public void Delete(Avukat avukat)
         {
             _avukatDal.Delete(avukat);

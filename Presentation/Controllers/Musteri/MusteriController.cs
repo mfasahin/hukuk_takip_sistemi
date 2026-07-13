@@ -1,6 +1,4 @@
 ﻿using Business.Abstract;
-using Business.Concrete;
-using DataAccess.Concrete;
 using Entity.Concrete;
 using System.Net;
 using System.Web.Mvc;
@@ -11,15 +9,15 @@ namespace Presentation.Controllers
     {
         private readonly IMusteriService _musteriService;
 
+        // Constructor: DI ile IMusteriService enjekte ediliyor
         public MusteriController(IMusteriService musteriService)
         {
             _musteriService = musteriService;
         }
 
-         /*public MusteriController() : this(new MusteriManager(new EfMusteriDal()))
-         {
-         }*/
-
+        /*public MusteriController() : this(new MusteriManager(new EfMusteriDal()))
+        {
+        }*/
 
         // Listeleme
         public ActionResult Index()
@@ -54,7 +52,6 @@ namespace Presentation.Controllers
             return View(musteri);
         }
 
-
         // Silme GET
         public ActionResult Delete(int? id)
         {
@@ -77,7 +74,6 @@ namespace Presentation.Controllers
             _musteriService.Delete(musteri);
             return RedirectToAction("Index");
         }
-
 
     }
 }

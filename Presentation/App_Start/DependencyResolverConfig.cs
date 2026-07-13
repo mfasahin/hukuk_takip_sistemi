@@ -2,7 +2,6 @@
 using Business.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
-using System.Data.Entity.Core.Metadata.Edm;
 using System.Web.Mvc;
 using Unity;
 using Unity.Mvc5;

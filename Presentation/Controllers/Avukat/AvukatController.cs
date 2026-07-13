@@ -1,15 +1,9 @@
 ﻿using Business.Abstract;
-using Business.Concrete;
-using DataAccess.Abstract;
-using DataAccess.Concrete;
-
-
 using Entity.Concrete;
+using Presentation.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Presentation.Controllers
@@ -23,24 +17,24 @@ namespace Presentation.Controllers
             _avukatService = avukatService;
         }
 
-        /*public AvukatController() : this(new MusteriManager(new EfMusteriDal()))
-        {
-        }*/
-
-
         // Listeleme
         public ActionResult Index()
         {
-            var avukatlar = _avukatService.GetAll();
-            return View(avukatlar);
-        }
+            var avukatList = _avukatService.GetAll(); // List<Entity.Concrete.Avukat>
 
-        [HttpGet]
-        public ActionResult Create()
-        {
-            return View();
-        }
+            // Entity → ViewModel dönüşümü
+            var model = avukatList.Select(a => new Presentation.Models.AvukatModel
+            {
+                AVUKAT_ID = a.AVUKAT_ID,
+                AVKT_AD = a.AVKT_AD,
+                AVKT_SOYAD = a.AVKT_SOYAD,
+                TBB_SICIL_NO = a.TBB_SICIL_NO,
+                AVKT_TEL_NO = a.AVKT_TEL_NO
+            }).ToList();
 
+            return View(model); // IEnumerable<AvukatModel> gönderiyoruz
+        }
+       
         [HttpPost]
         public ActionResult Create(Avukat avukat)
         {
@@ -48,41 +42,55 @@ namespace Presentation.Controllers
             return RedirectToAction("Index");
         }
 
-        // Güncelleme POST dan önce GET, EDİT YERİNE UPDATE
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(Avukat avukat)
-        {
-            if (ModelState.IsValid)
-            {
-                _avukatService.Update(avukat);
-                return RedirectToAction("Index");
-            }
-            return View(avukat);
-        }
-
-
-        // Silme GET
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
-            var avukat = _avukatService.GetById(id.Value);
-            if (avukat == null)
-                return HttpNotFound();
-
-            return View(avukat);
-        }
-
-        // Silme POST
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id) // YANLIŞ
+        [HttpGet]
+        public ActionResult GetAvukat(int id)
         {
             var avukat = _avukatService.GetById(id);
-            _avukatService.Delete(avukat);
-            return RedirectToAction("Index");
+            if (avukat == null) return HttpNotFound();
+
+            var model = new AvukatModel
+            {
+                AVUKAT_ID = avukat.AVUKAT_ID,
+                AVKT_AD = avukat.AVKT_AD,
+                AVKT_SOYAD = avukat.AVKT_SOYAD,
+                TBB_SICIL_NO = avukat.TBB_SICIL_NO,
+                AVKT_TEL_NO = avukat.AVKT_TEL_NO
+            };
+
+            return Json(model, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public ActionResult Update(AvukatModel model)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { success = false, error = "ModelState geçersiz" });
+
+            try
+            {
+                var entity = _avukatService.GetById(model.AVUKAT_ID);
+                if (entity == null)
+                    return Json(new { success = false, error = "Kayıt bulunamadı" });
+
+                entity.AVKT_AD = model.AVKT_AD;
+                entity.AVKT_SOYAD = model.AVKT_SOYAD;
+                entity.TBB_SICIL_NO = model.TBB_SICIL_NO;
+                entity.AVKT_TEL_NO = model.AVKT_TEL_NO;
+
+                _avukatService.Update(entity);
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
+        // Silme GET
+        //public ActionResult Delete(int id)
+        
+
+        
     }
 }

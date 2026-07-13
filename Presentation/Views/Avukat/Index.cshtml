@@ -1,24 +1,127 @@
-﻿@model List<Entity.Concrete.Avukat>
+﻿@model IEnumerable<Presentation.Models.AvukatModel>
 
-<h2>Avukat Listesi</h2>
+
+<tr>
+    <td colspan="6">
+        <div style="display:flex; justify-content:flex-end;">
+            <button type="submit" class="btn btn-success">Avukat Ekle</button>
+        </div>
+    </td>
+</tr>
+
 <table class="table">
-    <tr>
-
-        <th>Avukat Adı</th>
-        <th>Avukat Soyadı</th>
-        <th>TBB Sicil Numarası</th>
-        <th>Avukat E-posta </th>
-        <th>Avukat Telefon Numarası</th>
-    </tr>
-    @foreach (var a in Model)
-    {
+    <thead>
         <tr>
-            <td>@a.AVKT_AD</td>
-            <td>@a.AVKT_SOYAD</td>
-            <td>@a.TBB_SICIL_NO</td>
-            <td>@a.AVKT_EPOSTA</td>
-            <td>@a.AVKT_TEL_NO</td>
-
+            <th>ID</th>
+            <th>Ad</th>
+            <th>Soyad</th>
+            <th>Sicil No</th>
+            <th>Telefon</th>
+            <th>İşlem</th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (var avukat in Model)
+        {
+            <tr>
+                <td>@avukat.AVUKAT_ID</td>
+                <td>@avukat.AVKT_AD</td>
+                <td>@avukat.AVKT_SOYAD</td>
+                <td>@avukat.TBB_SICIL_NO</td>
+                <td>@avukat.AVKT_TEL_NO</td>
+                <td>
+                    <button class="btn btn-primary updateBtn" data-id="@avukat.AVUKAT_ID">
+                        Güncelle
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
+
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Avukat Güncelle</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="updateForm">
+                    <input type="hidden" id="AVUKAT_ID" name="AVUKAT_ID" />
+                    <div class="form-group">
+                        <label>Ad</label>
+                        <input type="text" class="form-control" id="AVKT_AD" name="AVKT_AD" />
+                    </div>
+                    <div class="form-group">
+                        <label>Soyad</label>
+                        <input type="text" class="form-control" id="AVKT_SOYAD" name="AVKT_SOYAD" />
+                    </div>
+                    <div class="form-group">
+                        <label>Sicil No</label>
+                        <input type="text" class="form-control" id="TBB_SICIL_NO" name="TBB_SICIL_NO" />
+                    </div>
+                    <div class="form-group">
+                        <label>Telefon</label>
+                        <input type="text" class="form-control" id="AVKT_TEL_NO" name="AVKT_TEL_NO" />
+                    </div>
+                    <button type="button" id="saveBtn" class="btn btn-success">Kaydet</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<script src="~/Scripts/bootstrap.bundle.min.js"></script>
+@section Scripts {
+    <script>
+
+        $(document).on("click", ".updateBtn", function () {
+            var id = $(this).data("id");
+
+            $.get('/Avukat/GetAvukat', { id: id }, function (data) {
+                $("#AVUKAT_ID").val(data.AVUKAT_ID);
+                $("#AVKT_AD").val(data.AVKT_AD);
+                $("#AVKT_SOYAD").val(data.AVKT_SOYAD);
+                $("#TBB_SICIL_NO").val(data.TBB_SICIL_NO);
+                $("#AVKT_TEL_NO").val(data.AVKT_TEL_NO);
+
+                $("#updateModal").modal("show");
+            });
+        });
+
+        // Kaydet butonuna tıklanınca form submit tetiklenir
+        $(document).on("click", "#saveBtn", function () {
+            $("#updateForm").submit(); // form submit fonksiyonunu çalıştırır
+        });
+
+
+        $("#updateForm").on("submit", function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/Avukat/Update',          // AvukatController içindeki Update action
+                type: 'POST',
+                data: $(this).serialize(),      // form alanlarını gönder
+                success: function (result) {
+                    if (result.success) {
+                        //messageBox.Show("Güncelleme başarılı!");
+                        alert("Güncelleme başarılı!");
+                        $("#updateModal").modal("hide");
+                        location.reload();
+                    } else {
+                        alert("Kaydetme başarısız: " + (result.error || ""));
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Hata:", error);
+                    alert("Hata oluştu!");
+                }
+            });
+        });
+
+
+    </script>
+}
