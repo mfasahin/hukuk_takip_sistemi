@@ -2,10 +2,10 @@
 using Business.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Web.Mvc;
+using Unity;
+using Unity.Mvc5;
 
 namespace Presentation.App_Start
 {
@@ -13,37 +13,16 @@ namespace Presentation.App_Start
     {
         public static void RegisterDependencies()
         {
-            var services = new ServiceCollection();
+            var container = new UnityContainer();
 
             // IoC Container kayıtları
-            services.AddScoped<IMusteriService, MusteriManager>();
-            services.AddScoped<IMusteriDal, EfMusteriDal>();
+            container.RegisterType<IMusteriService, MusteriManager>();
+            container.RegisterType<IMusteriDal, EfMusteriDal>();
 
-            services.AddScoped<IAvukatService, AvukatManager>();
-            services.AddScoped<IAvukatDal, EfAvukatDal>();
+            container.RegisterType<IAvukatService, AvukatManager>();
+            container.RegisterType<IAvukatDal, EfAvukatDal>();
 
-            var provider = services.BuildServiceProvider();
-            DependencyResolver.SetResolver(new DefaultDependencyResolver(provider));
-        }
-    }
-
-    public class DefaultDependencyResolver : IDependencyResolver
-    {
-        private readonly IServiceProvider _provider;
-
-        public DefaultDependencyResolver(IServiceProvider provider)
-        {
-            _provider = provider;
-        }
-
-        public object GetService(Type serviceType)
-        {
-            return _provider.GetService(serviceType);
-        }
-
-        public IEnumerable<object> GetServices(Type serviceType)
-        {
-            return _provider.GetServices(serviceType);
+            DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }
 }
