@@ -1,4 +1,6 @@
-﻿namespace Presentation.Models
+﻿using System;
+
+namespace Presentation.Models
 {
     public class AvukatModel
     {
@@ -19,5 +21,7 @@
         public string HKK_BURO_ADRES { get; set; }
 
         public string OFIS_TEL_NO { get; set; }
+
+        public DateTime? SilinmeTarihi { get; set; } // soft delete için
     }
 }

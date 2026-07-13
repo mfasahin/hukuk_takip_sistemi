@@ -15,7 +15,7 @@
             <th>ID</th>
             <th>Ad</th>
             <th>Soyad</th>
-            <th>Sicil No</th>
+            <th>TBB Sicil No</th>
             <th>Telefon</th>
             <th>İşlem</th>
         </tr>
@@ -33,6 +33,10 @@
                     <button class="btn btn-primary updateBtn" data-id="@avukat.AVUKAT_ID">
                         Güncelle
                     </button>
+                    <button class="btn btn-danger deleteBtn" data-id="@avukat.AVUKAT_ID">
+                        Sil
+                    </button>
+
                 </td>
             </tr>
         }
@@ -66,6 +70,7 @@
                         <input type="text" class="form-control" id="AVKT_TEL_NO" name="AVKT_TEL_NO" />
                     </div>
                     <button type="button" id="saveBtn" class="btn btn-success">Kaydet</button>
+
                 </form>
             </div>
         </div>
@@ -120,6 +125,30 @@
                     alert("Hata oluştu!");
                 }
             });
+        });
+
+        $(document).on("click", ".deleteBtn", function () {
+            var id = $(this).data("id");
+
+            if (confirm("Bu kaydı silmek istediğine emin misin?")) {
+                $.ajax({
+                    url: '/Avukat/Delete',
+                    type: 'POST',
+                    data: { id: id, __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() },
+                    success: function (result) {
+                        if (result.success) {
+                            alert("Kayıt silindi (soft delete)!");
+                            location.reload();
+                        } else {
+                            alert("Silme başarısız: " + (result.error || ""));
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Hata:", error);
+                        alert("Hata oluştu!");
+                    }
+                });
+            }
         });
 
 
