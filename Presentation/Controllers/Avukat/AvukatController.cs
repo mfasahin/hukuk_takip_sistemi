@@ -3,7 +3,6 @@ using Entity.Concrete;
 using Presentation.Models;
 using System;
 using System.Linq;
-using System.Net;
 using System.Web.Mvc;
 
 namespace Presentation.Controllers
@@ -16,24 +15,6 @@ namespace Presentation.Controllers
         {
             _avukatService = avukatService;
         }
-
-        // Listeleme
-        //public ActionResult Index()
-        //{
-        //    var avukatList = _avukatService.GetAll(); // List<Entity.Concrete.Avukat>
-
-        //    // Entity → ViewModel dönüşümü
-        //    var model = avukatList.Select(a => new Presentation.Models.AvukatModel
-        //    {
-        //        AVUKAT_ID = a.AVUKAT_ID,
-        //        AVKT_AD = a.AVKT_AD,
-        //        AVKT_SOYAD = a.AVKT_SOYAD,
-        //        TBB_SICIL_NO = a.TBB_SICIL_NO,
-        //        AVKT_TEL_NO = a.AVKT_TEL_NO
-        //    }).ToList();
-
-        //    return View(model); // IEnumerable<AvukatModel> gönderiyoruz
-        //}
 
         public ActionResult Index()
         {
@@ -58,7 +39,6 @@ namespace Presentation.Controllers
 
             return View(model); // IEnumerable<AvukatModel> gönderiyoruz
         }
-
 
         [HttpPost]
         public ActionResult Create(Avukat avukat)
@@ -133,9 +113,5 @@ namespace Presentation.Controllers
                 return Json(new { success = false, error = ex.Message });
             }
         }
-
-
-
-
     }
 }
