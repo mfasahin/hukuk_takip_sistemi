@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using System.Web.Services.Description;
 
 namespace Presentation.Controllers
 {
@@ -46,11 +47,38 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(Musteri musteri)
+        public ActionResult Create(MusteriModel model)
         {
-            _musteriService.Add(musteri);
-            return RedirectToAction("Index");
+            if (!ModelState.IsValid)
+            {
+                return Json(new { success = false, error = "Geçersiz model" });
+            }
+
+            try
+            {
+                var musteri = new Musteri
+                {
+                    MUSTERI_ID = model.MUSTERI_ID,
+                    MUST_NO = model.MUST_NO,
+                    MUST_AD = model. MUST_AD,
+                    MUST_SOYAD = model.MUST_SOYAD,
+                    MUST_KIMLIK_NO = model.MUST_KIMLIK_NO,
+                    MUST_VKNO = model.MUST_VKNO,
+                    MUST_EPOSTA = model.MUST_EPOSTA,
+                    MUST_TEL_NO = model.MUST_EPOSTA,
+                    GRS_TAR_ZMN = DateTime.Now
+                };
+
+                _musteriService.Add(musteri);
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
         }
+
 
         [HttpGet]
         public ActionResult GetMusteri(int id)

@@ -1,27 +1,155 @@
 ﻿@model IEnumerable<Presentation.Models.MusteriModel>
+@{
+    ViewBag.Title = "Müsteri Listesi";
+}
 
-<h2>Müşteri Listesi</h2>
+<!-- Müşteri Ekle Butonu -->
+<tr>
+    <td colspan="6">
+        <div style="display:flex; justify-content:flex-end;">
+            <button type="button" class="btn btn-success"
+                    data-bs-toggle="modal"
+                    data-bs-target="#createModal">
+                Müşteri Ekle
+            </button>
+        </div>
+    </td>
+</tr>
+
+<h2>Müşteriler</h2>
 <table class="table">
-    <tr>
-        <th>ID</th>
-        <th>No</th>
-        <th>Ad</th>
-        <th>Soyad</th>
-        <th>VKNO</th>
-    </tr>
-    @foreach (var m in Model)
-    {
+    <thead>
         <tr>
-            <td>@m.MUSTERI_ID</td>
-            <td>@m.MUST_NO</td>
-            <td>@m.MUST_AD</td>
-            <td>@m.MUST_SOYAD</td>
-            <td>@m.MUST_VKNO</td>
+            <th>Müşteri no</th>
+            <th>Ad</th>
+            <th>Soyad</th>
+            <th>kimlik no</th>
+            <th>vergi kimlik no</th>
+            <th>e_posta</th>
+            <th>tel_no</th>
+            <th>İşlem</th>
         </tr>
-    }
-</table>S
+    </thead>
+    <tbody>
+        @foreach (var musteri in Model)
+        {
+            <tr>
+                <td>@musteri.MUST_NO</td>
+                <td>@musteri.MUST_AD</td>
+                <td>@musteri.MUST_SOYAD</td>
+                <td>@musteri.MUST_KIMLIK_NO</td>
+                <td>@musteri.MUST_VKNO</td>
+                <td>@musteri.MUST_EPOSTA</td>
+                <td>@musteri.MUST_TEL_NO</td>
+                <td>
+                    <button class="btn btn-sm btn-warning updateBtn" data-id="@musteri.MUSTERI_ID">Güncelle</button>
+                    <button class="btn btn-sm btn-danger deleteBtn" data-id="@musteri.MUSTERI_ID">Sil</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Create Modal -->
+<div class="modal fade" id="createModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="createForm">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Yeni mÜŞTERİ</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("MusteriNo")
+                        <input type="text" id="MUST_NO" name="MUST_NO" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("MusteriAd")
+                        <input type="text" id="MUST_AD" name="MUST_AD" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("MusteriSoyad")
+                        <input type="text" id="MUST_SOYAD" name="MUST_SOYAD" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("MusteriKimlikNo")
+                        <input type="email" id="MUST_KIMLIK_NO" name="MUST_KIMLIK_NO" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("MusteriVKNO")
+                        <input type="email" id="MUST_VKNO" name="MUST_VKNO" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("MusteriEPOSTA")
+                        <input type="email" id="MUST_EPOSTA" name="MUST_EPOSTA" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("MusteriTelefon")
+                        <input type="email" id="MUST_TEL_NO" name="MUST_TEL_NO" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="createSaveBtn" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Update Modal -->
+<div class="modal fade" id="updateModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="updateForm">
+                <input type="hidden" id="MUSTERI_ID" name="MUSTERI_ID" />
+                <div class="modal-header">
+                    <h5 class="modal-title">Müşteri Güncelle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("MusteriNo")
+                        <input type="text" id="MUST_NO" name="MUST_NO" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("MusteriAd")
+                        <input type="text" id="MUST_AD" name="MUST_AD" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("MusteriSoyad")
+                        <input type="text" id="MUST_SOYAD" name="MUST_SOYAD" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("MusteriKimlikNo")
+                        <input type="text" id="MUST_KIMLIK_NO" name="MUST_KIMLIK_NO" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("MusteriVKNO")
+                        <input type="text" id="MUST_VKNO" name="MUST_VKNO" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("MusteriEPOSTA")
+                        <input type="email" id="MUST_EPOSTA" name="MUST_EPOSTA" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("MusteriTelefon")
+                        <input type="text" id="MUST_TEL_NO" name="MUST_TEL_NO" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveBtn" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 
-
-
-
+@section Scripts {
+    <script src="~/Scripts/crud.js"></script>
+    <script>
+        initCrud("Musteri", ["MUSTERI_ID", "MUST_NO", "MUST_AD", "MUST_SOYAD", "MUST_KIMLIK_NO", "MUST_VKNO", "MUST_EPOSTA", "MUST_TEL_NO"]);
+    </script>
+}
