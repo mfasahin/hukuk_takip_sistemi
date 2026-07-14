@@ -52,14 +52,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\IAvukatDal.cs" />
+    <Compile Include="Abstract\IcraDal.cs" />
     <Compile Include="Abstract\IhtarDal.cs" />
     <Compile Include="Abstract\IMusteriDal.cs" />
     <Compile Include="Abstract\ISubeDal.cs" />
+    <Compile Include="Abstract\IUrunDal.cs" />
     <Compile Include="Concrete\AppDbContext.cs" />
     <Compile Include="Concrete\EfAvukatDal.cs" />
+    <Compile Include="Concrete\EfIcraDal.cs" />
     <Compile Include="Concrete\EfIhtarDal.cs" />
     <Compile Include="Concrete\EfMusteriDal.cs" />
     <Compile Include="Concrete\EfSubeDal.cs" />
+    <Compile Include="Concrete\EfUrunDal.cs" />
     <Compile Include="Migrations\202607101327343_InitialCreate.cs" />
     <Compile Include="Migrations\202607101327343_InitialCreate.Designer.cs">
       <DependentUpon>202607101327343_InitialCreate.cs</DependentUpon>
