@@ -15,5 +15,11 @@ namespace Presentation.Models
         public string URUN_KOD { get; set; } // NOT NULL
 
         public DateTime? SON_GECERLILIK_TAR { get; set; }
+        
+        public DateTime? GRS_TAR_ZMN{  get; set; }
+
+        public DateTime? GNC_TAR_ZMN{  get; set; }
+
+        public DateTime? SIL_TAR_ZMN {  get; set; }
     }
 }

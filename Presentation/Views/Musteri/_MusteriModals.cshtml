@@ -1,0 +1,95 @@
+﻿<!-- Create Modal -->
+<div class="modal fade" id="createModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="createForm">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Müşteri Bilgileri</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Müşteri Numarası")
+                        <input type="text" id="MUST_NO" name="MUST_NO" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Müşteri Adı")
+                        <input type="text" id="MUST_AD" name="MUST_AD" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Müşteri Soyadı")
+                        <input type="text" id="MUST_SOYAD" name="MUST_SOYAD" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Müşteri Kimlik Numarası")
+                        <input type="email" id="MUST_KIMLIK_NO" name="MUST_KIMLIK_NO" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Müşteri Vergi Kimlik Numarası")
+                        <input type="email" id="MUST_VKNO" name="MUST_VKNO" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Müşteri E-posta")
+                        <input type="email" id="MUST_EPOSTA" name="MUST_EPOSTA" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Müşteri Telefon Numarası")
+                        <input type="email" id="MUST_TEL_NO" name="MUST_TEL_NO" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="createSaveBtn" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Update Modal -->
+<div class="modal fade" id="updateModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="updateForm">
+                <input type="hidden" id="MUSTERI_ID" name="MUSTERI_ID" />
+                <div class="modal-header">
+                    <h5 class="modal-title">Müşteri Bilgileri</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Müşteri Numarası")
+                        <input type="text" id="MUST_NO" name="MUST_NO" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Müşteri Adı")
+                        <input type="text" id="MUST_AD" name="MUST_AD" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Müşteri Soyadı")
+                        <input type="text" id="MUST_SOYAD" name="MUST_SOYAD" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Müşteri Kimlik Numarası")
+                        <input type="text" id="MUST_KIMLIK_NO" name="MUST_KIMLIK_NO" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Müşteri Vergi Kimlik Numarası")
+                        <input type="text" id="MUST_VKNO" name="MUST_VKNO" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Müşteri E-posta")
+                        <input type="email" id="MUST_EPOSTA" name="MUST_EPOSTA" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Müşteri Telefon Numarası")
+                        <input type="text" id="MUST_TEL_NO" name="MUST_TEL_NO" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveBtn" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -21,6 +21,9 @@ namespace Presentation.App_Start
             container.RegisterType<IAvukatService, AvukatManager>();
             container.RegisterType<IAvukatDal, EfAvukatDal>();
 
+            container.RegisterType<IUrunService, UrunManager>();
+            container.RegisterType<IUrunDal, EfUrunDal>();
+
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }

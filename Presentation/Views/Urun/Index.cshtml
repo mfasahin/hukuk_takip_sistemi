@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Presentation.Models.UrunModel>
+@{
+    ViewBag.Title = "Ürün Listesi";
+}
+
+<!-- Ürün Ekle Butonu -->
+<tr>
+    <td colspan="6">
+        <div style="display:flex; justify-content:flex-end;">
+            <button type="button" class="btn btn-success"
+                    data-bs-toggle="modal"
+                    data-bs-target="#createModal">
+                Ürün Ekle
+            </button>
+        </div>
+    </td>
+</tr>
+
+<h2>Ürünler</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <!-- Tümünü seç/deselect için -->
+                <input type="checkbox" id="selectAll" />
+            </th>
+            <th>Ürün Adı</th>
+            <th>Ürün Kodu</th>
+            <th>Ürün Son Geçerlilik Tarihi</th>
+            <th>İşlem</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var urun in Model)
+        {
+            <tr>
+                <td>
+                    <input type="checkbox" class="rowCheckbox" value="@urun.URUN_ID" />
+                </td>
+                <td>@urun.URUN_AD</td>
+                <td>@urun.URUN_KOD</td>
+                <td>@urun.SON_GECERLILIK_TAR</td>
+
+                <td>
+                    <button class="btn btn-sm btn-warning updateBtn" data-id="@urun.URUN_ID">Güncelle</button>
+                    <button class="btn btn-sm btn-danger deleteBtn" data-id="@urun.URUN_ID">Sil</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@Html.Partial("_urunModals")
+
+@section Scripts {
+    <script src="~/Scripts/crud.js"></script>
+    <script>
+        initCrud("Urun", ["URUN_ID", "URUN_AD", "URUN_KOD", "SON_GECERLILIK_TAR"]);
+    </script>
+
+    @*checkbox kontrolü*@
+    <!--<script src="~/Scripts/checkbox.js"></script>-->
+}

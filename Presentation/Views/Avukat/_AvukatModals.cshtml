@@ -1,0 +1,75 @@
+﻿<!-- Avukat Ekle Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Avukat Ekle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createForm">
+                    <div class="form-group">
+                        <label>Ad</label>
+                        <input type="text" class="form-control" name="AVKT_AD" />
+                    </div>
+                    <div class="form-group">
+                        <label>Soyad</label>
+                        <input type="text" class="form-control" name="AVKT_SOYAD" />
+                    </div>
+                    <div class="form-group">
+                        <label>Sicil No</label>
+                        <input type="text" class="form-control" name="TBB_SICIL_NO" />
+                    </div>
+                    <div class="form-group">
+                        <label>E-posta</label>
+                        <input type="text" class="form-control" name="AVKT_EPOSTA" />
+                    </div>
+                    <div class="form-group">
+                        <label>Telefon</label>
+                        <input type="text" class="form-control" name="AVKT_TEL_NO" />
+                    </div>
+                    <button type="button" id="createSaveBtn" class="btn btn-success">Kaydet</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Avukat Güncelle Modal -->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Avukat Güncelle</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="updateForm">
+                    <input type="hidden" id="AVUKAT_ID" name="AVUKAT_ID" />
+                    <div class="form-group">
+                        <label>Ad</label>
+                        <input type="text" class="form-control" id="AVKT_AD" name="AVKT_AD" />
+                    </div>
+                    <div class="form-group">
+                        <label>Soyad</label>
+                        <input type="text" class="form-control" id="AVKT_SOYAD" name="AVKT_SOYAD" />
+                    </div>
+                    <div class="form-group">
+                        <label>Sicil No</label>
+                        <input type="text" class="form-control" id="TBB_SICIL_NO" name="TBB_SICIL_NO" />
+                    </div>
+                    <div class="form-group">
+                        <label>Telefon</label>
+                        <input type="text" class="form-control" id="AVKT_TEL_NO" name="AVKT_TEL_NO" />
+                    </div>
+                    <div class="form-group">
+                        <label>e_posta</label>
+                        <input type="text" class="form-control" id="AVKT_EPOSTA" name="AVKT_EPOSTA" />
+                    </div>
+                    <button type="button" id="saveBtn" class="btn btn-success">Kaydet</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -156,6 +156,7 @@
     <Compile Include="Controllers\Avukat\AvukatController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Musteri\MusteriController.cs" />
+    <Compile Include="Controllers\Urun\UrunController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -197,6 +198,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\checkbox.js" />
     <Content Include="Scripts\crud.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -213,16 +215,12 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Musteri\Index.cshtml" />
-    <Content Include="Views\Musteri\Create.cshtml" />
     <Content Include="Views\Avukat\Index.cshtml" />
-    <Content Include="Views\Musteri\Delete.cshtml" />
-    <Content Include="Views\Musteri\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Controllers\Icra\" />
     <Folder Include="Controllers\Ihtar\" />
-    <Folder Include="Controllers\Urun\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap\css\bootstrap-grid.css.map" />
@@ -248,7 +246,10 @@
     <Content Include="Content\bootstrap\js\bootstrap.js.map" />
     <Content Include="Content\bootstrap\js\bootstrap.min.js.map" />
     <None Include="packages.config" />
-    <Content Include="Views\Avukat\_AvukatEkleModal.cshtml" />
+    <Content Include="Views\Musteri\_MusteriModals.cshtml" />
+    <Content Include="Views\Avukat\_AvukatModals.cshtml" />
+    <Content Include="Views\Urun\Index.cshtml" />
+    <Content Include="Views\Urun\_UrunModals.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Business\Business.csproj">

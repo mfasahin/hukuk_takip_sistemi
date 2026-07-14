@@ -1,0 +1,63 @@
+﻿<!-- Create Modal -->
+<div class="modal fade" id="createModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="createForm">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Müşteri Bilgileri</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Ürün Adı")
+                        <input type="text" id="URUN_AD" name="URUN_AD" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Ürün Kodu")
+                        <input type="text" id="URUN_KOD" name="URUN_KOD" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Son Geçerlilik Tarihi")
+                        <input type="text" id="SON_GECERLILIK_TAR" name="SON_GECERLILIK_TAR" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="createSaveBtn" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Update Modal -->
+<div class="modal fade" id="updateModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="updateForm">
+                <input type="hidden" id="MUSTERI_ID" name="MUSTERI_ID" />
+                <div class="modal-header">
+                    <h5 class="modal-title">Müşteri Bilgileri</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.Label("Ürün Adı")
+                        <input type="text" id="URUN_AD" name="URUN_AD" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Ürün Kodu")
+                        <input type="text" id="URUN_KOD" name="URUN_KOD" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Son Geçerlilik Tarihi")
+                        <input type="text" id="SON_GECERLILIK_TAR" name="SON_GECERLILIK_TAR" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveBtn" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

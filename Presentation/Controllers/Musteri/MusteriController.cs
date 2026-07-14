@@ -3,9 +3,7 @@ using Entity.Concrete;
 using Presentation.Models;
 using System;
 using System.Linq;
-using System.Net;
 using System.Web.Mvc;
-using System.Web.Services.Description;
 
 namespace Presentation.Controllers
 {
@@ -21,8 +19,8 @@ namespace Presentation.Controllers
 
         public ActionResult Index()
         {
-            // Tüm avukatları getir
-            var musteriList = _musteriService.GetAll(); // List<Entity.Concrete.Avukat>
+            // Tüm müsterileri getir
+            var musteriList = _musteriService.GetAll(); // List<Entity.Concrete.Musteri>
 
             // SilinmeTarihi dolu olanları filtrele (yani silinmişleri gösterme)
             var aktifMusteriler = musteriList

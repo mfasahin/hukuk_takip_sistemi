@@ -1,6 +1,5 @@
 ﻿using Business.Abstract;
 using DataAccess.Abstract;
-using DataAccess.Concrete;
 using Entity.Concrete;
 using System.Collections.Generic;
 
@@ -35,7 +34,7 @@ namespace Business.Concrete
 
         public Urun GetById(int id)
         {
-            return _urunDal.Get(a => a.URUN_ID == id);
+            return _urunDal.Get(u => u.URUN_ID == id);
         }
     }
 }

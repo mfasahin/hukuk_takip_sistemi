@@ -1,5 +1,4 @@
-﻿// crud.js
-function initCrud(entityName, fields) {
+﻿function initCrud(entityName, fields) {
     // CREATE
     $(document).on("click", "#createSaveBtn", function () {
         $("#createForm").submit();
