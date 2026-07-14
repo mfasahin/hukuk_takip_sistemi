@@ -1,5 +1,7 @@
 ﻿@model IEnumerable<Presentation.Models.AvukatModel>
-
+@{
+    ViewBag.Title = "Avukat Listesi";
+}
 <!-- Avukat Ekle Butonu -->
 <tr>
     <td colspan="6">
@@ -14,6 +16,7 @@
 </tr>
 
 <!-- Avukat Listesi -->
+<h2>Avukatlar</h2>
 <table class="table">
     <thead>
         <tr>
@@ -21,7 +24,6 @@
                 <!-- Tümünü seç/deselect için -->
                 <input type="checkbox" id="selectAll" />
             </th>
-            <th>ID</th>
             <th>Ad</th>
             <th>Soyad</th>
             <th>TBB Sicil No</th>
@@ -40,7 +42,6 @@
                 <td>
                     <input type="checkbox" class="rowCheckbox" value="@avukat.AVUKAT_ID" />
                 </td>
-                <td>@avukat.AVUKAT_ID</td>
                 <td>@avukat.AVKT_AD</td>
                 <td>@avukat.AVKT_SOYAD</td>
                 <td>@avukat.TBB_SICIL_NO</td>

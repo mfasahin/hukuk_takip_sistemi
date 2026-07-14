@@ -250,6 +250,7 @@
     <Content Include="Views\Avukat\_AvukatModals.cshtml" />
     <Content Include="Views\Urun\Index.cshtml" />
     <Content Include="Views\Urun\_UrunModals.cshtml" />
+    <Content Include="Views\Shared\_Sidebar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Business\Business.csproj">
