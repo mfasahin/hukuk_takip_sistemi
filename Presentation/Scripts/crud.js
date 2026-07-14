@@ -26,17 +26,39 @@
     $(document).on("click", ".updateBtn", function () {
         var id = $(this).data("id");
 
-        // Burada entityName parametresini kullanıyoruz
         $.get('/' + entityName + '/Get' + entityName, { id: id }, function (data) {
             console.log("Gelen data:", data);
+
             fields.forEach(function (f) {
                 if (data[f] !== undefined) {
-                    $("#updateForm #" + f).val(data[f]); // sadece updateForm içindeki inputları doldur
+                    var $input = $("#updateForm #" + f);
+
+                    if ($input.attr("type") === "date" && data[f]) {
+                        var dateVal;
+
+                        // /Date(1783976400000)/ formatını yakala
+                        if (typeof data[f] === "string" && data[f].indexOf("/Date") === 0) {
+                            var timestamp = parseInt(data[f].match(/\d+/)[0], 10);
+                            dateVal = new Date(timestamp);
+                        } else {
+                            dateVal = new Date(data[f]);
+                        }
+
+                        // yyyy-MM-dd formatını lokal saat üzerinden üret
+                        var year = dateVal.getFullYear();
+                        var month = ("0" + (dateVal.getMonth() + 1)).slice(-2);
+                        var day = ("0" + dateVal.getDate()).slice(-2);
+
+                        $input.val(year + "-" + month + "-" + day);
+                    } else {
+                        $input.val(data[f]);
+                    }
                 }
             });
+
+
             $("#updateModal").modal("show");
         });
-
     });
 
     $(document).on("click", "#saveBtn", function () {

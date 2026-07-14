@@ -39,7 +39,12 @@
                 </td>
                 <td>@urun.URUN_AD</td>
                 <td>@urun.URUN_KOD</td>
-                <td>@urun.SON_GECERLILIK_TAR</td>
+                <td>
+                    @(urun.SON_GECERLILIK_TAR.HasValue
+                    ? urun.SON_GECERLILIK_TAR.Value.ToString("dd.MM.yyyy")
+                    : "")
+                </td>
+
 
                 <td>
                     <button class="btn btn-sm btn-warning updateBtn" data-id="@urun.URUN_ID">Güncelle</button>
@@ -57,7 +62,4 @@
     <script>
         initCrud("Urun", ["URUN_ID", "URUN_AD", "URUN_KOD", "SON_GECERLILIK_TAR"]);
     </script>
-
-    @*checkbox kontrolü*@
-    <!--<script src="~/Scripts/checkbox.js"></script>-->
 }

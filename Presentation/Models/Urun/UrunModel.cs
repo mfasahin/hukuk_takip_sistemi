@@ -14,8 +14,9 @@ namespace Presentation.Models
 
         public string URUN_KOD { get; set; } // NOT NULL
 
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? SON_GECERLILIK_TAR { get; set; }
-        
+
         public DateTime? GRS_TAR_ZMN{  get; set; }
 
         public DateTime? GNC_TAR_ZMN{  get; set; }

@@ -22,7 +22,9 @@ namespace Entity.Concrete
         [StringLength(5)]
         public string URUN_KOD { get; set; } // NOT NULL
 
-        public DateTime? SON_GECERLILIK_TAR { get; set; } 
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime? SON_GECERLILIK_TAR { get; set; }
+
 
         public DateTime? GRS_TAR_ZMN { get; set; }
         public int? GRS_KULLANICI_ID { get; set; }
