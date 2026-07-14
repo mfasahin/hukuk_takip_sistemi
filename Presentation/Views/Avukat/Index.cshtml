@@ -1,14 +1,20 @@
 ﻿@model IEnumerable<Presentation.Models.AvukatModel>
 
 
+<!-- Avukat Ekle Butonu -->
 <tr>
     <td colspan="6">
         <div style="display:flex; justify-content:flex-end;">
-            <button type="submit" class="btn btn-success">Avukat Ekle</button>
+            <button type="button" class="btn btn-success"
+                    data-bs-toggle="modal"
+                    data-bs-target="#createModal">
+                Avukat Ekle
+            </button>
         </div>
     </td>
 </tr>
 
+<!-- Avukat Listesi -->
 <table class="table">
     <thead>
         <tr>
@@ -17,6 +23,10 @@
             <th>Soyad</th>
             <th>TBB Sicil No</th>
             <th>Telefon</th>
+            <th>E_POSTA</th>
+            <th>HUKUK BRÜ AD</th>
+            <th>HUKUK BÜRO ADRES</th>
+            <th>OFİS TELEFON NUMARASI</th>
             <th>İşlem</th>
         </tr>
     </thead>
@@ -29,6 +39,10 @@
                 <td>@avukat.AVKT_SOYAD</td>
                 <td>@avukat.TBB_SICIL_NO</td>
                 <td>@avukat.AVKT_TEL_NO</td>
+                <td>@avukat.AVKT_EPOSTA</td>
+                <td>@avukat.HKK_BURO_AD</td>
+                <td>@avukat.HKK_BURO_ADRES</td>
+                <td>@avukat.OFIS_TEL_NO</td>
                 <td>
                     <button class="btn btn-primary updateBtn" data-id="@avukat.AVUKAT_ID">
                         Güncelle
@@ -43,6 +57,44 @@
     </tbody>
 </table>
 
+<!-- Avukat Ekle Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Avukat Ekle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createForm">
+                    <div class="form-group">
+                        <label>Ad</label>
+                        <input type="text" class="form-control" name="AVKT_AD" />
+                    </div>
+                    <div class="form-group">
+                        <label>Soyad</label>
+                        <input type="text" class="form-control" name="AVKT_SOYAD" />
+                    </div>
+                    <div class="form-group">
+                        <label>Sicil No</label>
+                        <input type="text" class="form-control" name="TBB_SICIL_NO" />
+                    </div>
+                    <div class="form-group">
+                        <label>E-posta</label>
+                        <input type="text" class="form-control" name="AVKT_EPOSTA" />
+                    </div>
+                    <div class="form-group">
+                        <label>Telefon</label>
+                        <input type="text" class="form-control" name="AVKT_TEL_NO" />
+                    </div>
+                    <button type="button" id="createSaveBtn" class="btn btn-success">Kaydet</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Avukat Güncelle Modal -->
 <div class="modal fade" id="updateModal" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -69,6 +121,10 @@
                         <label>Telefon</label>
                         <input type="text" class="form-control" id="AVKT_TEL_NO" name="AVKT_TEL_NO" />
                     </div>
+                    <div class="form-group">
+                        <label>e_posta</label>
+                        <input type="text" class="form-control" id="AVKT_EPOSTA" name="AVKT_EPOSTA" />
+                    </div>
                     <button type="button" id="saveBtn" class="btn btn-success">Kaydet</button>
 
                 </form>
@@ -79,8 +135,39 @@
 
 
 @section Scripts {
+
     <script>
 
+        // Yeni avukat ekleme
+        $(document).on("click", "#createSaveBtn", function () {
+            $("#createForm").submit();
+        });
+
+        // Form submit olunca AJAX çalışır
+        $("#createForm").on("submit", function (e) {
+            e.preventDefault(); // Sayfanın yenilenmesini engelle
+
+            $.ajax({
+                url: '/Avukat/Create',      // Controller'daki Create action
+                type: 'POST',
+                data: $(this).serialize(),  // Formdaki inputları gönder
+                success: function (result) {
+                    if (result.success) {
+                        alert("Avukat eklendi!");
+                        $("#createModal").modal("hide"); // Modalı kapat
+                        location.reload();               // Listeyi yenile
+                    } else {
+                        alert("Ekleme başarısız: " + (result.error || ""));
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Hata:", error);
+                    alert("Sunucu hatası oluştu!");
+                }
+            });
+        });
+
+        // Avukat Güncelleme
         $(document).on("click", ".updateBtn", function () {
             var id = $(this).data("id");
 
@@ -90,6 +177,7 @@
                 $("#AVKT_SOYAD").val(data.AVKT_SOYAD);
                 $("#TBB_SICIL_NO").val(data.TBB_SICIL_NO);
                 $("#AVKT_TEL_NO").val(data.AVKT_TEL_NO);
+                $("#AVKT_EPOSTA").val(data.AVKT_EPOSTA);
 
                 $("#updateModal").modal("show");
             });
@@ -124,6 +212,7 @@
             });
         });
 
+        //silme
         $(document).on("click", ".deleteBtn", function () {
             var id = $(this).data("id");
 

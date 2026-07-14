@@ -1,0 +1,33 @@
+﻿<div class="modal fade" id="avukatEkleModal" tabindex="-1" aria-labelledby="avukatEkleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="avukatEkleModalLabel">Avukat Ekle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+
+            <div class="modal-body">
+                @using (Html.BeginForm("Create", "Avukat", FormMethod.Post))
+                {
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.AVKT_AD)
+                        @Html.TextBoxFor(m => m.AVKT_AD, new { @class = "form-control" })
+                    </div>
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.AVKT_SOYAD)
+                        @Html.TextBoxFor(m => m.AVKT_SOYAD, new { @class = "form-control" })
+                    </div>
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.TBB_SICIL_NO)
+                        @Html.TextBoxFor(m => m.TBB_SICIL_NO, new { @class = "form-control" })
+                    </div>
+                    <!-- diğer alanlar -->
+
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>

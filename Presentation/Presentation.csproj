@@ -214,7 +214,6 @@
     <Content Include="Views\Musteri\Index.cshtml" />
     <Content Include="Views\Musteri\Create.cshtml" />
     <Content Include="Views\Avukat\Index.cshtml" />
-    <Content Include="Views\Avukat\Create.cshtml" />
     <Content Include="Views\Musteri\Delete.cshtml" />
     <Content Include="Views\Musteri\Edit.cshtml" />
   </ItemGroup>
@@ -249,6 +248,7 @@
     <Content Include="Content\bootstrap\js\bootstrap.js.map" />
     <Content Include="Content\bootstrap\js\bootstrap.min.js.map" />
     <None Include="packages.config" />
+    <Content Include="Views\Avukat\_AvukatEkleModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Business\Business.csproj">

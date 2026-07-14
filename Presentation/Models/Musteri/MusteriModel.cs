@@ -23,7 +23,13 @@ namespace Presentation.Models
 
         public string MUST_EPOSTA { get; set; }
 
-        public string MUST_TEL_NO { get; set; }
+        public string MUST_TEL_NO{ get; set; }
+
+        public DateTime? GRS_TAR_ZMN { get; set; }
+
+        public DateTime? GNC_TAR_ZMN { get; set; }
+
+        public DateTime? SIL_TAR_ZMN { get; set; } // soft delete için
 
     }
 }
