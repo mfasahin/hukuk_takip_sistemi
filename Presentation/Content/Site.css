@@ -35,7 +35,8 @@ textarea {
 .sidebar-logo img {
     max-width: 100%;
     height: auto;
-    margin-bottom: 20px;
+    display:block;
+    margin: 0 auto;
 }
 
 /* Menü başlığı */
@@ -70,4 +71,9 @@ textarea {
     color: #fff !important;
     font-weight: bold;
     border-radius: 4px;
+}
+
+.nav-link i {
+    margin-right: 8px; /* ikon ile yazı arasında boşluk */
+    font-size: 18px; /* ikon boyutu */
 }

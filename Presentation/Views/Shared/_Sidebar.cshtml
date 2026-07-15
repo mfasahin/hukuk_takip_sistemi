@@ -4,34 +4,31 @@
     </div>
     <ul class="nav flex-column">
         <li class="nav-item">
-            @Html.ActionLink(
-                "Müşteriler", "Index", "Musteri", null,
-                new { @class = ViewContext.RouteData.Values["controller"].ToString() == "Musteri" ? "nav-link active" : "nav-link" }
-            )
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Musteri" ? "active" : "")" href="@Url.Action("Index","Musteri")">
+                <i class="bi bi-people"></i> Müşteriler
+            </a>
         </li>
         <li class="nav-item">
-            @Html.ActionLink(
-                "Ürünler", "Index", "Urun", null,
-                new { @class = ViewContext.RouteData.Values["controller"].ToString() == "Urun" ? "nav-link active" : "nav-link" }
-            )
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Urun" ? "active" : "")" href="@Url.Action("Index","Urun")">
+                <i class="bi bi-box-seam"></i> Ürünler
+            </a>
         </li>
         <li class="nav-item">
-            @Html.ActionLink(
-                "Avukatlar", "Index", "Avukat", null,
-                new { @class = ViewContext.RouteData.Values["controller"].ToString() == "Avukat" ? "nav-link active" : "nav-link" }
-            )
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Avukat" ? "active" : "")" href="@Url.Action("Index","Avukat")">
+                <i class="bi bi-person-badge"></i> Avukatlar
+            </a>
         </li>
         <li class="nav-item">
-            @Html.ActionLink(
-                "İhtar Takip", "Index", "Ihtar", null,
-                new { @class = ViewContext.RouteData.Values["controller"].ToString() == "Ihtar" ? "nav-link active" : "nav-link" }
-            )
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Ihtar" ? "active" : "")" href="@Url.Action("Index","Ihtar")">
+                <i class="bi bi-bell"></i> İhtar Takip
+            </a>
         </li>
         <li class="nav-item">
-            @Html.ActionLink(
-                "İcra Takip", "Index", "Icra", null,
-                new { @class = ViewContext.RouteData.Values["controller"].ToString() == "Icra" ? "nav-link active" : "nav-link" }
-            )
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Icra" ? "active" : "")" href="@Url.Action("Index","Icra")">
+                <i class="bi bi-file-text"></i> İcra Takip
+            </a>
         </li>
     </ul>
+
 </div>
+
