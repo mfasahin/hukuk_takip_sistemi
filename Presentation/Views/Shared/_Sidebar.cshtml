@@ -1,10 +1,37 @@
-﻿<div class="bg-light sidebar vh-100">
-    <h5 class="mt-3">Menü</h5>
+﻿<div class="sidebar vh-100">
+    <div class="sidebar-logo text-center mb-4">
+        <img src="~/Content/images/halkbank_logo_2.jpg" alt="Logo" class="img-fluid" />
+    </div>
     <ul class="nav flex-column">
-        <li class="nav-item">@Html.ActionLink("Müşteriler", "Index", "Musteri", null, new { @class = "nav-link" })</li>
-        <li class="nav-item">@Html.ActionLink("Ürünler", "Index", "Urun", null, new { @class = "nav-link" })</li>
-        <li class="nav-item">@Html.ActionLink("Avukatlar", "Index", "Avukat", null, new { @class = "nav-link" })</li>
-        <li class="nav-item">@Html.ActionLink("İhtar Takip", "Index", "Ihtar", null, new { @class = "nav-link" })</li>
-        <li class="nav-item">@Html.ActionLink("İcra Takip", "Index", "Icra", null, new { @class = "nav-link" })</li>
+        <li class="nav-item">
+            @Html.ActionLink(
+                "Müşteriler", "Index", "Musteri", null,
+                new { @class = ViewContext.RouteData.Values["controller"].ToString() == "Musteri" ? "nav-link active" : "nav-link" }
+            )
+        </li>
+        <li class="nav-item">
+            @Html.ActionLink(
+                "Ürünler", "Index", "Urun", null,
+                new { @class = ViewContext.RouteData.Values["controller"].ToString() == "Urun" ? "nav-link active" : "nav-link" }
+            )
+        </li>
+        <li class="nav-item">
+            @Html.ActionLink(
+                "Avukatlar", "Index", "Avukat", null,
+                new { @class = ViewContext.RouteData.Values["controller"].ToString() == "Avukat" ? "nav-link active" : "nav-link" }
+            )
+        </li>
+        <li class="nav-item">
+            @Html.ActionLink(
+                "İhtar Takip", "Index", "Ihtar", null,
+                new { @class = ViewContext.RouteData.Values["controller"].ToString() == "Ihtar" ? "nav-link active" : "nav-link" }
+            )
+        </li>
+        <li class="nav-item">
+            @Html.ActionLink(
+                "İcra Takip", "Index", "Icra", null,
+                new { @class = ViewContext.RouteData.Values["controller"].ToString() == "Icra" ? "nav-link active" : "nav-link" }
+            )
+        </li>
     </ul>
 </div>

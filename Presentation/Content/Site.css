@@ -1,20 +1,73 @@
-﻿/* Set padding to keep content from hitting the edges */
+﻿/* İçerik alanı */
 .body-content {
     margin-top: 15px;
     padding-left: 15px;
     padding-right: 15px;
+    margin-left: 240px; /* sidebar genişliği kadar sağa kaydır */
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
+/* Bootstrap override */
 .dl-horizontal dt {
     white-space: normal;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
+/* Form elemanları */
 input,
 select,
 textarea {
     max-width: 280px;
+}
+
+/* Sidebar genel görünüm */
+.sidebar {
+    background-color: #01538b; /* ana mavi */
+    color: #fff; /* yazılar beyaz */
+    padding: 20px;
+    min-height: 100vh;
+    width: 220px;
+    position: fixed; /* sola sabitle */
+    top: 0;
+    left: 0;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+}
+
+/* Logo veya başlık */
+.sidebar-logo img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+/* Menü başlığı */
+.sidebar h5 {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #f1c40f; /* altın sarısı */
+}
+
+/* Menü linkleri */
+.sidebar .nav-link {
+    color: #fff;
+    font-size: 18px;
+    padding: 10px 15px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+    /* Hover efekti */
+    .sidebar .nav-link:hover {
+        background-color: #0275d8; /* aynı paletin daha açık tonu */
+        color: #fff;
+        transform: translateX(5px);
+    }
+
+/* Aktif menü */
+.nav-link.active {
+    background-color: #01395f; /* aynı paletin daha koyu tonu */
+    color: #fff !important;
+    font-weight: bold;
+    border-radius: 4px;
 }
