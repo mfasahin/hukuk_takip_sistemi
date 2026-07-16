@@ -13,12 +13,12 @@ namespace Presentation.Models
         public string SubeAd { get; set; }
 
         public int AvukatId { get; set; }
-        public string AvukatAdSoyad { get; set; }
+        public string AvukatAd { get; set; }
 
         public decimal BorcTutar { get; set; } // DECIMAL(12,2)
 
         [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime IhtarTarZmn { get; set; } // NOT NULL
+        public DateTime IhtarTarZmn { get; set; } 
 
         public DateTime? GrsTarZmn { get; set; }
 

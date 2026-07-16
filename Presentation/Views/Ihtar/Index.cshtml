@@ -18,7 +18,6 @@
         <tr>
             <th><input type="checkbox" id="selectAll" /></th>
             <th>Müşteri</th>
-            @*<th>Ürün</th>*@
             <th>Borç Tutarı</th>
             <th>İhtar Tarihi</th>
             <th>Şube</th>
@@ -33,18 +32,11 @@
                 <td>
                     <input type="checkbox" class="rowCheckbox" value="@ihtar.IhtarId" />
                 </td>
-                @*<td>@(ihtar.MUSTERI_AD + " " + ihtar.MUSTERI_SOYAD)</td>*@
-                @*<td>@ihtar.URUN_AD</td>*@
+                <td>@ihtar.MusteriAd</td>
                 <td>@ihtar.BorcTutar</td>
-                <td>
-                    @*@(ihtar.IHTAR_TAR_ZMN.HasValue
-                        ? ihtar.IHTAR_TAR_ZMN.Value.ToString("dd.MM.yyyy")
-                        : "")*@
-                    @ihtar.IhtarTarZmn.ToString("dd.MM.yyyy")
-
-                </td>
+                <td>@ihtar.IhtarTarZmn.ToString("dd.MM.yyyy")</td>
                 <td>@ihtar.SubeAd</td>
-                @*<td>@(ihtar.AvukatAd + " " + ihtar.AvukatSoyad)</td>*@
+                <td>@ihtar.AvukatAd</td>
                 <td>
                     <button class="btn btn-sm btn-warning updateBtn" data-id="@ihtar.IhtarId">Güncelle</button>
                     <button class="btn btn-sm btn-danger deleteBtn" data-id="@ihtar.IhtarId">Sil</button>
@@ -54,20 +46,19 @@
     </tbody>
 </table>
 
-@Html.Partial("_ihtarModals")
+<!-- Partial’a boş bir model gönder -->
+@Html.Partial("_IhtarModals", new Presentation.Models.IhtarModel())
 
 @section Scripts {
     <script src="~/Scripts/crud.js"></script>
     <script>
-        // foreign key alanlarını da ekledik
         initCrud("Ihtar", [
-            "IHTAR_ID",
-            "MUSTERI_ID",
-            "URUN_ID",
-            "BORC_TUTAR",
-            "IHTAR_TAR_ZMN",
-            "SUBE_ID",
-            "AVUKAT_ID"
+            "IhtarId",
+            "MusteriId",
+            "BorcTutar",
+            "IhtarTarZmn",
+            "SubeId",
+            "AvukatId"
         ]);
     </script>
 }

@@ -16,6 +16,8 @@ namespace Presentation
 
             // IoC Container başlat
             DependencyResolverConfig.RegisterDependencies();
+            UnityConfig.RegisterComponents();
+
         }
     }
 }

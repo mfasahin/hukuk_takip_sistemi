@@ -30,6 +30,9 @@ namespace Presentation.App_Start
             container.RegisterType<IIcraService, IcraManager>();
             container.RegisterType<IIcraDal, EfIcraDal>();
 
+            container.RegisterType<ISubeService, SubeManager>();
+            container.RegisterType<ISubeDal, EfSubeDal>();
+
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }

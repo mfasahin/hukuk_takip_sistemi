@@ -87,7 +87,7 @@ namespace Presentation.Controllers
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
-        // GÜNCELLEME İŞLEMİ
+        // GÜNCELLEME 
         [HttpPost]
         public ActionResult Update(UrunModel model)
         {

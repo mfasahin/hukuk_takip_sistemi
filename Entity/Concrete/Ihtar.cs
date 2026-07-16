@@ -39,5 +39,6 @@ namespace Entity.Concrete
         public virtual Musteri Musteri { get; set; }
         public virtual Avukat Avukat { get; set; }
         public virtual Sube Sube { get; set; }
+
     }
 }

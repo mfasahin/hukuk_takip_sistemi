@@ -1,4 +1,6 @@
-﻿<!-- Create Modal -->
+﻿@model Presentation.Models.IhtarModel
+
+<!-- Create Modal -->
 <div class="modal fade" id="createModal">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -11,31 +13,27 @@
                     <div class="container-fluid">
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @*@Html.Label("Müşteri")
-                                @Html.DropDownList("MUSTERI_ID", (SelectList)ViewBag.MusteriList, "Müşteri Seç", new { @class = "form-control" })
-                            </div>
-                            <div class="col-md-4">
-                                @Html.Label("Ürün")
-                                @Html.DropDownList("URUN_ID", (SelectList)ViewBag.UrunList, "Ürün Seç", new { @class = "form-control" })*@
-                            </div>
-                            <div class="col-md-4">
                                 @Html.Label("Borç Tutarı")
-                                <input type="text" id="BORC_TUTAR" name="BORC_TUTAR" class="form-control" />
+                                <input type="text" id="BorcTutar" name="BorcTutar" class="form-control" />
+                            </div>
+                            <div class="col-md-4">
+                                @Html.Label("İhtar Tarihi")
+                                <input type="date" id="IhtarTarZmn" name="IhtarTarZmn" class="form-control" />
+                            </div>
+                            <div class="col-md-4">
+                                @Html.Label("Müşteri")
+                                @Html.DropDownList("MusteriId", ViewBag.MusteriList as List<SelectListItem>, "Müşteri Seç", new { @class = "form-control" })
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @Html.Label("İhtar Tarihi")
-                                <input type="date" id="IHTAR_TAR_ZMN" name="IHTAR_TAR_ZMN" class="form-control" />
-                            </div>
-                            @*<div class="col-md-4">
                                 @Html.Label("Şube")
-                                @Html.DropDownList("SUBE_ID", (SelectList)ViewBag.SubeList, "Şube Seç", new { @class = "form-control" })
+                                @Html.DropDownList("SubeId", ViewBag.SubeList as List<SelectListItem>, "Şube Seç", new { @class = "form-control" })
                             </div>
                             <div class="col-md-4">
                                 @Html.Label("Avukat")
-                                @Html.DropDownList("AVUKAT_ID", (SelectList)ViewBag.AvukatList, "Avukat Seç", new { @class = "form-control" })*@
+                                @Html.DropDownList("AvukatId", ViewBag.AvukatList as List<SelectListItem>, "Avukat Seç", new { @class = "form-control" })
                             </div>
                         </div>
                     </div>
@@ -48,13 +46,12 @@
     </div>
 </div>
 
-
 <!-- Update Modal -->
 <div class="modal fade" id="updateModal">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form id="updateForm">
-                <input type="hidden" id="IHTAR_ID" name="IHTAR_ID" />
+                <input type="hidden" id="IhtarId" name="IhtarId" />
                 <div class="modal-header">
                     <h5 class="modal-title">İhtar Bilgileri</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -63,31 +60,36 @@
                     <div class="container-fluid">
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @*@Html.Label("Müşteri")
-                                @Html.DropDownList("MUSTERI_ID", (SelectList)ViewBag.MusteriList, "Müşteri Seç", new { @class = "form-control" })*@
-                            </div>
-                            <div class="col-md-4">
-                                @*@Html.Label("Ürün")
-                                @Html.DropDownList("URUN_ID", (SelectList)ViewBag.UrunList, "Ürün Seç", new { @class = "form-control" })*@
-                            </div>
-                            <div class="col-md-4">
                                 @Html.Label("Borç Tutarı")
-                                <input type="text" id="BORC_TUTAR" name="BORC_TUTAR" class="form-control" />
+                                <input type="text" id="BorcTutar" name="BorcTutar" class="form-control" value="@Model.BorcTutar" />
+                            </div>
+                            <div class="col-md-4">
+                                @Html.Label("İhtar Tarihi")
+                                <input type="date" id="IhtarTarZmn" name="IhtarTarZmn" class="form-control" value="@Model.IhtarTarZmn.ToString("yyyy-MM-dd")" />
+                            </div>
+                            <div class="col-md-4">
+                                @Html.LabelFor(m => m.MusteriId, "Müşteri")
+                                @Html.DropDownListFor(m => m.MusteriId,
+                                    ViewBag.MusteriList as IEnumerable<SelectListItem>,
+                                    "Müşteri Seç",
+                                    new { @class = "form-control" })
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @Html.Label("İhtar Tarihi")
-                                <input type="date" id="IHTAR_TAR_ZMN" name="IHTAR_TAR_ZMN" class="form-control" />
+                                @Html.LabelFor(m => m.SubeId, "Şube")
+                                @Html.DropDownListFor(m => m.SubeId,
+                                    ViewBag.SubeList as IEnumerable<SelectListItem>,
+                                    "Şube Seç",
+                                    new { @class = "form-control" })
                             </div>
                             <div class="col-md-4">
-                                @*@Html.Label("Şube")
-                                @Html.DropDownList("SUBE_ID", (SelectList)ViewBag.SubeList, "Şube Seç", new { @class = "form-control" })*@
-                            </div>
-                            <div class="col-md-4">
-                                @*@Html.Label("Avukat")
-                                @Html.DropDownList("AVUKAT_ID", (SelectList)ViewBag.AvukatList, "Avukat Seç", new { @class = "form-control" })*@
+                                @Html.LabelFor(m => m.AvukatId, "Avukat")
+                                @Html.DropDownListFor(m => m.AvukatId,
+                                    ViewBag.AvukatList as IEnumerable<SelectListItem>,
+                                    "Avukat Seç",
+                                    new { @class = "form-control" })
                             </div>
                         </div>
                     </div>
@@ -99,4 +101,3 @@
         </div>
     </div>
 </div>
-

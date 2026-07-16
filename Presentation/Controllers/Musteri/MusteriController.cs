@@ -43,20 +43,20 @@ namespace Presentation.Controllers
 
             return View(model); // IEnumerable<AvukatModel> gönderiyoruz
         }
-
         [HttpPost]
         public ActionResult Create(MusteriModel model)
         {
             if (!ModelState.IsValid)
             {
-                return Json(new { success = false, error = "Geçersiz model" });
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                              .Select(e => e.ErrorMessage);
+                return Json(new { success = false, error = string.Join("; ", errors) });
             }
 
             try
             {
                 var musteri = new Musteri
                 {
-                    MUSTERI_ID = model.MusteriId,
                     MUST_NO = model.MustNo,
                     MUST_AD = model.MustAd,
                     MUST_SOYAD = model.MustSoyad,
@@ -70,6 +70,13 @@ namespace Presentation.Controllers
                 _musteriService.Add(musteri);
 
                 return Json(new { success = true });
+            }
+            catch (System.Data.Entity.Validation.DbEntityValidationException ex)
+            {
+                var errors = ex.EntityValidationErrors
+                    .SelectMany(e => e.ValidationErrors)
+                    .Select(e => $"Property: {e.PropertyName}, Error: {e.ErrorMessage}");
+                return Json(new { success = false, error = string.Join("; ", errors) });
             }
             catch (Exception ex)
             {
@@ -99,8 +106,8 @@ namespace Presentation.Controllers
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
-        
-        // GÜNCELLEME İŞLEMİ
+
+        // GÜNCELLEME 
         [HttpPost]
         public ActionResult Update(MusteriModel model)
         {
