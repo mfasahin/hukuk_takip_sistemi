@@ -30,15 +30,15 @@ namespace Presentation.Controllers
             // Entity → ViewModel dönüşümü
             var model = aktifMusteriler.Select(m => new Presentation.Models.MusteriModel
             {
-                MUSTERI_ID = m.MUSTERI_ID,
-                MUST_NO = m.MUST_NO,
-                MUST_AD = m.MUST_AD,
-                MUST_SOYAD = m.MUST_SOYAD,
-                MUST_KIMLIK_NO = m.MUST_KIMLIK_NO,
-                MUST_VKNO = m.MUST_VKNO,
-                MUST_EPOSTA = m.MUST_EPOSTA,
-                MUST_TEL_NO = m.MUST_TEL_NO,
-                SIL_TAR_ZMN = m.SIL_TAR_ZMN
+                MusteriId = m.MUSTERI_ID,
+                MustNo = m.MUST_NO,
+                MustAd = m.MUST_AD,
+                MustSoyad = m.MUST_SOYAD,
+                MustKimlikNo = m.MUST_KIMLIK_NO,
+                MustVknNo = m.MUST_VKN_NO,
+                MustEposta = m.MUST_EPOSTA,
+                MustTelNo = m.MUST_TEL_NO,
+                SilTarZmn = m.SIL_TAR_ZMN
             }).ToList();
 
             return View(model); // IEnumerable<AvukatModel> gönderiyoruz
@@ -56,14 +56,14 @@ namespace Presentation.Controllers
             {
                 var musteri = new Musteri
                 {
-                    MUSTERI_ID = model.MUSTERI_ID,
-                    MUST_NO = model.MUST_NO,
-                    MUST_AD = model. MUST_AD,
-                    MUST_SOYAD = model.MUST_SOYAD,
-                    MUST_KIMLIK_NO = model.MUST_KIMLIK_NO,
-                    MUST_VKNO = model.MUST_VKNO,
-                    MUST_EPOSTA = model.MUST_EPOSTA,
-                    MUST_TEL_NO = model.MUST_EPOSTA,
+                    MUSTERI_ID = model.MusteriId,
+                    MUST_NO = model.MustNo,
+                    MUST_AD = model.MustAd,
+                    MUST_SOYAD = model.MustSoyad,
+                    MUST_KIMLIK_NO = model.MustKimlikNo,
+                    MUST_VKN_NO = model.MustVknNo,
+                    MUST_EPOSTA = model.MustEposta,
+                    MUST_TEL_NO = model.MustTelNo,
                     GRS_TAR_ZMN = DateTime.Now
                 };
 
@@ -86,14 +86,14 @@ namespace Presentation.Controllers
 
             var model = new MusteriModel
             {
-                MUSTERI_ID = musteri.MUSTERI_ID,
-                MUST_NO = musteri.MUST_NO,
-                MUST_AD = musteri.MUST_AD,
-                MUST_SOYAD = musteri.MUST_SOYAD,
-                MUST_KIMLIK_NO = musteri.MUST_KIMLIK_NO,
-                MUST_VKNO = musteri.MUST_VKNO,
-                MUST_EPOSTA = musteri.MUST_EPOSTA,
-                MUST_TEL_NO = musteri.MUST_TEL_NO,
+                MusteriId = musteri.MUSTERI_ID,
+                MustNo = musteri.MUST_NO,
+                MustAd = musteri.MUST_AD,
+                MustSoyad = musteri.MUST_SOYAD,
+                MustKimlikNo = musteri.MUST_KIMLIK_NO,
+                MustVknNo = musteri.MUST_VKN_NO,
+                MustEposta = musteri.MUST_EPOSTA,
+                MustTelNo = musteri.MUST_TEL_NO,
                 //GNC_TAR_ZMN = musteri.GNC_TAR_ZMN
             };
 
@@ -109,18 +109,17 @@ namespace Presentation.Controllers
 
             try
             {
-                var entity = _musteriService.GetById(model.MUSTERI_ID);
+                var entity = _musteriService.GetById(model.MusteriId);
                 if (entity == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
 
-                entity.MUST_NO = model.MUST_NO;
-                entity.MUST_AD = model.MUST_AD;
-                entity.MUST_SOYAD = model.MUST_SOYAD;
-                entity.MUST_KIMLIK_NO= model.MUST_KIMLIK_NO;
-                entity.MUST_VKNO = model.MUST_VKNO;
-                entity.MUST_EPOSTA = model.MUST_EPOSTA;
-                entity.MUST_TEL_NO = model.MUST_TEL_NO;
-                entity.MUST_VKNO = model.MUST_VKNO;
+                entity.MUST_NO = model.MustNo;
+                entity.MUST_AD = model.MustAd;
+                entity.MUST_SOYAD = model.MustSoyad;
+                entity.MUST_KIMLIK_NO= model.MustKimlikNo;
+                entity.MUST_VKN_NO = model.MustVknNo;
+                entity.MUST_EPOSTA = model.MustEposta;
+                entity.MUST_TEL_NO = model.MustTelNo;
                 entity.GNC_TAR_ZMN = DateTime.Now;
                 
                 _musteriService.Update(entity);

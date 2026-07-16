@@ -8,8 +8,8 @@ namespace Presentation.Models
 {
     public class IcraMahkemeModel
     {
-        public int MAHKEME_ID { get; set; } // PK
+        public int MahkemeId { get; set; } // PK
         
-        public string MAHKEME_AD { get; set; } // NOT NULL
+        public string MahkemeAd { get; set; } // NOT NULL
     }
 }

@@ -42,8 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\IAvukatService.cs" />
-    <Compile Include="Abstract\IcraService.cs" />
-    <Compile Include="Abstract\IhtarService.cs" />
+    <Compile Include="Abstract\IIcraService.cs" />
+    <Compile Include="Abstract\IIhtarService.cs" />
     <Compile Include="Abstract\IMusteriService.cs" />
     <Compile Include="Abstract\IUrunService.cs" />
     <Compile Include="Concrete\AvukatManager.cs" />

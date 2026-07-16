@@ -4,7 +4,7 @@ using Entity.Concrete;
 
 namespace DataAccess.Concrete
 {
-    public class EfIcraDal : EfEntityRepositoryBase<Icra, AppDbContext>, IcraDal
+    public class EfIcraDal : EfEntityRepositoryBase<Icra, AppDbContext>, IIcraDal
     {
         // Icra'ya özel sorgular gerekiyorsa buraya eklenir
     }

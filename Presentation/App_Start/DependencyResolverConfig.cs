@@ -24,6 +24,12 @@ namespace Presentation.App_Start
             container.RegisterType<IUrunService, UrunManager>();
             container.RegisterType<IUrunDal, EfUrunDal>();
 
+            container.RegisterType<IIhtarService, IhtarManager>();
+            container.RegisterType<IIhtarDal, EfIhtarDal>();
+
+            container.RegisterType<IIcraService, IcraManager>();
+            container.RegisterType<IIcraDal, EfIcraDal>();
+
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }

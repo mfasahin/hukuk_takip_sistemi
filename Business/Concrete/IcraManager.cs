@@ -1,19 +1,15 @@
 ﻿using Business.Abstract;
 using DataAccess.Abstract;
 using Entity.Concrete;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
-    public  class IcraManager : IcraService
+    public  class IcraManager : IIcraService
     {
-        private IcraDal _icraDal;
+        private readonly IIcraDal _icraDal;
 
-        public IcraManager(IcraDal icraDal)
+        public IcraManager(IIcraDal icraDal)
         {
             _icraDal = icraDal;
         }
@@ -23,19 +19,19 @@ namespace Business.Concrete
             return _icraDal.GetAll();
         }
 
-        public void Add(Icra ıcra)
+        public void Add(Icra icra)
         {
-            _icraDal.Add(ıcra);
+            _icraDal.Add(icra);
         }
 
-        public void Update(Icra ıcra)
+        public void Update(Icra icra)
         {
-            _icraDal.Update(ıcra);
+            _icraDal.Update(icra);
         }
 
-        public void Delete(Icra ıcra)
+        public void Delete(Icra icra)
         {
-            _icraDal.Delete(ıcra);
+            _icraDal.Delete(icra);
         }
 
         public Icra GetById(int id)

@@ -7,7 +7,7 @@ namespace Business.Concrete
 {
     public class AvukatManager : IAvukatService
     {
-        private IAvukatDal _avukatDal;
+        private readonly IAvukatDal _avukatDal;
 
         public AvukatManager(IAvukatDal avukatDal)
         {

@@ -30,7 +30,7 @@
             <th>kimlik no</th>
             <th>vergi kimlik no</th>
             <th>e_posta</th>
-            <th>tel_no</th>
+            <th>tel_no</th>            
             <th>İşlem</th>
         </tr>
     </thead>
@@ -39,18 +39,18 @@
         {
             <tr>
                 <td>
-                    <input type="checkbox" class="rowCheckbox" value="@musteri.MUSTERI_ID" />
+                    <input type="checkbox" class="rowCheckbox" value="@musteri.MusteriId" />
                 </td>
-                <td>@musteri.MUST_NO</td>
-                <td>@musteri.MUST_AD</td>
-                <td>@musteri.MUST_SOYAD</td>
-                <td>@musteri.MUST_KIMLIK_NO</td>
-                <td>@musteri.MUST_VKNO</td>
-                <td>@musteri.MUST_EPOSTA</td>
-                <td>@musteri.MUST_TEL_NO</td>
+                <td>@musteri.MustNo</td>
+                <td>@musteri.MustAd</td>
+                <td>@musteri.MustSoyad</td>
+                <td>@musteri.MustKimlikNo</td>
+                <td>@musteri.MustVknNo</td>
+                <td>@musteri.MustEposta</td>
+                <td>@musteri.MustTelNo</td>
                 <td>
-                    <button class="btn btn-sm btn-warning updateBtn" data-id="@musteri.MUSTERI_ID">Güncelle</button>
-                    <button class="btn btn-sm btn-danger deleteBtn" data-id="@musteri.MUSTERI_ID">Sil</button>
+                    <button class="btn btn-sm btn-warning updateBtn" data-id="@musteri.MusteriId">Güncelle</button>
+                    <button class="btn btn-sm btn-danger deleteBtn" data-id="@musteri.MusteriId">Sil</button>
                 </td>
             </tr>
         }

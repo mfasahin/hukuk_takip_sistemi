@@ -1,0 +1,73 @@
+﻿@model IEnumerable<Presentation.Models.IhtarModel>
+@{
+    ViewBag.Title = "İhtar Listesi";
+}
+
+<!-- İhtar Ekle Butonu -->
+<div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+    <button type="button" class="btn btn-success"
+            data-bs-toggle="modal"
+            data-bs-target="#createModal">
+        İhtar Ekle
+    </button>
+</div>
+
+<h2>İhtarlar</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th><input type="checkbox" id="selectAll" /></th>
+            <th>Müşteri</th>
+            @*<th>Ürün</th>*@
+            <th>Borç Tutarı</th>
+            <th>İhtar Tarihi</th>
+            <th>Şube</th>
+            <th>Avukat</th>
+            <th>İşlem</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ihtar in Model)
+        {
+            <tr>
+                <td>
+                    <input type="checkbox" class="rowCheckbox" value="@ihtar.IhtarId" />
+                </td>
+                @*<td>@(ihtar.MUSTERI_AD + " " + ihtar.MUSTERI_SOYAD)</td>*@
+                @*<td>@ihtar.URUN_AD</td>*@
+                <td>@ihtar.BorcTutar</td>
+                <td>
+                    @*@(ihtar.IHTAR_TAR_ZMN.HasValue
+                        ? ihtar.IHTAR_TAR_ZMN.Value.ToString("dd.MM.yyyy")
+                        : "")*@
+                    @ihtar.IhtarTarZmn.ToString("dd.MM.yyyy")
+
+                </td>
+                <td>@ihtar.SubeAd</td>
+                @*<td>@(ihtar.AvukatAd + " " + ihtar.AvukatSoyad)</td>*@
+                <td>
+                    <button class="btn btn-sm btn-warning updateBtn" data-id="@ihtar.IhtarId">Güncelle</button>
+                    <button class="btn btn-sm btn-danger deleteBtn" data-id="@ihtar.IhtarId">Sil</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@Html.Partial("_ihtarModals")
+
+@section Scripts {
+    <script src="~/Scripts/crud.js"></script>
+    <script>
+        // foreign key alanlarını da ekledik
+        initCrud("Ihtar", [
+            "IHTAR_ID",
+            "MUSTERI_ID",
+            "URUN_ID",
+            "BORC_TUTAR",
+            "IHTAR_TAR_ZMN",
+            "SUBE_ID",
+            "AVUKAT_ID"
+        ]);
+    </script>
+}

@@ -30,11 +30,11 @@ namespace Presentation.Controllers
             // Entity → ViewModel dönüşümü
             var model = aktifUrunler.Select(u => new Presentation.Models.UrunModel
             {
-                URUN_ID = u.URUN_ID,
-                URUN_AD = u.URUN_AD,
-                URUN_KOD = u.URUN_KOD,
-                SON_GECERLILIK_TAR = u.SON_GECERLILIK_TAR,
-                SIL_TAR_ZMN = u.SIL_TAR_ZMN
+                UrunId = u.URUN_ID,
+                UrunAd = u.URUN_AD,
+                UrunKod = u.URUN_KOD,
+                SonGecerlilikTar = u.SON_GECERLILIK_TAR,
+                SilTarZmn = u.SIL_TAR_ZMN
             }).ToList();
 
             return View(model); // IEnumerable<UrunModel> gönderiyoruz
@@ -52,10 +52,10 @@ namespace Presentation.Controllers
             {
                 var urun = new Urun
                 {
-                    URUN_ID = model.URUN_ID,
-                    URUN_AD = model.URUN_AD,
-                    URUN_KOD = model.URUN_KOD,
-                    SON_GECERLILIK_TAR = model.SON_GECERLILIK_TAR,
+                    URUN_ID = model.UrunId,
+                    URUN_AD = model.UrunAd,
+                    URUN_KOD = model.UrunKod,
+                    SON_GECERLILIK_TAR = model.SonGecerlilikTar,
                     GRS_TAR_ZMN = DateTime.Now
                 };
 
@@ -69,7 +69,6 @@ namespace Presentation.Controllers
             }
         }
 
-
         [HttpGet]
         public ActionResult GetUrun(int id)
         {
@@ -78,10 +77,10 @@ namespace Presentation.Controllers
 
             var model = new UrunModel
             {
-                URUN_ID = urun.URUN_ID,
-                URUN_AD = urun.URUN_AD,
-                URUN_KOD = urun.URUN_KOD,
-                SON_GECERLILIK_TAR = urun.SON_GECERLILIK_TAR,
+                UrunId = urun.URUN_ID,
+                UrunAd = urun.URUN_AD,
+                UrunKod = urun.URUN_KOD,
+                SonGecerlilikTar = urun.SON_GECERLILIK_TAR,
                 //GNC_TAR_ZMN = musteri.GNC_TAR_ZMN
             };
 
@@ -97,13 +96,13 @@ namespace Presentation.Controllers
 
             try
             {
-                var entity = _urunService.GetById(model.URUN_ID);
+                var entity = _urunService.GetById(model.UrunId);
                 if (entity == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
 
-                entity.URUN_AD = model.URUN_AD;
-                entity.URUN_KOD = model.URUN_KOD;
-                entity.SON_GECERLILIK_TAR = model.SON_GECERLILIK_TAR;
+                entity.URUN_AD = model.UrunAd;
+                entity.URUN_KOD = model.UrunKod;
+                entity.SON_GECERLILIK_TAR = model.SonGecerlilikTar;
                 entity.GNC_TAR_ZMN = DateTime.Now;
 
                 _urunService.Update(entity);
@@ -138,6 +137,5 @@ namespace Presentation.Controllers
                 return Json(new { success = false, error = ex.Message });
             }
         }
-
     }
 }

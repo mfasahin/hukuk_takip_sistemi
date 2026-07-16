@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -48,5 +49,7 @@ namespace Entity.Concrete
 
         public DateTime? SIL_TAR_ZMN { get; set; }
         public int? SIL_KULLANICI_ID { get; set; }
+
+        public virtual ICollection<Ihtar> Ihtars { get; set; }
     }
 }

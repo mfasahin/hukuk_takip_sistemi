@@ -36,8 +36,8 @@ namespace Entity.Concrete
         public int? SIL_KULLANICI_ID { get; set; }
 
         // Navigation Properties
-        public Musteri Musteri { get; set; }
-        public Avukat Avukat { get; set; }
-        public Sube Sube { get; set; }
+        public virtual Musteri Musteri { get; set; }
+        public virtual Avukat Avukat { get; set; }
+        public virtual Sube Sube { get; set; }
     }
 }

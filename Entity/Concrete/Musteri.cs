@@ -11,7 +11,7 @@ namespace Entity.Concrete
     [Table("MUSTERI", Schema = "dbo")]
     public class Musteri
     {
-        [Key] 
+        [Key]
         public int MUSTERI_ID { get; set; }   // PK
 
         [Required]
@@ -28,9 +28,8 @@ namespace Entity.Concrete
         [StringLength(11)]
         public string MUST_KIMLIK_NO { get; set; }
 
-        [Column("MUST_VKNO")]
         [StringLength(10)]
-        public string MUST_VKNO { get; set; } //düzeltildi
+        public string MUST_VKN_NO { get; set; } 
 
         [StringLength(50)]
         public string MUST_EPOSTA { get; set; }
@@ -46,5 +45,7 @@ namespace Entity.Concrete
 
         public DateTime? SIL_TAR_ZMN { get; set; }
         public int? SIL_KULLANICI_ID { get; set; }
+
+        public virtual ICollection<Ihtar> Ihtars { get; set; }
     }
 }

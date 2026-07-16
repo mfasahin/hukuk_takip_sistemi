@@ -5,39 +5,43 @@ using System.Collections.Generic;
 
 namespace Business.Concrete
 {
-    public class IhtarManager : IhtarService
+    public class IhtarManager : IIhtarService
     {
-        private IhtarDal _ıhtarDal;
+        private readonly IIhtarDal _ihtarDal;
 
-        public IhtarManager(IhtarDal ıhtarDal)
+        public IhtarManager(IIhtarDal ihtarDal)
         {
-            _ıhtarDal = ıhtarDal;
+            _ihtarDal = ihtarDal;
         }
 
         public List<Ihtar> GetAll()
         {
-            return _ıhtarDal.GetAll();
+            return _ihtarDal.GetAll();
         }
 
-        public void Add(Ihtar ıhtar)
+        public void Add(Ihtar ihtar)
         {
-            _ıhtarDal.Add(ıhtar);
+            _ihtarDal.Add(ihtar);
         }
 
-        public void Update(Ihtar ıhtar)
+        public void Update(Ihtar ihtar)
         {
-            _ıhtarDal.Update(ıhtar);
+            _ihtarDal.Update(ihtar);
         }
 
-        public void Delete(Ihtar ıhtar)
+        public void Delete(Ihtar ihtar)
         {
-            _ıhtarDal.Delete(ıhtar);
+            _ihtarDal.Delete(ihtar);
         }
 
         public Ihtar GetById(int id)
         {
-            return _ıhtarDal.Get(Ihtar => Ihtar.IHTAR_ID == id);
+            return _ihtarDal.Get(Ihtar => Ihtar.IHTAR_ID == id);
         }
 
+        public List<Ihtar> GetIhtarWithRelations()
+        {
+            return _ihtarDal.GetIhtarWithRelations();
+        }
     }
 }

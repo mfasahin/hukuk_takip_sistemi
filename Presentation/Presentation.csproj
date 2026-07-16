@@ -155,20 +155,21 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="Controllers\Avukat\AvukatController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\Ihtar\IhtarController.cs" />
     <Compile Include="Controllers\Musteri\MusteriController.cs" />
     <Compile Include="Controllers\Urun\UrunController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Avukat\AvukatModel.cs" />
-    <Compile Include="Models\IcraMahkeme\IcraMahkemeModel.cs" />
-    <Compile Include="Models\Icra\IcraModel.cs" />
-    <Compile Include="Models\Ihtar\IhtarModel.cs" />
-    <Compile Include="Models\IhtarUrun\IhtarUrunModel.cs" />
-    <Compile Include="Models\Kullanici\KullaniciModel.cs" />
-    <Compile Include="Models\Musteri\MusteriModel.cs" />
-    <Compile Include="Models\Sube\SubeModel.cs" />
-    <Compile Include="Models\Urun\UrunModel.cs" />
+    <Compile Include="Models\AvukatModel\AvukatModel.cs" />
+    <Compile Include="Models\IcraMahkemeModel\IcraMahkemeModel.cs" />
+    <Compile Include="Models\IcraModel\IcraModel.cs" />
+    <Compile Include="Models\IhtarModel\IhtarModel.cs" />
+    <Compile Include="Models\IhtarUrunModel\IhtarUrunModel.cs" />
+    <Compile Include="Models\KullaniciModel\KullaniciModel.cs" />
+    <Compile Include="Models\MusteriModel\MusteriModel.cs" />
+    <Compile Include="Models\SubeModel\SubeModel.cs" />
+    <Compile Include="Models\UrunModel\UrunModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -221,7 +222,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Controllers\Icra\" />
-    <Folder Include="Controllers\Ihtar\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap\css\bootstrap-grid.css.map" />
@@ -252,6 +252,8 @@
     <Content Include="Views\Urun\Index.cshtml" />
     <Content Include="Views\Urun\_UrunModals.cshtml" />
     <Content Include="Views\Shared\_Sidebar.cshtml" />
+    <Content Include="Views\Ihtar\Index.cshtml" />
+    <Content Include="Views\Ihtar\_IhtarModals.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Business\Business.csproj">

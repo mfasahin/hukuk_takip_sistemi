@@ -1,0 +1,102 @@
+﻿<!-- Create Modal -->
+<div class="modal fade" id="createModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="createForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">İhtar Bilgileri</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                @*@Html.Label("Müşteri")
+                                @Html.DropDownList("MUSTERI_ID", (SelectList)ViewBag.MusteriList, "Müşteri Seç", new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-4">
+                                @Html.Label("Ürün")
+                                @Html.DropDownList("URUN_ID", (SelectList)ViewBag.UrunList, "Ürün Seç", new { @class = "form-control" })*@
+                            </div>
+                            <div class="col-md-4">
+                                @Html.Label("Borç Tutarı")
+                                <input type="text" id="BORC_TUTAR" name="BORC_TUTAR" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                @Html.Label("İhtar Tarihi")
+                                <input type="date" id="IHTAR_TAR_ZMN" name="IHTAR_TAR_ZMN" class="form-control" />
+                            </div>
+                            @*<div class="col-md-4">
+                                @Html.Label("Şube")
+                                @Html.DropDownList("SUBE_ID", (SelectList)ViewBag.SubeList, "Şube Seç", new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-4">
+                                @Html.Label("Avukat")
+                                @Html.DropDownList("AVUKAT_ID", (SelectList)ViewBag.AvukatList, "Avukat Seç", new { @class = "form-control" })*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="createSaveBtn" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Update Modal -->
+<div class="modal fade" id="updateModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="updateForm">
+                <input type="hidden" id="IHTAR_ID" name="IHTAR_ID" />
+                <div class="modal-header">
+                    <h5 class="modal-title">İhtar Bilgileri</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                @*@Html.Label("Müşteri")
+                                @Html.DropDownList("MUSTERI_ID", (SelectList)ViewBag.MusteriList, "Müşteri Seç", new { @class = "form-control" })*@
+                            </div>
+                            <div class="col-md-4">
+                                @*@Html.Label("Ürün")
+                                @Html.DropDownList("URUN_ID", (SelectList)ViewBag.UrunList, "Ürün Seç", new { @class = "form-control" })*@
+                            </div>
+                            <div class="col-md-4">
+                                @Html.Label("Borç Tutarı")
+                                <input type="text" id="BORC_TUTAR" name="BORC_TUTAR" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                @Html.Label("İhtar Tarihi")
+                                <input type="date" id="IHTAR_TAR_ZMN" name="IHTAR_TAR_ZMN" class="form-control" />
+                            </div>
+                            <div class="col-md-4">
+                                @*@Html.Label("Şube")
+                                @Html.DropDownList("SUBE_ID", (SelectList)ViewBag.SubeList, "Şube Seç", new { @class = "form-control" })*@
+                            </div>
+                            <div class="col-md-4">
+                                @*@Html.Label("Avukat")
+                                @Html.DropDownList("AVUKAT_ID", (SelectList)ViewBag.AvukatList, "Avukat Seç", new { @class = "form-control" })*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveBtn" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

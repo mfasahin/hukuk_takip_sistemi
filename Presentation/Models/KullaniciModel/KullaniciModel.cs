@@ -8,10 +8,10 @@ namespace Presentation.Models
 {
     public class KullaniciModel
     {
-        public int KULLANICI_ID { get; set; } //PK
+        public int KullaniciId { get; set; } //PK
 
-        public string KULLANICI_AD { get; set; } // NOT NULL
+        public string KullaniciAd { get; set; } // NOT NULL
 
-        public string SIFRE { get; set; } // NOT NULL
+        public string Sifre { get; set; } // NOT NULL
     }
 }

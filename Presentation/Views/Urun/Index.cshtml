@@ -35,20 +35,20 @@
         {
             <tr>
                 <td>
-                    <input type="checkbox" class="rowCheckbox" value="@urun.URUN_ID" />
+                    <input type="checkbox" class="rowCheckbox" value="@urun.UrunId" />
                 </td>
-                <td>@urun.URUN_AD</td>
-                <td>@urun.URUN_KOD</td>
+                <td>@urun.UrunAd</td>
+                <td>@urun.UrunKod</td>
                 <td>
-                    @(urun.SON_GECERLILIK_TAR.HasValue
-                    ? urun.SON_GECERLILIK_TAR.Value.ToString("dd.MM.yyyy")
+                    @(urun.SonGecerlilikTar.HasValue
+                    ? urun.SonGecerlilikTar.Value.ToString("dd.MM.yyyy")
                     : "")
                 </td>
 
 
                 <td>
-                    <button class="btn btn-sm btn-warning updateBtn" data-id="@urun.URUN_ID">Güncelle</button>
-                    <button class="btn btn-sm btn-danger deleteBtn" data-id="@urun.URUN_ID">Sil</button>
+                    <button class="btn btn-sm btn-warning updateBtn" data-id="@urun.UrunId">Güncelle</button>
+                    <button class="btn btn-sm btn-danger deleteBtn" data-id="@urun.UrunId">Sil</button>
                 </td>
             </tr>
         }

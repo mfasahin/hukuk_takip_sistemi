@@ -7,7 +7,7 @@ namespace Business.Concrete
 {
     public class UrunManager : IUrunService
     {
-        private IUrunDal _urunDal;
+        private readonly IUrunDal _urunDal;
         public UrunManager(IUrunDal urunDal)
         {
             _urunDal = urunDal;

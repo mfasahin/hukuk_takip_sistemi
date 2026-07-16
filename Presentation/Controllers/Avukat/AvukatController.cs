@@ -30,16 +30,16 @@ namespace Presentation.Controllers
             // Entity → ViewModel dönüşümü
             var model = aktifAvukatlar.Select(a => new Presentation.Models.AvukatModel
             {
-                AVUKAT_ID = a.AVUKAT_ID,
-                AVKT_AD = a.AVKT_AD,
-                AVKT_SOYAD = a.AVKT_SOYAD,
-                TBB_SICIL_NO = a.TBB_SICIL_NO,
-                AVKT_EPOSTA = a.AVKT_EPOSTA,
-                AVKT_TEL_NO = a.AVKT_TEL_NO,
-                HKK_BURO_AD = a.HKK_BURO_AD,
-                HKK_BURO_ADRES = a.HKK_BURO_ADRES,
-                OFIS_TEL_NO = a.OFIS_TEL_NO,
-                SIL_TAR_ZMN = a.SIL_TAR_ZMN
+                AvukatId = a.AVUKAT_ID,
+                AvktAd = a.AVKT_AD,
+                AvktSoyad = a.AVKT_SOYAD,
+                TbbSicilNo = a.TBB_SICIL_NO,
+                AvktEposta = a.AVKT_EPOSTA,
+                AvktTelNo = a.AVKT_TEL_NO,
+                HkkBuroAd = a.HKK_BURO_AD,
+                HkkBuroAdres = a.HKK_BURO_ADRES,
+                OfisTelNo = a.OFIS_TEL_NO,
+                SilTarZmn = a.SIL_TAR_ZMN
             }).ToList();
 
             return View(model); // IEnumerable<AvukatModel> gönderiyoruz
@@ -56,15 +56,15 @@ namespace Presentation.Controllers
             {
                 var avukat = new Avukat
                 {
-                    AVUKAT_ID = model.AVUKAT_ID,
-                    AVKT_AD = model.AVKT_AD,
-                    AVKT_SOYAD = model.AVKT_SOYAD,
-                    TBB_SICIL_NO = model.TBB_SICIL_NO,
-                    AVKT_EPOSTA = model.AVKT_EPOSTA,
-                    AVKT_TEL_NO = model.AVKT_TEL_NO,
-                    HKK_BURO_AD = model.HKK_BURO_AD,
-                    HKK_BURO_ADRES = model.HKK_BURO_ADRES,
-                    OFIS_TEL_NO = model.OFIS_TEL_NO,
+                    AVUKAT_ID = model.AvukatId,
+                    AVKT_AD = model.AvktAd,
+                    AVKT_SOYAD = model.AvktSoyad,
+                    TBB_SICIL_NO = model.TbbSicilNo,
+                    AVKT_EPOSTA = model.AvktEposta,
+                    AVKT_TEL_NO = model.AvktTelNo,
+                    HKK_BURO_AD = model.HkkBuroAd,
+                    HKK_BURO_ADRES = model.HkkBuroAdres,
+                    OFIS_TEL_NO = model.OfisTelNo,
                     GRS_TAR_ZMN = DateTime.Now
                 };
 
@@ -78,8 +78,6 @@ namespace Presentation.Controllers
             }
         }
 
-
-
         //lİSTELEME
         [HttpGet]
         public ActionResult GetAvukat(int id)
@@ -89,15 +87,15 @@ namespace Presentation.Controllers
 
             var model = new AvukatModel
             {
-                AVUKAT_ID = avukat.AVUKAT_ID,
-                AVKT_AD = avukat.AVKT_AD,
-                AVKT_SOYAD = avukat.AVKT_SOYAD,
-                TBB_SICIL_NO = avukat.TBB_SICIL_NO,
-                AVKT_EPOSTA = avukat.AVKT_EPOSTA,
-                AVKT_TEL_NO = avukat.AVKT_TEL_NO,
-                HKK_BURO_AD = avukat.HKK_BURO_AD,
-                HKK_BURO_ADRES = avukat.HKK_BURO_ADRES,
-                OFIS_TEL_NO = avukat.OFIS_TEL_NO
+                AvukatId = avukat.AVUKAT_ID,
+                AvktAd = avukat.AVKT_AD,
+                AvktSoyad = avukat.AVKT_SOYAD,
+                TbbSicilNo = avukat.TBB_SICIL_NO,
+                AvktEposta = avukat.AVKT_EPOSTA,
+                AvktTelNo = avukat.AVKT_TEL_NO,
+                HkkBuroAd = avukat.HKK_BURO_AD,
+                HkkBuroAdres = avukat.HKK_BURO_ADRES,
+                OfisTelNo = avukat.OFIS_TEL_NO
             };
 
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -112,18 +110,18 @@ namespace Presentation.Controllers
 
             try
             {
-                var entity = _avukatService.GetById(model.AVUKAT_ID);
+                var entity = _avukatService.GetById(model.AvukatId);
                 if (entity == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
 
-                entity.AVKT_AD = model.AVKT_AD;
-                entity.AVKT_SOYAD = model.AVKT_SOYAD;
-                entity.TBB_SICIL_NO = model.TBB_SICIL_NO;
-                entity.AVKT_EPOSTA = model.AVKT_EPOSTA;
-                entity.AVKT_TEL_NO = model.AVKT_TEL_NO;
-                entity.HKK_BURO_AD = model.HKK_BURO_AD;
-                entity.HKK_BURO_ADRES = model.HKK_BURO_ADRES;
-                entity.OFIS_TEL_NO = model.OFIS_TEL_NO;
+                entity.AVKT_AD = model.AvktAd;
+                entity.AVKT_SOYAD = model.AvktSoyad;
+                entity.TBB_SICIL_NO = model.TbbSicilNo;
+                entity.AVKT_EPOSTA = model.AvktEposta;
+                entity.AVKT_TEL_NO = model.AvktTelNo;
+                entity.HKK_BURO_AD = model.HkkBuroAd;
+                entity.HKK_BURO_ADRES = model.HkkBuroAdres;
+                entity.OFIS_TEL_NO = model.OfisTelNo;
                 entity.GNC_TAR_ZMN = DateTime.Now;
 
                 _avukatService.Update(entity);

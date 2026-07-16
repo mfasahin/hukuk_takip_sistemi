@@ -8,10 +8,10 @@ namespace Presentation.Models
 {
     public class IhtarUrunModel
     {
-        public int IHTAR_URUN_ID { get; set; } // PK
+        public int IhtarUrunId { get; set; } // PK
 
-        public int URUN_ID { get; set; } // FK
+        public int UrunId { get; set; } // FK
 
-        public int IHTAR_ID { get; set; } // FK
+        public int IhtarId { get; set; } // FK
     }
 }

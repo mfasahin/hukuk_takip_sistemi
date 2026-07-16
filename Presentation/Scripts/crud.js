@@ -56,7 +56,6 @@
                 }
             });
 
-
             $("#updateModal").modal("show");
         });
     });
