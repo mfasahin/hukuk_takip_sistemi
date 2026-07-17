@@ -33,6 +33,10 @@ namespace Presentation.App_Start
             container.RegisterType<ISubeService, SubeManager>();
             container.RegisterType<ISubeDal, EfSubeDal>();
 
+            container.RegisterType<IIhtarUrunService, IhtarUrunManager>();
+            container.RegisterType<IIhtarUrunDal, EfIhtarUrunDal>();
+
+
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }

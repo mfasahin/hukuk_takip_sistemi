@@ -29,7 +29,7 @@ namespace Entity.Concrete
         public int? SIL_KULLANICI_ID { get; set; }
 
         // Navigation Properties
-        public Urun Urun { get; set; }
-        public Ihtar Ihtar { get; set; }
+        public virtual Ihtar Ihtar { get; set; }
+        public virtual Urun Urun { get; set; }
     }
 }

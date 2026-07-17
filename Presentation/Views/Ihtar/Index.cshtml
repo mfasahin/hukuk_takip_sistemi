@@ -3,7 +3,6 @@
     ViewBag.Title = "İhtar Listesi";
 }
 
-<!-- İhtar Ekle Butonu -->
 <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
     <button type="button" class="btn btn-success"
             data-bs-toggle="modal"
@@ -22,6 +21,7 @@
             <th>İhtar Tarihi</th>
             <th>Şube</th>
             <th>Avukat</th>
+            <th>Ürünler</th>
             <th>İşlem</th>
         </tr>
     </thead>
@@ -29,14 +29,28 @@
         @foreach (var ihtar in Model)
         {
             <tr>
-                <td>
-                    <input type="checkbox" class="rowCheckbox" value="@ihtar.IhtarId" />
-                </td>
+                <td><input type="checkbox" class="rowCheckbox" value="@ihtar.IhtarId" /></td>
                 <td>@ihtar.MusteriAd</td>
                 <td>@ihtar.BorcTutar</td>
                 <td>@ihtar.IhtarTarZmn.ToString("dd.MM.yyyy")</td>
                 <td>@ihtar.SubeAd</td>
                 <td>@ihtar.AvukatAd</td>
+                <td>
+                    @if (ihtar.Urunler != null && ihtar.Urunler.Any())
+                    {
+                        <ul>
+                            @foreach (var urun in ihtar.Urunler)
+                            {
+                                <li>@urun.UrunAd</li>
+ <!-- UrunModel kullanıyoruz -->
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <span>Ürün yok</span>
+                    }
+                </td>
                 <td>
                     <button class="btn btn-sm btn-warning updateBtn" data-id="@ihtar.IhtarId">Güncelle</button>
                     <button class="btn btn-sm btn-danger deleteBtn" data-id="@ihtar.IhtarId">Sil</button>
@@ -46,7 +60,6 @@
     </tbody>
 </table>
 
-<!-- Partial’a boş bir model gönder -->
 @Html.Partial("_IhtarModals", new Presentation.Models.IhtarModel())
 
 @section Scripts {
@@ -59,6 +72,7 @@
             "IhtarTarZmn",
             "SubeId",
             "AvukatId"
+            // Ürünler ayrı modalda yönetilecek
         ]);
     </script>
 }

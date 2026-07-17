@@ -13,6 +13,8 @@ namespace Presentation.Controllers
         private readonly IMusteriService _musteriService;
         private readonly IAvukatService _avukatService;
         private readonly ISubeService _subeService;
+        private readonly IIhtarUrunService _ihtarUrunService;
+        private readonly IUrunService _urunService;
 
 
         // Constructor: DI ile IMusteriService enjekte ediliyor
@@ -20,12 +22,16 @@ namespace Presentation.Controllers
             IIhtarService ihtarService,
             IMusteriService musteriService,
             IAvukatService avukatService,
-            ISubeService subeService)
+            ISubeService subeService,
+            IIhtarUrunService ihtarUrunService,
+            IUrunService urunService)
         {
             _ihtarService = ihtarService;
             _musteriService = musteriService;
             _avukatService = avukatService;
             _subeService = subeService;
+            _ihtarUrunService = ihtarUrunService;
+            _urunService = urunService;
         }
 
         public ActionResult Index()
@@ -35,34 +41,37 @@ namespace Presentation.Controllers
             var model = ihtarList.Select(i => new IhtarModel
             {
                 IhtarId = i.IHTAR_ID,
+                MusteriAd = i.Musteri.MUST_AD,
                 BorcTutar = i.BORC_TUTAR,
                 IhtarTarZmn = i.IHTAR_TAR_ZMN,
-                MusteriId = i.MUSTERI_ID,
-                AvukatId = i.AVUKAT_ID,
-                SubeId = i.SUBE_ID
+                SubeAd = i.Sube.SUBE_ADI,
+                AvukatAd = i.Avukat.AVKT_AD,
+
+                // Ürünler artık List<UrunModel>
+                Urunler = i.IhtarUrunler.Select(u => new UrunModel
+                {
+                    UrunId = u.URUN_ID,
+                    UrunAd = u.Urun.URUN_AD
+                }).ToList()
             }).ToList();
+
 
             // Dropdown listeleri doldur
             ViewBag.MusteriList = _musteriService.GetAll()
-                .Select(m => new SelectListItem
-                {
-                    Value = m.MUSTERI_ID.ToString(),
-                    Text = m.MUST_AD
-                }).ToList();
+                .Select(m => new SelectListItem { Value = m.MUSTERI_ID.ToString(), Text = m.MUST_AD })
+                .ToList();
 
             ViewBag.AvukatList = _avukatService.GetAll()
-                .Select(a => new SelectListItem
-                {
-                    Value = a.AVUKAT_ID.ToString(),
-                    Text = a.AVKT_AD
-                }).ToList();
+                .Select(a => new SelectListItem { Value = a.AVUKAT_ID.ToString(), Text = a.AVKT_AD })
+                .ToList();
 
             ViewBag.SubeList = _subeService.GetAll()
-                .Select(s => new SelectListItem
-                {
-                    Value = s.SUBE_ID.ToString(),
-                    Text = s.SUBE_ADI
-                }).ToList();
+                .Select(s => new SelectListItem { Value = s.SUBE_ID.ToString(), Text = s.SUBE_ADI })
+                .ToList();
+
+            ViewBag.UrunList = _urunService.GetAll()
+                .Select(u => new UrunModel { UrunId = u.URUN_ID, UrunAd = u.URUN_AD })
+                .ToList();
 
             return View(model);
         }
@@ -87,13 +96,27 @@ namespace Presentation.Controllers
                 {
                     BORC_TUTAR = model.BorcTutar,
                     IHTAR_TAR_ZMN = model.IhtarTarZmn,
-                    MUSTERI_ID = model.MusteriId,
+                    MUSTERI_ID = model.MusteriId,   // MusteriAd yerine MusteriId kullanılmalı
                     SUBE_ID = model.SubeId,
                     AVUKAT_ID = model.AvukatId,
                     GRS_TAR_ZMN = DateTime.Now
                 };
 
                 _ihtarService.Add(ihtar);
+
+                // Ürünleri ihtar_ürün tablosuna ekle
+                if (model.SecilenUrunler != null && model.SecilenUrunler.Any())
+                {
+                    foreach (var urunId in model.SecilenUrunler)
+                    {
+                        var ihtarUrun = new IhtarUrun
+                        {
+                            IHTAR_ID = ihtar.IHTAR_ID,
+                            URUN_ID = urunId
+                        };
+                        _ihtarUrunService.Add(ihtarUrun);
+                    }
+                }
 
                 // İsimleri doldur
                 var musteriAd = _musteriService.GetById(model.MusteriId)?.MUST_AD;
@@ -138,28 +161,6 @@ namespace Presentation.Controllers
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
-        //public ActionResult Edit(int id)
-        //{
-        //    var entity = _ihtarService.GetById(id);
-        //    if (entity == null)
-        //        return HttpNotFound();
-
-        //    var model = new IhtarModel
-        //    {
-        //        IhtarId = entity.IHTAR_ID,
-        //        BorcTutar = entity.BORC_TUTAR,
-        //        IhtarTarZmn = entity.IHTAR_TAR_ZMN,
-        //        MusteriId = entity.MUSTERI_ID,
-        //        SubeId = entity.SUBE_ID,
-        //        AvukatId = entity.AVUKAT_ID
-        //    };
-
-        //    ViewBag.MusteriList = new SelectList(_musteriService.GetAll(), "MUSTERI_ID", "MUSTERI_AD", model.MusteriId);
-        //    ViewBag.SubeList = new SelectList(_subeService.GetAll(), "SUBE_ID", "SUBE_AD", model.SubeId);
-        //    ViewBag.AvukatList = new SelectList(_avukatService.GetAll(), "AVUKAT_ID", "AVUKAT_ADSOYAD", model.AvukatId);
-
-        //    return PartialView("_IhtarModals", model);
-        //}
 
         [HttpGet]
         public ActionResult Update(int id)

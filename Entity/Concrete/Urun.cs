@@ -33,5 +33,7 @@ namespace Entity.Concrete
 
         public DateTime? SIL_TAR_ZMN { get; set; }
         public int? SIL_KULLANICI_ID { get; set; }
+
+        public virtual ICollection<IhtarUrun> IhtarUrunler { get; set; }
     }
 }

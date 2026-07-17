@@ -3,7 +3,9 @@ using DataAccess.Abstract;
 using DataAccess.Concrete;
 using Entity.Concrete;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+
 
 public class EfIhtarDal : EfEntityRepositoryBase<Ihtar, AppDbContext>, IIhtarDal
 {
@@ -11,15 +13,16 @@ public class EfIhtarDal : EfEntityRepositoryBase<Ihtar, AppDbContext>, IIhtarDal
     {
         using (var context = new AppDbContext())
         {
-            var result = from i in context.IHTAR
-                         join m in context.MUSTERI on i.MUSTERI_ID equals m.MUSTERI_ID
-                         join a in context.AVUKAT on i.AVUKAT_ID equals a.AVUKAT_ID
-                         join s in context.SUBE on i.SUBE_ID equals s.SUBE_ID
-                         where i.SIL_TAR_ZMN == null
-                         select i; // sadece entity döndür
+            var result = context.IHTAR
+                .Where(i => i.SIL_TAR_ZMN == null)
+                .Include(i => i.Musteri)
+                .Include(i => i.Avukat)
+                .Include(i => i.Sube)
+                .Include(i => i.IhtarUrunler.Select(u => u.Urun)) // iç içe (nested) include: IhtarUrunler koleksiyonu + her birinin Urun'u
+                .ToList();
 
-
-            return result.ToList();
+            return result;
         }
     }
+
 }

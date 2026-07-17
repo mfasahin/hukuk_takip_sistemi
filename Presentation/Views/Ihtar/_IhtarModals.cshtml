@@ -36,6 +36,20 @@
                                 @Html.DropDownList("AvukatId", ViewBag.AvukatList as List<SelectListItem>, "Avukat Seç", new { @class = "form-control" })
                             </div>
                         </div>
+
+                        <!-- Ürün Seçimi -->
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                @Html.Label("Ürünler")
+                                @foreach (var urun in ViewBag.UrunList as List<Presentation.Models.UrunModel>)
+                                {
+                                    <div class="form-check">
+                                        <input type="checkbox" name="SecilenUrunler" value="@urun.UrunId" class="form-check-input" />
+                                        <label class="form-check-label">@urun.UrunAd</label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -90,6 +104,21 @@
                                     ViewBag.AvukatList as IEnumerable<SelectListItem>,
                                     "Avukat Seç",
                                     new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <!-- Ürün Seçimi (Update için) -->
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                @Html.Label("Ürünler")
+                                @foreach (var urun in ViewBag.UrunList as List<Presentation.Models.UrunModel>)
+                                {
+                                    var isChecked = Model.Urunler != null && Model.Urunler.Any(u => u.UrunId == urun.UrunId);
+                                    <div class="form-check">
+                                        <input type="checkbox" name="SecilenUrunler" value="@urun.UrunId" class="form-check-input" @(isChecked ? "checked" : "") />
+                                        <label class="form-check-label">@urun.UrunAd</label>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>

@@ -11,7 +11,10 @@ namespace Presentation.Models
         public int IhtarUrunId { get; set; } // PK
 
         public int UrunId { get; set; } // FK
+        public UrunModel Urun { get; set; }
 
         public int IhtarId { get; set; } // FK
+
+        public IhtarModel Ihtar { get; set; }
     }
 }

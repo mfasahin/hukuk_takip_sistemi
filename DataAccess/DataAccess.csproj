@@ -54,6 +54,7 @@
     <Compile Include="Abstract\IAvukatDal.cs" />
     <Compile Include="Abstract\IIcraDal.cs" />
     <Compile Include="Abstract\IIhtarDal.cs" />
+    <Compile Include="Abstract\IIhtarUrunDal.cs" />
     <Compile Include="Abstract\IMusteriDal.cs" />
     <Compile Include="Abstract\ISubeDal.cs" />
     <Compile Include="Abstract\IUrunDal.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Concrete\EfAvukatDal.cs" />
     <Compile Include="Concrete\EfIcraDal.cs" />
     <Compile Include="Concrete\EfIhtarDal.cs" />
+    <Compile Include="Concrete\EfIhtarUrunDal.cs" />
     <Compile Include="Concrete\EfMusteriDal.cs" />
     <Compile Include="Concrete\EfSubeDal.cs" />
     <Compile Include="Concrete\EfUrunDal.cs" />

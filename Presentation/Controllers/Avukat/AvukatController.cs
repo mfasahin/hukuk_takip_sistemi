@@ -4,7 +4,6 @@ using Presentation.Models;
 using System;
 using System.Linq;
 using System.Web.Mvc;
-using static Unity.Storage.RegistrationSet;
 
 namespace Presentation.Controllers
 {

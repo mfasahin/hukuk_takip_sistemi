@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -39,6 +40,7 @@ namespace Entity.Concrete
         public virtual Musteri Musteri { get; set; }
         public virtual Avukat Avukat { get; set; }
         public virtual Sube Sube { get; set; }
+        public virtual ICollection<IhtarUrun> IhtarUrunler { get; set; }
 
     }
 }

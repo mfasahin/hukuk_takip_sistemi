@@ -44,12 +44,14 @@
     <Compile Include="Abstract\IAvukatService.cs" />
     <Compile Include="Abstract\IIcraService.cs" />
     <Compile Include="Abstract\IIhtarService.cs" />
+    <Compile Include="Abstract\IIhtarUrunService.cs" />
     <Compile Include="Abstract\IMusteriService.cs" />
     <Compile Include="Abstract\ISubeService.cs" />
     <Compile Include="Abstract\IUrunService.cs" />
     <Compile Include="Concrete\AvukatManager.cs" />
     <Compile Include="Concrete\IcraManager.cs" />
     <Compile Include="Concrete\IhtarManager.cs" />
+    <Compile Include="Concrete\IhtarUrunManager.cs" />
     <Compile Include="Concrete\MusteriManager.cs" />
     <Compile Include="Concrete\SubeManager.cs" />
     <Compile Include="Concrete\UrunManager.cs" />

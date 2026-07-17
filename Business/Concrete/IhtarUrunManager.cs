@@ -1,0 +1,41 @@
+﻿using Business.Abstract;
+using DataAccess.Abstract;
+using Entity.Concrete;
+using System.Collections.Generic;
+
+namespace Business.Concrete
+{
+    public class IhtarUrunManager : IIhtarUrunService
+    {
+        private readonly IIhtarUrunDal _ihtarUrunDal;
+
+        public IhtarUrunManager(IIhtarUrunDal ihtarUrunDal)
+        {
+            _ihtarUrunDal = ihtarUrunDal;
+        }
+
+        public List<IhtarUrun> GetAll()
+        {
+            return _ihtarUrunDal.GetAll();
+        }
+
+        public void Add(IhtarUrun ihtarUrun)
+        {
+            _ihtarUrunDal.Add(ihtarUrun);
+        }
+
+        public void Update(IhtarUrun ihtarUrun)
+        {
+            _ihtarUrunDal.Update(ihtarUrun);
+        }
+        public void Delete(IhtarUrun ihtarUrun)
+        {
+            _ihtarUrunDal.Delete(ihtarUrun);
+        }
+
+        public IhtarUrun GetById(int id)
+        {
+            return _ihtarUrunDal.Get(i => i.IHTAR_URUN_ID == id);
+        }
+    }
+}

@@ -29,6 +29,9 @@ namespace Presentation
             container.RegisterType<IUrunService, UrunManager>();
             container.RegisterType<IUrunDal, EfUrunDal>();
 
+            container.RegisterType<IIhtarUrunService, IhtarUrunManager>();
+            container.RegisterType<IIhtarUrunDal, EfIhtarUrunDal>();
+
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }
