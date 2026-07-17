@@ -36,25 +36,17 @@ namespace Presentation.Controllers
 
         public ActionResult Index()
         {
-            var ihtarList = _ihtarService.GetIhtarWithRelations();
+            var dtoList = _ihtarService.GetIhtarWithRelations();
 
-            var model = ihtarList.Select(i => new IhtarModel
+            var modelList = dtoList.Select(dto => new IhtarModel
             {
-                IhtarId = i.IHTAR_ID,
-                MusteriAd = i.Musteri.MUST_AD,
-                BorcTutar = i.BORC_TUTAR,
-                IhtarTarZmn = i.IHTAR_TAR_ZMN,
-                SubeAd = i.Sube.SUBE_ADI,
-                AvukatAd = i.Avukat.AVKT_AD,
-
-                // Ürünler artık List<UrunModel>
-                Urunler = i.IhtarUrunler.Select(u => new UrunModel
-                {
-                    UrunId = u.URUN_ID,
-                    UrunAd = u.Urun.URUN_AD
-                }).ToList()
+                IhtarId = dto.IhtarId,
+                BorcTutar = dto.BorcTutar,
+                //IhtarTarZmn = dto.IhtarTarih,
+                MusteriAd = dto.MusteriAd,
+                AvukatAd = dto.AvukatAd,
+                SubeAd = dto.SubeAd
             }).ToList();
-
 
             // Dropdown listeleri doldur
             ViewBag.MusteriList = _musteriService.GetAll()
@@ -70,10 +62,10 @@ namespace Presentation.Controllers
                 .ToList();
 
             ViewBag.UrunList = _urunService.GetAll()
-                .Select(u => new UrunModel { UrunId = u.URUN_ID, UrunAd = u.URUN_AD })
+                .Select(u => new SelectListItem { Value = u.URUN_ID.ToString(), Text = u.URUN_AD })
                 .ToList();
 
-            return View(model);
+            return View(modelList);
         }
 
 
@@ -143,27 +135,8 @@ namespace Presentation.Controllers
             }
         }
 
-
-
         [HttpGet]
         public ActionResult GetIhtar(int id)
-        {
-            var ihtar = _ihtarService.GetById(id);
-            if (ihtar == null) return HttpNotFound();
-
-            var model = new IhtarModel
-            {
-                IhtarId = ihtar.IHTAR_ID,
-                BorcTutar = ihtar.BORC_TUTAR,
-                IhtarTarZmn = ihtar.IHTAR_TAR_ZMN,
-                //GNC_TAR_ZMN = musteri.GNC_TAR_ZMN
-            };
-
-            return Json(model, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpGet]
-        public ActionResult Update(int id)
         {
             var entity = _ihtarService.GetById(id);
             if (entity == null)
@@ -174,26 +147,73 @@ namespace Presentation.Controllers
                 IhtarId = entity.IHTAR_ID,
                 BorcTutar = entity.BORC_TUTAR,
                 IhtarTarZmn = entity.IHTAR_TAR_ZMN,
-                MusteriId = entity.MUSTERI_ID,   // <-- bu satırlar eksikse
-                AvukatId = entity.AVUKAT_ID,    // <-- dropdown boş kalır
-                SubeId = entity.SUBE_ID
+                MusteriId = entity.MUSTERI_ID,
+                AvukatId = entity.AVUKAT_ID,
+                SubeId = entity.SUBE_ID,
+                SecilenUrunler = entity.IhtarUrunler?.Select(u => u.URUN_ID).ToList()
             };
 
-            // Create action'ındaki ile AYNI şekilde dolduruluyor olmalı
+            // Dropdown listeleri doldur
             ViewBag.MusteriList = _musteriService.GetAll()
-                .Select(m => new SelectListItem { Value = m.MUSTERI_ID.ToString(), Text = m.MUST_AD + " " + m.MUST_SOYAD })
+                .Select(m => new SelectListItem { Value = m.MUSTERI_ID.ToString(), Text = m.MUST_AD + " " + m.MUST_SOYAD, Selected = (m.MUSTERI_ID == model.MusteriId) })
                 .ToList();
 
             ViewBag.SubeList = _subeService.GetAll()
-                .Select(s => new SelectListItem { Value = s.SUBE_ID.ToString(), Text = s.SUBE_ADI })
+                .Select(s => new SelectListItem { Value = s.SUBE_ID.ToString(), Text = s.SUBE_ADI, Selected = (s.SUBE_ID == model.SubeId) })
                 .ToList();
 
             ViewBag.AvukatList = _avukatService.GetAll()
-                .Select(a => new SelectListItem { Value = a.AVUKAT_ID.ToString(), Text = a.AVKT_AD + " " + a.AVKT_SOYAD })
+                .Select(a => new SelectListItem { Value = a.AVUKAT_ID.ToString(), Text = a.AVKT_AD + " " + a.AVKT_SOYAD, Selected = (a.AVUKAT_ID == model.AvukatId) })
+                .ToList();
+
+            ViewBag.UrunList = _urunService.GetAll()
+                .Select(u => new SelectListItem { Value = u.URUN_ID.ToString(), Text = u.URUN_AD, Selected = model.SecilenUrunler != null && model.SecilenUrunler.Contains(u.URUN_ID) })
                 .ToList();
 
             return PartialView("_UpdatePartial", model);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Update(IhtarModel model)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { success = false, message = "Model geçersiz" });
+
+            var entity = _ihtarService.GetById(model.IhtarId);
+            if (entity == null)
+                return HttpNotFound();
+
+            // Alanları güncelle
+            entity.BORC_TUTAR = model.BorcTutar;
+            entity.IHTAR_TAR_ZMN = model.IhtarTarZmn;
+            entity.MUSTERI_ID = model.MusteriId;
+            entity.SUBE_ID = model.SubeId;
+            entity.AVUKAT_ID = model.AvukatId;
+
+            _ihtarService.Update(entity);
+
+            // Eski ürün ilişkilerini sil
+            //_ihtarUrunService.Delete(ihtar);
+
+            // Yeni seçilen ürünleri ekle
+            if (model.SecilenUrunler != null && model.SecilenUrunler.Any())
+            {
+                foreach (var urunId in model.SecilenUrunler)
+                {
+                    var ihtarUrun = new IhtarUrun
+                    {
+                        IHTAR_ID = entity.IHTAR_ID,
+                        URUN_ID = urunId
+                    };
+                    _ihtarUrunService.Add(ihtarUrun);
+                }
+            }
+
+            return Json(new { success = true });
+        }
+
+
 
         //SİLME
         [HttpPost]

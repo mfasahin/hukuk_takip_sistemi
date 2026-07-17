@@ -3,7 +3,9 @@
     ViewBag.Title = "İhtar Listesi";
 }
 
-<div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+<h2>İhtarlar</h2>
+
+<div class="mb-3" style="display:flex; justify-content:flex-end;">
     <button type="button" class="btn btn-success"
             data-bs-toggle="modal"
             data-bs-target="#createModal">
@@ -11,7 +13,6 @@
     </button>
 </div>
 
-<h2>İhtarlar</h2>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -38,17 +39,16 @@
                 <td>
                     @if (ihtar.Urunler != null && ihtar.Urunler.Any())
                     {
-                        <ul>
+                        <ul class="list-unstyled mb-0">
                             @foreach (var urun in ihtar.Urunler)
                             {
                                 <li>@urun.UrunAd</li>
- <!-- UrunModel kullanıyoruz -->
                             }
                         </ul>
                     }
                     else
                     {
-                        <span>Ürün yok</span>
+                        <span class="text-muted">Ürün yok</span>
                     }
                 </td>
                 <td>
@@ -65,14 +65,15 @@
 @section Scripts {
     <script src="~/Scripts/crud.js"></script>
     <script>
+        // initCrud fonksiyonunda updateBtn ve deleteBtn yakalanmalı
         initCrud("Ihtar", [
             "IhtarId",
             "MusteriId",
             "BorcTutar",
             "IhtarTarZmn",
             "SubeId",
-            "AvukatId"
-            // Ürünler ayrı modalda yönetilecek
+            "AvukatId",
+            "SecilenUrunler"
         ]);
     </script>
 }

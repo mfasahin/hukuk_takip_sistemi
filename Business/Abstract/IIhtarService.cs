@@ -1,4 +1,5 @@
 ﻿using Entity.Concrete;
+using Entity.Dto;
 using System.Collections.Generic;
 
 namespace Business.Abstract
@@ -11,6 +12,6 @@ namespace Business.Abstract
         void Delete(Ihtar ihtar);
         Ihtar GetById(int id);
 
-        List<Ihtar> GetIhtarWithRelations();
+        List<IhtarDto> GetIhtarWithRelations();
     }
 }

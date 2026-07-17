@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using DataAccess.Abstract;
 using Entity.Concrete;
+using Entity.Dto;
 using System.Collections.Generic;
 
 namespace Business.Concrete
@@ -39,7 +40,7 @@ namespace Business.Concrete
             return _ihtarDal.Get(Ihtar => Ihtar.IHTAR_ID == id);
         }
 
-        public List<Ihtar> GetIhtarWithRelations()
+        public List<IhtarDto> GetIhtarWithRelations()
         {
             return _ihtarDal.GetIhtarWithRelations();
         }

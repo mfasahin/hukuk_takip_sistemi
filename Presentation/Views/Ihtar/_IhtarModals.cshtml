@@ -6,80 +6,19 @@
         <div class="modal-content">
             <form id="createForm">
                 <div class="modal-header">
-                    <h5 class="modal-title">İhtar Bilgileri</h5>
+                    <h5 class="modal-title">Yeni İhtar</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @Html.Label("Borç Tutarı")
-                                <input type="text" id="BorcTutar" name="BorcTutar" class="form-control" />
+                                @Html.LabelFor(m => m.BorcTutar, "Borç Tutarı")
+                                @Html.TextBoxFor(m => m.BorcTutar, new { @class = "form-control", type = "number", step = "0.01" })
                             </div>
                             <div class="col-md-4">
-                                @Html.Label("İhtar Tarihi")
-                                <input type="date" id="IhtarTarZmn" name="IhtarTarZmn" class="form-control" />
-                            </div>
-                            <div class="col-md-4">
-                                @Html.Label("Müşteri")
-                                @Html.DropDownList("MusteriId", ViewBag.MusteriList as List<SelectListItem>, "Müşteri Seç", new { @class = "form-control" })
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                @Html.Label("Şube")
-                                @Html.DropDownList("SubeId", ViewBag.SubeList as List<SelectListItem>, "Şube Seç", new { @class = "form-control" })
-                            </div>
-                            <div class="col-md-4">
-                                @Html.Label("Avukat")
-                                @Html.DropDownList("AvukatId", ViewBag.AvukatList as List<SelectListItem>, "Avukat Seç", new { @class = "form-control" })
-                            </div>
-                        </div>
-
-                        <!-- Ürün Seçimi -->
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                @Html.Label("Ürünler")
-                                @foreach (var urun in ViewBag.UrunList as List<Presentation.Models.UrunModel>)
-                                {
-                                    <div class="form-check">
-                                        <input type="checkbox" name="SecilenUrunler" value="@urun.UrunId" class="form-check-input" />
-                                        <label class="form-check-label">@urun.UrunAd</label>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="createSaveBtn" class="btn btn-primary">Kaydet</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Update Modal -->
-<div class="modal fade" id="updateModal">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <form id="updateForm">
-                <input type="hidden" id="IhtarId" name="IhtarId" />
-                <div class="modal-header">
-                    <h5 class="modal-title">İhtar Bilgileri</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                @Html.Label("Borç Tutarı")
-                                <input type="text" id="BorcTutar" name="BorcTutar" class="form-control" value="@Model.BorcTutar" />
-                            </div>
-                            <div class="col-md-4">
-                                @Html.Label("İhtar Tarihi")
-                                <input type="date" id="IhtarTarZmn" name="IhtarTarZmn" class="form-control" value="@Model.IhtarTarZmn.ToString("yyyy-MM-dd")" />
+                                @Html.LabelFor(m => m.IhtarTarZmn, "İhtar Tarihi")
+                                @Html.TextBoxFor(m => m.IhtarTarZmn, new { @class = "form-control", type = "date" })
                             </div>
                             <div class="col-md-4">
                                 @Html.LabelFor(m => m.MusteriId, "Müşteri")
@@ -107,26 +46,18 @@
                             </div>
                         </div>
 
-                        <!-- Ürün Seçimi (Update için) -->
+                        <!-- Ürün Seçimi -->
                         <div class="row mb-3">
                             <div class="col-md-12">
-                                @Html.Label("Ürünler")
-                                @foreach (var urun in ViewBag.UrunList as List<Presentation.Models.UrunModel>)
-                                {
-                                    var isChecked = Model.Urunler != null && Model.Urunler.Any(u => u.UrunId == urun.UrunId);
-                                    <div class="form-check">
-                                        <input type="checkbox" name="SecilenUrunler" value="@urun.UrunId" class="form-check-input" @(isChecked ? "checked" : "") />
-                                        <label class="form-check-label">@urun.UrunAd</label>
-                                    </div>
-                                }
+                                @Html.LabelFor(m => m.SecilenUrunler, "Ürünler")
+                                @Html.ListBoxFor(m => m.SecilenUrunler,
+                                    ViewBag.UrunList as IEnumerable<SelectListItem>,
+                                    new { @class = "form-control", multiple = "multiple" })
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="saveBtn" class="btn btn-primary">Kaydet</button>
+                    <button type="button" id="createSaveBtn" class="btn btn-primary">Kaydet</button>
                 </div>
             </form>
-        </div>
-    </div>
-</div>

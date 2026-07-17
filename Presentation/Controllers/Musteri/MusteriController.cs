@@ -43,6 +43,7 @@ namespace Presentation.Controllers
 
             return View(model); // IEnumerable<AvukatModel> gönderiyoruz
         }
+
         [HttpPost]
         public ActionResult Create(MusteriModel model)
         {
@@ -123,12 +124,12 @@ namespace Presentation.Controllers
                 entity.MUST_NO = model.MustNo;
                 entity.MUST_AD = model.MustAd;
                 entity.MUST_SOYAD = model.MustSoyad;
-                entity.MUST_KIMLIK_NO= model.MustKimlikNo;
+                entity.MUST_KIMLIK_NO = model.MustKimlikNo;
                 entity.MUST_VKN_NO = model.MustVknNo;
                 entity.MUST_EPOSTA = model.MustEposta;
                 entity.MUST_TEL_NO = model.MustTelNo;
                 entity.GNC_TAR_ZMN = DateTime.Now;
-                
+
                 _musteriService.Update(entity);
 
                 return Json(new { success = true });
