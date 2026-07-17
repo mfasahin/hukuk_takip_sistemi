@@ -10,5 +10,7 @@ namespace Business.Abstract
         void Update(Icra icra);
         void Delete(Icra icra);
         Icra GetById(int id);
+
+
     }
 }

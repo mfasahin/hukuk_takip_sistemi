@@ -61,6 +61,7 @@
     <Compile Include="Concrete\Sube.cs" />
     <Compile Include="Concrete\Urun.cs" />
     <Compile Include="Dto\IhtarDto.cs" />
+    <Compile Include="Dto\UrunDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

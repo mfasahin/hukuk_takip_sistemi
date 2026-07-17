@@ -42,14 +42,16 @@ namespace Presentation.Models
         public int MusteriId { get; set; }
         public int SubeId { get; set; }
         public int AvukatId { get; set; }
+        public int UrunId { get; set; }
 
         // Görüntülenecek alanlar
         public string MusteriAd { get; set; }
         public string SubeAd { get; set; }
         public string AvukatAd { get; set; }
+        public string UrunAd { get; set; }
 
         public decimal BorcTutar { get; set; }
-        //public DateTime IhtarTarZmn { get; set; }
+        public DateTime IhtarTarZmn { get; set; }
 
         // Ürünler
         public List<UrunModel> Urunler { get; set; }

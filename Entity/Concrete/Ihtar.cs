@@ -24,8 +24,7 @@ namespace Entity.Concrete
         [DataType(DataType.Currency)]
         public decimal BORC_TUTAR { get; set; } // DECIMAL(12,2)
 
-        [Required]
-        public DateTime IHTAR_TAR_ZMN { get; set; } // NOT NULL
+        public DateTime IHTAR_TAR_ZMN { get; set; } 
 
         public DateTime GRS_TAR_ZMN { get; set; }
         public int GRS_KULLANICI_ID { get; set; } 

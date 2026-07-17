@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Presentation.Models.IhtarModel>
+﻿@model IEnumerable<Entity.Dto.IhtarDto>
+
 @{
     ViewBag.Title = "İhtar Listesi";
 }
@@ -33,23 +34,23 @@
                 <td><input type="checkbox" class="rowCheckbox" value="@ihtar.IhtarId" /></td>
                 <td>@ihtar.MusteriAd</td>
                 <td>@ihtar.BorcTutar</td>
-                <td>@ihtar.IhtarTarZmn.ToString("dd.MM.yyyy")</td>
+                <td>@ihtar.IhtarTarih.ToString("dd.MM.yyyy")</td>
                 <td>@ihtar.SubeAd</td>
                 <td>@ihtar.AvukatAd</td>
                 <td>
-                    @if (ihtar.Urunler != null && ihtar.Urunler.Any())
+                    @*@if (ihtar.UrunId != null && ihtar.UrunId.Any())
                     {
                         <ul class="list-unstyled mb-0">
-                            @foreach (var urun in ihtar.Urunler)
+                            @foreach (var urun in ihtar.UrunId)
                             {
-                                <li>@urun.UrunAd</li>
+                                <li>@urun.UrunId</li>
                             }
                         </ul>
                     }
                     else
                     {
                         <span class="text-muted">Ürün yok</span>
-                    }
+                    }*@
                 </td>
                 <td>
                     <button class="btn btn-sm btn-warning updateBtn" data-id="@ihtar.IhtarId">Güncelle</button>
@@ -65,12 +66,11 @@
 @section Scripts {
     <script src="~/Scripts/crud.js"></script>
     <script>
-        // initCrud fonksiyonunda updateBtn ve deleteBtn yakalanmalı
         initCrud("Ihtar", [
             "IhtarId",
             "MusteriId",
             "BorcTutar",
-            "IhtarTarZmn",
+            "IhtarTarih",
             "SubeId",
             "AvukatId",
             "SecilenUrunler"

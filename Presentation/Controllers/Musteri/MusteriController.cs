@@ -3,6 +3,7 @@ using Entity.Concrete;
 using Presentation.Models;
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Web.Mvc;
 
 namespace Presentation.Controllers
@@ -20,15 +21,12 @@ namespace Presentation.Controllers
         public ActionResult Index()
         {
             // Tüm müsterileri getir
-            var musteriList = _musteriService.GetAll(); // List<Entity.Concrete.Musteri>
+            var musteriList = _musteriService.GetAll().Where(m => m.SIL_TAR_ZMN == null) // sadece silinmemiş kayıtlar
+                .ToList(); // List<Entity.Concrete.Musteri>
 
-            // SilinmeTarihi dolu olanları filtrele (yani silinmişleri gösterme)
-            var aktifMusteriler = musteriList
-                .Where(m => m.SIL_TAR_ZMN == null) // sadece silinmemiş kayıtlar
-                .ToList();
 
             // Entity → ViewModel dönüşümü
-            var model = aktifMusteriler.Select(m => new Presentation.Models.MusteriModel
+            var model = musteriList.Select(m => new Presentation.Models.MusteriModel
             {
                 MusteriId = m.MUSTERI_ID,
                 MustNo = m.MUST_NO,
