@@ -62,7 +62,7 @@
                                     ViewBag.UrunList as IEnumerable<SelectListItem>,
                                     "Ürün Seç",
                                     new { @class = "form-select" })
-                                @Html.ValidationMessageFor(m => m.UrunAd, "", new { @class = "text-danger" })
+                                @Html.ValidationMessageFor(m => m.UrunId, "", new { @class = "text-danger" })
                             </div>
                         </div>
                     </div>
@@ -84,7 +84,7 @@
             @using (Html.BeginForm("Update", "Ihtar", FormMethod.Post, new { id = "updateForm" }))
             {
                 @Html.AntiForgeryToken()
-                @Html.HiddenFor(m => m.IhtarId) <!-- Güncelleme için ihtar ID -->
+                @Html.HiddenFor(m => m.IhtarId, new { id = "IhtarId" }) <!-- ID mutlaka hidden input -->
 
                 <div class="modal-header">
                     <h5 class="modal-title" id="updateModalLabel">İhtar Güncelle</h5>
@@ -96,21 +96,18 @@
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 @Html.LabelFor(m => m.BorcTutar, "Borç Tutarı")
-                                @Html.TextBoxFor(m => m.BorcTutar, new { @class = "form-control", type = "number", step = "0.01" })
-                                @Html.ValidationMessageFor(m => m.BorcTutar, "", new { @class = "text-danger" })
+                                @Html.TextBoxFor(m => m.BorcTutar, new { @class = "form-control", id = "BorcTutar", type = "number", step = "0.01" })
                             </div>
                             <div class="col-md-4">
                                 @Html.LabelFor(m => m.IhtarTarih, "İhtar Tarihi")
-                                @Html.TextBoxFor(m => m.IhtarTarih, new { @class = "form-control", type = "date" })
-                                @Html.ValidationMessageFor(m => m.IhtarTarih, "", new { @class = "text-danger" })
+                                @Html.TextBoxFor(m => m.IhtarTarih, new { @class = "form-control", id = "IhtarTarih", type = "date" })
                             </div>
                             <div class="col-md-4">
                                 @Html.LabelFor(m => m.MusteriId, "Müşteri")
                                 @Html.DropDownListFor(m => m.MusteriId,
                                     ViewBag.MusteriList as IEnumerable<SelectListItem>,
                                     "Müşteri Seç",
-                                    new { @class = "form-select" })
-                                @Html.ValidationMessageFor(m => m.MusteriId, "", new { @class = "text-danger" })
+                                    new { @class = "form-select", id = "MusteriId" })
                             </div>
                         </div>
 
@@ -120,38 +117,35 @@
                                 @Html.DropDownListFor(m => m.SubeId,
                                     ViewBag.SubeList as IEnumerable<SelectListItem>,
                                     "Şube Seç",
-                                    new { @class = "form-select" })
-                                @Html.ValidationMessageFor(m => m.SubeId, "", new { @class = "text-danger" })
+                                    new { @class = "form-select", id = "SubeId" })
                             </div>
                             <div class="col-md-4">
                                 @Html.LabelFor(m => m.AvukatId, "Avukat")
                                 @Html.DropDownListFor(m => m.AvukatId,
                                     ViewBag.AvukatList as IEnumerable<SelectListItem>,
                                     "Avukat Seç",
-                                    new { @class = "form-select" })
-                                @Html.ValidationMessageFor(m => m.AvukatId, "", new { @class = "text-danger" })
+                                    new { @class = "form-select", id = "AvukatId" })
                             </div>
                         </div>
 
-                        <!-- Ürün Seçimi -->
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 @Html.LabelFor(m => m.UrunId, "Ürün")
                                 @Html.DropDownListFor(m => m.UrunId,
                                     ViewBag.UrunList as IEnumerable<SelectListItem>,
                                     "Ürün Seç",
-                                    new { @class = "form-select" })
-                                @Html.ValidationMessageFor(m => m.UrunAd, "", new { @class = "text-danger" })
+                                    new { @class = "form-select", id = "UrunId" })
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" id="updateSaveBtn" class="btn btn-primary">Güncelle</button>
+                    <button type="button" id="saveBtn" class="btn btn-primary">Kaydet</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
                 </div>
             }
         </div>
     </div>
 </div>
+

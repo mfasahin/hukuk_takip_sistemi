@@ -51,6 +51,8 @@ namespace Presentation.Models
         public string UrunAd { get; set; }
 
         public decimal BorcTutar { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime IhtarTarZmn { get; set; }
 
         // Ürünler

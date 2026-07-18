@@ -14,23 +14,33 @@ public class EfIhtarDal : EfEntityRepositoryBase<Ihtar, AppDbContext>, IIhtarDal
     {
         using (var context = new AppDbContext())
         {
-            var result = from ihtar in context.IHTAR
-                         join musteri in context.MUSTERI on ihtar.MUSTERI_ID equals musteri.MUSTERI_ID
-                         join avukat in context.AVUKAT on ihtar.AVUKAT_ID equals avukat.AVUKAT_ID
-                         join sube in context.SUBE on ihtar.SUBE_ID equals sube.SUBE_ID
-                         where ihtar.SIL_TAR_ZMN == null
+            var result = from i in context.IHTAR
+                         join m in context.MUSTERI on i.MUSTERI_ID equals m.MUSTERI_ID
+                         join a in context.AVUKAT on i.AVUKAT_ID equals a.AVUKAT_ID
+                         join s in context.SUBE on i.SUBE_ID equals s.SUBE_ID
+                         where i.SIL_TAR_ZMN == null
                          select new IhtarDto
                          {
-                             IhtarId = ihtar.IHTAR_ID,
-                             BorcTutar = ihtar.BORC_TUTAR,
-                             IhtarTarih = ihtar.IHTAR_TAR_ZMN,
-                             MusteriAd = musteri.MUST_AD,
-                             AvukatAd = avukat.AVKT_AD,
-                             SubeAd = sube.SUBE_ADI,
+                             IhtarId = i.IHTAR_ID,
+                             BorcTutar = i.BORC_TUTAR,
+                             IhtarTarih = i.IHTAR_TAR_ZMN,
+                             MusteriId = m.MUSTERI_ID,
+                             MusteriAd = m.MUST_AD + " " + m.MUST_SOYAD,
+                             AvukatId = a.AVUKAT_ID,
+                             AvukatAd = a.AVKT_AD,
+                             SubeId = s.SUBE_ID,
+                             SubeAd = s.SUBE_ADI,
+
+                             // ürün: ilişkili ilk IhtarUrun kaydından çekiliyor
+                             UrunId = context.IHTAR_URUN
+                                 .Where(iu => iu.IHTAR_ID == i.IHTAR_ID)
+                                 .Select(iu => (int?)iu.URUN_ID)
+                                 .FirstOrDefault() ?? 0,
+
                              UrunAd = (from iu in context.IHTAR_URUN
-                                       join urun in context.URUN on iu.URUN_ID equals urun.URUN_ID
-                                       where iu.IHTAR_ID == ihtar.IHTAR_ID
-                                       select urun.URUN_AD).FirstOrDefault()
+                                       join u in context.URUN on iu.URUN_ID equals u.URUN_ID
+                                       where iu.IHTAR_ID == i.IHTAR_ID
+                                       select u.URUN_AD).FirstOrDefault() ?? string.Empty
                          };
 
             return result.ToList();

@@ -159,34 +159,25 @@ namespace Presentation.Controllers
         public ActionResult Update(IhtarDto model)
         {
             if (!ModelState.IsValid)
-            {
-                var errors = ModelState
-                    .Where(x => x.Value.Errors.Count > 0)
-                    .Select(x => new {
-                        Field = x.Key,
-                        Errors = x.Value.Errors.Select(e => e.ErrorMessage).ToList()
-                    })
-                    .ToList();
+                return Json(new { success = false, error = "ModelState geçersiz" });
 
-                return Json(new { success = false, error = "ModelState geçersiz", details = errors });
-            }
             try
             {
                 var entity = _ihtarService.GetByIdWithRelations(model.IhtarId);
                 if (entity == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
 
+                // Alanları DTO’dan entity’ye aktar
                 entity.BORC_TUTAR = model.BorcTutar;
                 entity.IHTAR_TAR_ZMN = model.IhtarTarih;
                 entity.MUSTERI_ID = model.MusteriId;
                 entity.AVUKAT_ID = model.AvukatId;
                 entity.SUBE_ID = model.SubeId;
 
+                // Ürün güncellemesi (tek ürün için)
                 if (model.UrunId > 0)
                 {
-                    if (entity.IhtarUrunler == null)
-                        entity.IhtarUrunler = new List<IhtarUrun>();
-
+                    // İlgili ürün ilişkisini güncelle
                     var urunRelation = entity.IhtarUrunler.FirstOrDefault();
                     if (urunRelation != null)
                     {
@@ -197,8 +188,7 @@ namespace Presentation.Controllers
                         entity.IhtarUrunler.Add(new IhtarUrun
                         {
                             URUN_ID = model.UrunId,
-                            IHTAR_ID = entity.IHTAR_ID,
-                            GRS_TAR_ZMN = DateTime.Now   // <-- eklendi: tarih alanı boş kalmasın diye
+                            IHTAR_ID = entity.IHTAR_ID
                         });
                     }
                 }
@@ -211,17 +201,10 @@ namespace Presentation.Controllers
             }
             catch (Exception ex)
             {
-                var message = ex.Message;
-                var inner = ex.InnerException;
-                while (inner != null)
-                {
-                    message += " | INNER: " + inner.Message;
-                    inner = inner.InnerException;
-                }
-
-                return Json(new { success = false, error = message });
+                return Json(new { success = false, error = ex.Message });
             }
         }
+
 
         // SİLME (soft delete)
         [HttpPost]

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Entity.Dto
 {
@@ -7,6 +8,8 @@ namespace Entity.Dto
     {
         public int IhtarId { get; set; }
         public decimal BorcTutar { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime IhtarTarih { get; set; }
 
         public int MusteriId { get; set; }
