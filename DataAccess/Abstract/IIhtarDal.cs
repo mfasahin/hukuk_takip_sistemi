@@ -8,5 +8,6 @@ namespace DataAccess.Abstract
     public interface IIhtarDal : IEntityRepository<Ihtar>
     {
         List<IhtarDto> GetIhtarWithRelations();
+        Ihtar GetByIdWithRelations(int id);
     }
 }

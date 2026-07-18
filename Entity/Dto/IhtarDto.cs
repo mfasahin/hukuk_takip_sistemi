@@ -1,8 +1,5 @@
-﻿    using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Entity.Dto
 {
@@ -21,9 +18,11 @@ namespace Entity.Dto
         public int SubeId { get; set; }
         public string SubeAd { get; set; }
 
-        public string UrunId { get; set; }
+        public int UrunId { get; set; }
         public string UrunAd {  get; set; }
 
         public DateTime? SilTarZmn { get; set; }
+        public List<UrunDto> Urunler { get; set; }
+
     }
 }

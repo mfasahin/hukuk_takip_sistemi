@@ -44,5 +44,9 @@ namespace Business.Concrete
         {
             return _ihtarDal.GetIhtarWithRelations();
         }
+        public Ihtar GetByIdWithRelations(int id)
+        {
+            return _ihtarDal.GetByIdWithRelations(id);
+        }
     }
 }

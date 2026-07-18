@@ -13,5 +13,6 @@ namespace Business.Abstract
         Ihtar GetById(int id);
 
         List<IhtarDto> GetIhtarWithRelations();
+        Ihtar GetByIdWithRelations(int id);
     }
 }

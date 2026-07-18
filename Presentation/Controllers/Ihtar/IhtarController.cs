@@ -1,5 +1,8 @@
 ﻿using Business.Abstract;
+using Entity.Concrete;
 using Entity.Dto;
+using Presentation.Models;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -88,125 +91,147 @@ namespace Presentation.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public ActionResult GetIhtar(int id)
+        {
+            var ihtar = _ihtarService.GetByIdWithRelations(id);   // <-- GetById DEĞİL, bu
+            if (ihtar == null) return HttpNotFound();
+
+            var urun = ihtar.IhtarUrunler?.FirstOrDefault();
+
+            var dto = new IhtarDto
+            {
+                IhtarId = ihtar.IHTAR_ID,
+                BorcTutar = ihtar.BORC_TUTAR,
+                IhtarTarih = ihtar.IHTAR_TAR_ZMN,
+                MusteriId = ihtar.MUSTERI_ID,
+                MusteriAd = ihtar.Musteri?.MUST_AD ?? string.Empty,
+                AvukatId = ihtar.AVUKAT_ID,
+                AvukatAd = ihtar.Avukat?.AVKT_AD ?? string.Empty,
+                SubeId = ihtar.SUBE_ID,
+                SubeAd = ihtar.Sube?.SUBE_ADI ?? string.Empty,
+                UrunId = urun?.URUN_ID ?? 0,
+                UrunAd = urun?.Urun?.URUN_AD ?? string.Empty,
+                SilTarZmn = ihtar.SIL_TAR_ZMN
+            };
+
+            return Json(dto, JsonRequestBehavior.AllowGet);
+        }
+        //GÜNCELLEME
+        [HttpPost]
+        public ActionResult UpdateIhtar(IhtarDto model)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { success = false, error = "ModelState geçersiz" });
+
+            try
+            {
+                var entity = _ihtarService.GetById(model.IhtarId);
+                if (entity == null)
+                    return Json(new { success = false, error = "Kayıt bulunamadı" });
+
+                // Alanları DTO’dan entity’ye aktar
+                entity.BORC_TUTAR = model.BorcTutar;
+                entity.IHTAR_TAR_ZMN = model.IhtarTarih;
+                entity.MUSTERI_ID = model.MusteriId;
+                entity.AVUKAT_ID = model.AvukatId;
+                entity.SUBE_ID = model.SubeId;
+
+                // Ürün güncellemesi (tek ürün için)
+                if (model.UrunId > 0)
+                {
+                    // İlgili ürün ilişkisini güncelle
+                    var urunRelation = entity.IhtarUrunler.FirstOrDefault();
+                    if (urunRelation != null)
+                    {
+                        urunRelation.URUN_ID = model.UrunId;
+                    }
+                    else
+                    {
+                        entity.IhtarUrunler.Add(new IhtarUrun
+                        {
+                            URUN_ID = model.UrunId,
+                            IHTAR_ID = entity.IHTAR_ID
+                        });
+                    }
+                }
+
+                entity.GNC_TAR_ZMN = DateTime.Now;
+
+                _ihtarService.Update(entity);
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
+        //[HttpPost]
+        //public ActionResult Create(IhtarModel ihtar)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        var errors = ModelState.Values.SelectMany(v => v.Errors)
+        //                                      .Select(e => e.ErrorMessage);
+        //        return Json(new { success = false, error = string.Join("; ", errors) });
+        //    }
+
+        //    try
+        //    {
+        //        var musteri = new Musteri
+        //        {
+        //            MUST_NO = ihtar.MustNo,
+        //            MUST_AD = ihtar.MustAd,
+        //            MUST_SOYAD = ihtar.MustSoyad,
+        //            MUST_KIMLIK_NO = ihtar.MustKimlikNo,
+        //            MUST_VKN_NO = ihtar.MustVknNo,
+        //            MUST_EPOSTA = ihtar.MustEposta,
+        //            MUST_TEL_NO = ihtar.MustTelNo,
+        //            GRS_TAR_ZMN = DateTime.Now
+        //        };
+
+        //        _ihtarService.Add(ihtar);
+
+        //        return Json(new { success = true });
+        //    }
+        //    catch (System.Data.Entity.Validation.DbEntityValidationException ex)
+        //    {
+        //        var errors = ex.EntityValidationErrors
+        //            .SelectMany(e => e.ValidationErrors)
+        //            .Select(e => $"Property: {e.PropertyName}, Error: {e.ErrorMessage}");
+        //        return Json(new { success = false, error = string.Join("; ", errors) });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, error = ex.Message });
+        //    }
+
+
+        ////SİLME
+        //[HttpPost]
+        ////[ValidateAntiForgeryToken]
+        //public ActionResult Delete(int id)
+        //{
+        //    try
+        //    {
+        //        var entity = _musteriService.GetById(id);
+        //        if (entity == null)
+        //            return Json(new { success = false, error = "Kayıt bulunamadı" });
+
+        //        // Soft delete → SilinmeTarihi doldur
+        //        entity.SIL_TAR_ZMN = DateTime.Now;
+        //        _musteriService.Update(entity);
+
+        //        return Json(new { success = true });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, error = ex.Message });
+        //    }
+        //}
+
     }
-
-    //[HttpPost]
-    //public ActionResult Create(IhtarModel ihtar)
-    //{
-    //    if (!ModelState.IsValid)
-    //    {
-    //        var errors = ModelState.Values.SelectMany(v => v.Errors)
-    //                                      .Select(e => e.ErrorMessage);
-    //        return Json(new { success = false, error = string.Join("; ", errors) });
-    //    }
-
-    //    try
-    //    {
-    //        var musteri = new Musteri
-    //        {
-    //            MUST_NO = ihtar.MustNo,
-    //            MUST_AD = ihtar.MustAd,
-    //            MUST_SOYAD = ihtar.MustSoyad,
-    //            MUST_KIMLIK_NO = ihtar.MustKimlikNo,
-    //            MUST_VKN_NO = ihtar.MustVknNo,
-    //            MUST_EPOSTA = ihtar.MustEposta,
-    //            MUST_TEL_NO = ihtar.MustTelNo,
-    //            GRS_TAR_ZMN = DateTime.Now
-    //        };
-
-    //        _ihtarService.Add(ihtar);
-
-    //        return Json(new { success = true });
-    //    }
-    //    catch (System.Data.Entity.Validation.DbEntityValidationException ex)
-    //    {
-    //        var errors = ex.EntityValidationErrors
-    //            .SelectMany(e => e.ValidationErrors)
-    //            .Select(e => $"Property: {e.PropertyName}, Error: {e.ErrorMessage}");
-    //        return Json(new { success = false, error = string.Join("; ", errors) });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return Json(new { success = false, error = ex.Message });
-    //    }
-    //}
-
-
-    //[HttpGet]
-    //public ActionResult GetMusteri(int id)
-    //{
-    //    var musteri = _musteriService.GetById(id);
-    //    if (musteri == null) return HttpNotFound();
-
-    //    var model = new MusteriModel
-    //    {
-    //        MusteriId = musteri.MUSTERI_ID,
-    //        MustNo = musteri.MUST_NO,
-    //        MustAd = musteri.MUST_AD,
-    //        MustSoyad = musteri.MUST_SOYAD,
-    //        MustKimlikNo = musteri.MUST_KIMLIK_NO,
-    //        MustVknNo = musteri.MUST_VKN_NO,
-    //        MustEposta = musteri.MUST_EPOSTA,
-    //        MustTelNo = musteri.MUST_TEL_NO,
-    //        //GNC_TAR_ZMN = musteri.GNC_TAR_ZMN
-    //    };
-
-    //    return Json(model, JsonRequestBehavior.AllowGet);
-    //}
-
-    //// GÜNCELLEME 
-    //[HttpPost]
-    //public ActionResult Update(MusteriModel model)
-    //{
-    //    if (!ModelState.IsValid)
-    //        return Json(new { success = false, error = "ModelState geçersiz" });
-
-    //    try
-    //    {
-    //        var entity = _musteriService.GetById(model.MusteriId);
-    //        if (entity == null)
-    //            return Json(new { success = false, error = "Kayıt bulunamadı" });
-
-    //        entity.MUST_NO = model.MustNo;
-    //        entity.MUST_AD = model.MustAd;
-    //        entity.MUST_SOYAD = model.MustSoyad;
-    //        entity.MUST_KIMLIK_NO = model.MustKimlikNo;
-    //        entity.MUST_VKN_NO = model.MustVknNo;
-    //        entity.MUST_EPOSTA = model.MustEposta;
-    //        entity.MUST_TEL_NO = model.MustTelNo;
-    //        entity.GNC_TAR_ZMN = DateTime.Now;
-
-    //        _musteriService.Update(entity);
-
-    //        return Json(new { success = true });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return Json(new { success = false, error = ex.Message });
-    //    }
-    //}
-
-    ////SİLME
-    //[HttpPost]
-    ////[ValidateAntiForgeryToken]
-    //public ActionResult Delete(int id)
-    //{
-    //    try
-    //    {
-    //        var entity = _musteriService.GetById(id);
-    //        if (entity == null)
-    //            return Json(new { success = false, error = "Kayıt bulunamadı" });
-
-    //        // Soft delete → SilinmeTarihi doldur
-    //        entity.SIL_TAR_ZMN = DateTime.Now;
-    //        _musteriService.Update(entity);
-
-    //        return Json(new { success = true });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return Json(new { success = false, error = ex.Message });
-    //    }
-    //}
-
 }
+

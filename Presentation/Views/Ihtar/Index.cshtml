@@ -6,13 +6,17 @@
 
 <h2>İhtarlar</h2>
 
-<div class="mb-3" style="display:flex; justify-content:flex-end;">
-    <button type="button" class="btn btn-success"
-            data-bs-toggle="modal"
-            data-bs-target="#createModal">
-        İhtar Ekle
-    </button>
-</div>
+<tr>
+    <td colspan="6">
+        <div style="display:flex; justify-content:flex-end;">
+            <button type="button" class="btn btn-success"
+                    data-bs-toggle="modal"
+                    data-bs-target="#createModal">
+                İhtar Ekle
+            </button>
+        </div>
+    </td>
+</tr>
 
 <table class="table table-striped">
     <thead>
@@ -38,19 +42,14 @@
                 <td>@ihtar.SubeAd</td>
                 <td>@ihtar.AvukatAd</td>
                 <td>
-                    @*@if (ihtar.UrunId != null && ihtar.UrunId.Any())
+                    @if (ihtar.UrunId > 0)
                     {
-                        <ul class="list-unstyled mb-0">
-                            @foreach (var urun in ihtar.UrunId)
-                            {
-                                <li>@urun.UrunId</li>
-                            }
-                        </ul>
+                        <span>@ihtar.UrunAd</span>
                     }
                     else
                     {
                         <span class="text-muted">Ürün yok</span>
-                    }*@
+                    }
                 </td>
                 <td>
                     <button class="btn btn-sm btn-warning updateBtn" data-id="@ihtar.IhtarId">Güncelle</button>
@@ -66,14 +65,6 @@
 @section Scripts {
     <script src="~/Scripts/crud.js"></script>
     <script>
-        initCrud("Ihtar", [
-            "IhtarId",
-            "MusteriId",
-            "BorcTutar",
-            "IhtarTarih",
-            "SubeId",
-            "AvukatId",
-            "SecilenUrunler"
-        ]);
+        initCrud("Ihtar", ["IhtarId", "MusteriId", "SubeId", "AvukatId", "BorcTutar", "IhtarTarZmn"]);
     </script>
 }

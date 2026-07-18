@@ -40,6 +40,5 @@ namespace Entity.Concrete
         public virtual Avukat Avukat { get; set; }
         public virtual Sube Sube { get; set; }
         public virtual ICollection<IhtarUrun> IhtarUrunler { get; set; }
-
     }
 }
