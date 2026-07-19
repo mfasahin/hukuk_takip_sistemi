@@ -155,6 +155,7 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="Controllers\Avukat\AvukatController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\Icra\IcraController.cs" />
     <Compile Include="Controllers\Ihtar\IhtarController.cs" />
     <Compile Include="Controllers\Musteri\MusteriController.cs" />
     <Compile Include="Controllers\Urun\UrunController.cs" />
@@ -221,7 +222,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\Icra\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap\css\bootstrap-grid.css.map" />
@@ -254,6 +254,8 @@
     <Content Include="Views\Shared\_Sidebar.cshtml" />
     <Content Include="Views\Ihtar\Index.cshtml" />
     <Content Include="Views\Ihtar\_IhtarModals.cshtml" />
+    <Content Include="Views\Icra\Index.cshtml" />
+    <Content Include="Views\Icra\_IcraModals.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Business\Business.csproj">

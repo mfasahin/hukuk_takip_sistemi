@@ -1,0 +1,95 @@
+﻿@model Entity.Dto.IcraDto
+
+<!-- Create Modal -->
+<div class="modal fade" id="createModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            @using (Html.BeginForm("Create", "Icra", FormMethod.Post, new { id = "createForm" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title">Yeni İcra</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.IhtarUrunId, "İhtar / Ürün")
+                            @Html.DropDownListFor(m => m.IhtarUrunId,
+                                ViewBag.IhtarUrunList as IEnumerable<SelectListItem>,
+                                "Seçiniz", new { @class = "form-select" })
+                        </div>
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.MahkemeId, "Mahkeme")
+                            @Html.DropDownListFor(m => m.MahkemeId,
+                                ViewBag.MahkemeList as IEnumerable<SelectListItem>,
+                                "Seçiniz", new { @class = "form-select" })
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.IcraTakipTar, "İcra Takip Tarihi")
+                            @Html.TextBoxFor(m => m.IcraTakipTar, new { @class = "form-control", type = "date" })
+                        </div>
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.IcraDosyaNo, "İcra Dosya No")
+                            @Html.TextBoxFor(m => m.IcraDosyaNo, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="createSaveBtn" class="btn btn-primary">Kaydet</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Update Modal -->
+<div class="modal fade" id="updateModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            @using (Html.BeginForm("Update", "Icra", FormMethod.Post, new { id = "updateForm" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.IcraId)
+
+                <div class="modal-header">
+                    <h5 class="modal-title">İcra Güncelle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.IhtarUrunId, "İhtar / Ürün")
+                            @Html.DropDownListFor(m => m.IhtarUrunId,
+                                ViewBag.IhtarUrunList as IEnumerable<SelectListItem>,
+                                "Seçiniz", new { @class = "form-select" })
+                        </div>
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.MahkemeId, "Mahkeme")
+                            @Html.DropDownListFor(m => m.MahkemeId,
+                                ViewBag.MahkemeList as IEnumerable<SelectListItem>,
+                                "Seçiniz", new { @class = "form-select" })
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.IcraTakipTar, "İcra Takip Tarihi")
+                            @Html.TextBoxFor(m => m.IcraTakipTar, new { @class = "form-control", type = "date" })
+                        </div>
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.IcraDosyaNo, "İcra Dosya No")
+                            @Html.TextBoxFor(m => m.IcraDosyaNo, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="updateSaveBtn" class="btn btn-primary">Güncelle</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

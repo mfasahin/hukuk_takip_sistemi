@@ -60,7 +60,9 @@
     <Compile Include="Concrete\Musteri.cs" />
     <Compile Include="Concrete\Sube.cs" />
     <Compile Include="Concrete\Urun.cs" />
+    <Compile Include="Dto\IcraDto.cs" />
     <Compile Include="Dto\IhtarDto.cs" />
+    <Compile Include="Dto\IhtarUrunDto.cs" />
     <Compile Include="Dto\UrunDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

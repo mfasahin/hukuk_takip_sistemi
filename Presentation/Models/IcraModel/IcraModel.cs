@@ -14,7 +14,7 @@ namespace Presentation.Models
 
         public int MahkemeId { get; set; } // FK
 
-        public DateTime IcraTakipTar { get; set; } // NOT NULL araştır. zaman da eklenebilir
+        public DateTime IcraTakipTar { get; set; } // NOT NULL araştır.
 
         public string IcraDosyaNo { get; set; } // NOT NULL
     }

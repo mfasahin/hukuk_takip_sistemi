@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Entity.Dto.IcraDto>
+@{
+    ViewBag.Title = "İcra Takip";
+}
+
+<div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">
+        İcra Ekle
+    </button>
+</div>
+
+<h2>İcra Takip</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Dosya No</th>
+            <th>Takip Tarihi</th>
+            <th>Mahkeme</th>
+            <th>Müşteri</th>
+            <th>Ürün</th>
+            <th>Borç Tutarı</th>
+            <th>Avukat</th>
+            <th>Şube</th>
+            <th>İşlem</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var icra in Model)
+        {
+            <tr>
+                <td>@icra.IcraDosyaNo</td>
+                <td>@icra.IcraTakipTar.ToString("dd.MM.yyyy")</td>
+                <td>@icra.MahkemeAd</td>
+                <td>@icra.MusteriAd</td>
+                <td>@icra.UrunAd</td>
+                <td>@icra.BorcTutar</td>
+                <td>@icra.AvukatAd</td>
+                <td>@icra.SubeAd</td>
+                <td>
+                    <button class="btn btn-sm btn-warning updateBtn" data-id="@icra.IcraId">Güncelle</button>
+                    <button class="btn btn-sm btn-danger deleteBtn" data-id="@icra.IcraId">Sil</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@Html.Partial("_IcraModals", new Entity.Dto.IcraDto())
+
+@section Scripts {
+    <script src="~/Scripts/crud.js"></script>
+    <script>
+        initCrud("Icra", ["IcraId", "IhtarUrunId", "MahkemeId", "IcraTakipTar", "IcraDosyaNo"]);
+    </script>
+}

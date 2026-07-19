@@ -1,16 +1,16 @@
 ﻿using Entity.Concrete;
+using Entity.Dto;
 using System.Collections.Generic;
 
 namespace Business.Abstract
 {
     public interface IIcraService
     {
-        List<Icra> GetAll();
+        List<IcraDto> GetIcraWithRelations();
+        IcraDto GetByIdWithRelations(int id);
+        List<IhtarUrunDto> GetIhtarUrun();
+        Icra GetById(int id);
         void Add(Icra icra);
         void Update(Icra icra);
-        void Delete(Icra icra);
-        Icra GetById(int id);
-
-
     }
 }

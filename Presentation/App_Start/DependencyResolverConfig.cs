@@ -27,15 +27,17 @@ namespace Presentation.App_Start
             container.RegisterType<IIhtarService, IhtarManager>();
             container.RegisterType<IIhtarDal, EfIhtarDal>();
 
-            container.RegisterType<IIcraService, IcraManager>();
-            container.RegisterType<IIcraDal, EfIcraDal>();
-
             container.RegisterType<ISubeService, SubeManager>();
             container.RegisterType<ISubeDal, EfSubeDal>();
 
             container.RegisterType<IIhtarUrunService, IhtarUrunManager>();
             container.RegisterType<IIhtarUrunDal, EfIhtarUrunDal>();
 
+            container.RegisterType<IIcraService, IcraManager>();
+            container.RegisterType<IIcraDal, EfIcraDal>();
+
+            container.RegisterType<IMahkemeService, MahkemeManager>();
+            container.RegisterType<IMahkemeDal, EfMahkemeDal>();
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }

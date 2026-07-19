@@ -20,17 +20,23 @@ namespace Presentation
             container.RegisterType<IAvukatService, AvukatManager>();
             container.RegisterType<ISubeService, SubeManager>();
 
+            container.RegisterType<IUrunService, UrunManager>();
+            container.RegisterType<IIhtarUrunService, IhtarUrunManager>();
+
+            container.RegisterType<IIcraService, IcraManager>();
+            container.RegisterType<IMahkemeService, MahkemeManager>();
+
             // DataAccess katmanı DAL sınıfları
             container.RegisterType<IIhtarDal, EfIhtarDal>();
             container.RegisterType<IMusteriDal, EfMusteriDal>();
             container.RegisterType<IAvukatDal, EfAvukatDal>();
             container.RegisterType<ISubeDal, EfSubeDal>();
-
-            container.RegisterType<IUrunService, UrunManager>();
-            container.RegisterType<IUrunDal, EfUrunDal>();
-
-            container.RegisterType<IIhtarUrunService, IhtarUrunManager>();
+            
+            container.RegisterType<IUrunDal, EfUrunDal>();          
             container.RegisterType<IIhtarUrunDal, EfIhtarUrunDal>();
+
+            container.RegisterType<IIcraDal, EfIcraDal>();            
+            container.RegisterType<IMahkemeDal, EfMahkemeDal>();
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
