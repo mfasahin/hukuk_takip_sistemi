@@ -6,14 +6,14 @@ namespace DataAccess.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    [GeneratedCode("EntityFramework.Migrations", "6.5.2")]
-    public sealed partial class ChangeIhtarUrun : IMigrationMetadata
+    [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
+    public sealed partial class InitGuid : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ChangeIhtarUrun));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitGuid));
         
         string IMigrationMetadata.Id
         {
-            get { return "202607161100513_ChangeIhtarUrun"; }
+            get { return "202607191606219_InitGuid"; }
         }
         
         string IMigrationMetadata.Source

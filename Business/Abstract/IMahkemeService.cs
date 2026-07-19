@@ -1,13 +1,14 @@
 ﻿using Entity.Concrete;
+using System;
 using System.Collections.Generic;
 
 namespace Business.Abstract
 {
     public interface IMahkemeService
     {
-        List<Mahkeme> GetAll();
-        Mahkeme GetById(int id);
-        void Add(Mahkeme mahkeme);
-        void Update(Mahkeme mahkeme);
+        List<IcraMahkeme> GetAll();
+        IcraMahkeme GetById(Guid id);
+        void Add(IcraMahkeme mahkeme);
+        void Update(IcraMahkeme mahkeme);
     }
 }

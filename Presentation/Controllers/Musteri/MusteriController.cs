@@ -85,7 +85,7 @@ namespace Presentation.Controllers
 
 
         [HttpGet]
-        public ActionResult GetMusteri(int id)
+        public ActionResult GetMusteri(Guid id)
         {
             var musteri = _musteriService.GetById(id);
             if (musteri == null) return HttpNotFound();
@@ -141,7 +141,7 @@ namespace Presentation.Controllers
         //SİLME
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(Guid id)
         {
             try
             {

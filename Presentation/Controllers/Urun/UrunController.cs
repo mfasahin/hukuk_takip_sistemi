@@ -70,7 +70,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetUrun(int id)
+        public ActionResult GetUrun(Guid id)
         {
             var urun = _urunService.GetById(id);
             if (urun == null) return HttpNotFound();
@@ -118,7 +118,7 @@ namespace Presentation.Controllers
         //SİLME
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(Guid id)
         {
             try
             {

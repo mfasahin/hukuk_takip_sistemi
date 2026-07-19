@@ -6,20 +6,6 @@ namespace Presentation.Models
 {
     public class IhtarModel
     {
-        //public int IhtarId {  get; set; }
-        //public int MusteriId { get; set; }
-        //public string MusteriAd { get; set; }
-
-        //public int SubeId { get; set; }
-        //public string SubeAd { get; set; }
-
-        //public int AvukatId { get; set; }
-        //public string AvukatAd { get; set; }
-
-        //public decimal BorcTutar { get; set; } // DECIMAL(12,2)
-
-        //[DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
-        //public DateTime IhtarTarZmn { get; set; } 
 
         public DateTime? GrsTarZmn { get; set; }
 
@@ -27,22 +13,13 @@ namespace Presentation.Models
 
         public DateTime? SilTarZmn { get; set; }
 
-        //public List<IhtarUrunModel> Urunler { get; set; } // <-- Burada List<IhtarUrunModel>
-
-        //// İhtara bağlı ürünler
-        ////public List<UrunModel> Urunler { get; set; }
-
-        //// Yeni ihtar eklerken seçilen ürünlerin ID’leri
-        //public List<int> SecilenUrunler { get; set; }
-
-
-        public int IhtarId { get; set; }
+        public Guid IhtarId { get; set; }
 
         // FK alanları
-        public int MusteriId { get; set; }
-        public int SubeId { get; set; }
-        public int AvukatId { get; set; }
-        public int UrunId { get; set; }
+        public Guid MusteriId { get; set; }
+        public Guid SubeId { get; set; }
+        public Guid AvukatId { get; set; }
+        public Guid UrunId { get; set; }
 
         // Görüntülenecek alanlar
         public string MusteriAd { get; set; }

@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using DataAccess.Abstract;
 using Entity.Concrete;
+using System;
 using System.Collections.Generic;
 
 namespace Business.Concrete
@@ -33,7 +34,7 @@ namespace Business.Concrete
             _avukatDal.Delete(avukat);
         }
 
-        public Avukat GetById(int id)
+        public Avukat GetById(Guid id)
         {
             return _avukatDal.Get(a => a.AVUKAT_ID == id);
         }

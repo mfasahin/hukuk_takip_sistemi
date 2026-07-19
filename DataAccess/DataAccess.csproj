@@ -68,21 +68,9 @@
     <Compile Include="Concrete\EfMusteriDal.cs" />
     <Compile Include="Concrete\EfSubeDal.cs" />
     <Compile Include="Concrete\EfUrunDal.cs" />
-    <Compile Include="Migrations\202607101327343_InitialCreate.cs" />
-    <Compile Include="Migrations\202607101327343_InitialCreate.Designer.cs">
-      <DependentUpon>202607101327343_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202607161046538_ResetDb.cs" />
-    <Compile Include="Migrations\202607161046538_ResetDb.Designer.cs">
-      <DependentUpon>202607161046538_ResetDb.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202607161047539_ChangeVKNDb.cs" />
-    <Compile Include="Migrations\202607161047539_ChangeVKNDb.Designer.cs">
-      <DependentUpon>202607161047539_ChangeVKNDb.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202607161100513_ChangeIhtarUrun.cs" />
-    <Compile Include="Migrations\202607161100513_ChangeIhtarUrun.Designer.cs">
-      <DependentUpon>202607161100513_ChangeIhtarUrun.cs</DependentUpon>
+    <Compile Include="Migrations\202607191606219_InitGuid.cs" />
+    <Compile Include="Migrations\202607191606219_InitGuid.Designer.cs">
+      <DependentUpon>202607191606219_InitGuid.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -102,17 +90,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202607101327343_InitialCreate.resx">
-      <DependentUpon>202607101327343_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202607161046538_ResetDb.resx">
-      <DependentUpon>202607161046538_ResetDb.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202607161047539_ChangeVKNDb.resx">
-      <DependentUpon>202607161047539_ChangeVKNDb.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202607161100513_ChangeIhtarUrun.resx">
-      <DependentUpon>202607161100513_ChangeIhtarUrun.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202607191606219_InitGuid.resx">
+      <DependentUpon>202607191606219_InitGuid.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

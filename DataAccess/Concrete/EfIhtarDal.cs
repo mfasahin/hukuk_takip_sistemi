@@ -3,10 +3,9 @@ using DataAccess.Abstract;
 using DataAccess.Concrete;
 using Entity.Concrete;
 using Entity.Dto;
+using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-
 
 public class EfIhtarDal : EfEntityRepositoryBase<Ihtar, AppDbContext>, IIhtarDal
 {
@@ -21,21 +20,21 @@ public class EfIhtarDal : EfEntityRepositoryBase<Ihtar, AppDbContext>, IIhtarDal
                          where i.SIL_TAR_ZMN == null
                          select new IhtarDto
                          {
-                             IhtarId = i.IHTAR_ID,
+                             IhtarId = i.IHTAR_ID,          // Guid
                              BorcTutar = i.BORC_TUTAR,
                              IhtarTarih = i.IHTAR_TAR_ZMN,
-                             MusteriId = m.MUSTERI_ID,
+                             MusteriId = m.MUSTERI_ID,      // Guid
                              MusteriAd = m.MUST_AD + " " + m.MUST_SOYAD,
-                             AvukatId = a.AVUKAT_ID,
+                             AvukatId = a.AVUKAT_ID,        // Guid
                              AvukatAd = a.AVKT_AD,
-                             SubeId = s.SUBE_ID,
+                             SubeId = s.SUBE_ID,            // Guid
                              SubeAd = s.SUBE_ADI,
 
                              // ürün: ilişkili ilk IhtarUrun kaydından çekiliyor
                              UrunId = context.IHTAR_URUN
                                  .Where(iu => iu.IHTAR_ID == i.IHTAR_ID)
-                                 .Select(iu => (int?)iu.URUN_ID)
-                                 .FirstOrDefault() ?? 0,
+                                 .Select(iu => (Guid?)iu.URUN_ID)   // Guid tipine çevrildi
+                                 .FirstOrDefault() ?? Guid.Empty,
 
                              UrunAd = (from iu in context.IHTAR_URUN
                                        join u in context.URUN on iu.URUN_ID equals u.URUN_ID
@@ -47,7 +46,7 @@ public class EfIhtarDal : EfEntityRepositoryBase<Ihtar, AppDbContext>, IIhtarDal
         }
     }
 
-    public Ihtar GetByIdWithRelations(int id)
+    public Ihtar GetByIdWithRelations(Guid id)
     {
         using (var context = new AppDbContext())
         {
@@ -70,15 +69,11 @@ public class EfIhtarDal : EfEntityRepositoryBase<Ihtar, AppDbContext>, IIhtarDal
                            select new { IhtarUrun = iu, Urun = u })
                            .ToList();
 
-            // 3) KRİTİK: fixup veriyi bağladı ama "yüklendi" olarak işaretlemedi.
-            //    Bunu context kapanmadan ÖNCE manuel yapmazsanız, dışarıda
-            //    IhtarUrunler'e erişildiğinde EF tekrar DB'ye gitmeye çalışır ve patlar.
+            // 3) EF fixup işlemleri
             context.Entry(result.Ihtar)
                    .Collection(i => i.IhtarUrunler)
                    .IsLoaded = true;
 
-            // Her IhtarUrun'un içindeki Urun referansı da (tekil ilişki) genelde
-            // otomatik IsLoaded=true olur, ama garantiye almak için elle de işaretleyebilirsiniz:
             foreach (var x in urunler)
             {
                 context.Entry(x.IhtarUrun)

@@ -1,39 +1,30 @@
-﻿using System;
+﻿using Entity.Abstract;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entity.Concrete
 {
     [Table("ICRA", Schema = "dbo")]
-    public class Icra
+    public class Icra : BaseEntity
     {
         [Key]
-        public int ICRA_ID { get; set; } // PK
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public Guid ICRA_ID { get; set; } // PK
 
         [Required]
-        public int IHTAR_URUN_ID { get; set; } // FK
+        public Guid IHTAR_URUN_ID { get; set; } // FK
 
         [Required]
-        public int MAHKEME_ID { get; set; } // FK
+        public Guid MAHKEME_ID { get; set; } // FK
 
-        [Required]
-        public DateTime ICRA_TAKIP_TAR { get; set; } // NOT NULL araştır. zaman da eklenebilir
+        public DateTime ICRA_TAKIP_TAR { get; set; }
 
-        [Required]
         [StringLength(15)]
-        public string ICRA_DOSYA_NO { get; set; } // NOT NULL
-
-        public DateTime GRS_TAR_ZMN { get; set; } 
-        public int GRS_KULLANICI_ID { get; set; } 
-
-        public DateTime? GNC_TAR_ZMN { get; set; }
-        public int? GNC_KULLANICI_ID { get; set; }
-
-        public DateTime? SIL_TAR_ZMN { get; set; }
-        public int? SIL_KULLANICI_ID { get; set; }
+        public string ICRA_DOSYA_NO { get; set; }
 
         // Navigation Properties
         public IhtarUrun IhtarUrun { get; set; }
-        public Mahkeme Mahkeme { get; set; }
+        public IcraMahkeme Mahkeme { get; set; }
     }
 }

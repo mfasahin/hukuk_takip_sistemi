@@ -4,7 +4,7 @@ namespace Presentation.Models
 {
     public class AvukatModel
     {
-        public int AvukatId { get; set; } //PK
+        public Guid AvukatId { get; set; } //PK
 
         public string AvktAd { get; set; } // NOT NULL
 

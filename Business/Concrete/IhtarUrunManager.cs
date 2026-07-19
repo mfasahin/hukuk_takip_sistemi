@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using DataAccess.Abstract;
 using Entity.Concrete;
+using System;
 using System.Collections.Generic;
 
 namespace Business.Concrete
@@ -33,7 +34,7 @@ namespace Business.Concrete
             _ihtarUrunDal.Delete(ihtarUrun);
         }
 
-        public IhtarUrun GetById(int id)
+        public IhtarUrun GetById(Guid id)
         {
             return _ihtarUrunDal.Get(i => i.IHTAR_URUN_ID == id);
         }

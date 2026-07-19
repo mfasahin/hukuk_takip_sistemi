@@ -1,4 +1,5 @@
 ﻿using Entity.Concrete;
+using System;
 using System.Collections.Generic;
 
 namespace Business.Abstract
@@ -9,6 +10,6 @@ namespace Business.Abstract
         void Add(Musteri musteri);
         void Update(Musteri musteri);
         void Delete(Musteri musteri);
-        Musteri GetById(int id); 
+        Musteri GetById(Guid id); 
     }
 }

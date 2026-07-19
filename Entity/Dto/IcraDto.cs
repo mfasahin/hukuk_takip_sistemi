@@ -4,11 +4,11 @@ namespace Entity.Dto
 {
     public class IcraDto
     {
-        public int IcraId { get; set; }
+        public Guid IcraId { get; set; }
 
-        public int IhtarUrunId { get; set; }
+        public Guid IhtarUrunId { get; set; }
 
-        public int MahkemeId { get; set; }
+        public Guid MahkemeId { get; set; }
         public string MahkemeAd { get; set; }
 
         public DateTime IcraTakipTar { get; set; }

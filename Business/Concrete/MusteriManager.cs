@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using DataAccess.Abstract;
 using Entity.Concrete;
+using System;
 using System.Collections.Generic;
 
 namespace Business.Concrete
@@ -34,7 +35,7 @@ namespace Business.Concrete
             _musteriDal.Delete(musteri);
         }
 
-        public Musteri GetById(int id)
+        public Musteri GetById(Guid id)
         {
             return _musteriDal.Get(m => m.MUSTERI_ID == id);
         }

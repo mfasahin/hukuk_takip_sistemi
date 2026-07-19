@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\BaseEntity.cs" />
     <Compile Include="Concrete\Avukat.cs" />
     <Compile Include="Concrete\Icra.cs" />
     <Compile Include="Concrete\Icra_Mahkeme.cs" />

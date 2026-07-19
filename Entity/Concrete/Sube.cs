@@ -1,44 +1,32 @@
-﻿using System;
+﻿using Entity.Abstract;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Entity.Concrete
 {
     [Table("SUBE", Schema = "dbo")]
-    public class Sube
+    public class Sube : BaseEntity
     {
         [Key]
-        public int SUBE_ID { get; set; } //PK
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public Guid SUBE_ID { get; set; } //PK
 
-        [Required]
         [StringLength(5)]
-        public string SUBE_KODU { get; set; } // NOT NULL
-
-        [Required]
-        [StringLength(25)]
-        public string SUBE_ADI { get; set; } // NOT NULL
+        public string SUBE_KODU { get; set; } 
 
         [StringLength(25)]
-        public string SUBE_BOLGE { get; set; } 
+        public string SUBE_ADI { get; set; } 
+
+        [StringLength(25)]
+        public string SUBE_BOLGE { get; set; }
 
         [StringLength(75)]
-        public string SUBE_ADRES { get; set; } 
+        public string SUBE_ADRES { get; set; }
 
         [StringLength(15)]
         public string SUBE_TEL_NO { get; set; }
-
-        public DateTime? GRS_TAR_ZMN { get; set; }
-        public int? GRS_KULLANICI_ID { get; set; }
-
-        public DateTime? GNC_TAR_ZMN { get; set; }
-        public int? GNC_KULLANICI_ID { get; set; }
-
-        public DateTime? SIL_TAR_ZMN { get; set; }
-        public int? SIL_KULLANICI_ID { get; set; }
 
         public virtual ICollection<Ihtar> Ihtars { get; set; }
     }

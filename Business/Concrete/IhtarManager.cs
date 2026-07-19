@@ -2,6 +2,7 @@
 using DataAccess.Abstract;
 using Entity.Concrete;
 using Entity.Dto;
+using System;
 using System.Collections.Generic;
 
 namespace Business.Concrete
@@ -35,7 +36,7 @@ namespace Business.Concrete
             _ihtarDal.Delete(ihtar);
         }
 
-        public Ihtar GetById(int id)
+        public Ihtar GetById(Guid id)
         {
             return _ihtarDal.Get(Ihtar => Ihtar.IHTAR_ID == id);
         }
@@ -44,7 +45,7 @@ namespace Business.Concrete
         {
             return _ihtarDal.GetIhtarWithRelations();
         }
-        public Ihtar GetByIdWithRelations(int id)
+        public Ihtar GetByIdWithRelations(Guid id)
         {
             return _ihtarDal.GetByIdWithRelations(id);
         }

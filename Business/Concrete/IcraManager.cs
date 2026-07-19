@@ -2,6 +2,7 @@
 using DataAccess.Abstract;
 using Entity.Concrete;
 using Entity.Dto;
+using System;
 using System.Collections.Generic;
 
 namespace Business.Concrete
@@ -16,9 +17,9 @@ namespace Business.Concrete
         }
 
         public List<IcraDto> GetIcraWithRelations() => _icraDal.GetIcraWithRelations();
-        public IcraDto GetByIdWithRelations(int id) => _icraDal.GetByIdWithRelations(id);
+        public IcraDto GetByIdWithRelations(Guid id) => _icraDal.GetByIdWithRelations(id);
         public List<IhtarUrunDto> GetIhtarUrun() => _icraDal.GetIhtarUrun();
-        public Icra GetById(int id) => _icraDal.Get(i => i.ICRA_ID == id);
+        public Icra GetById(Guid id) => _icraDal.Get(i => i.ICRA_ID == id);
         public void Add(Icra icra) => _icraDal.Add(icra);
         public void Update(Icra icra) => _icraDal.Update(icra);
     }

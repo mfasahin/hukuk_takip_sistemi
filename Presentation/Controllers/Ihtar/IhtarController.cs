@@ -84,7 +84,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetIhtar(int id)
+        public ActionResult GetIhtar(Guid id)
         {
             var ihtar = _ihtarService.GetByIdWithRelations(id);
             if (ihtar == null) return HttpNotFound();
@@ -102,7 +102,7 @@ namespace Presentation.Controllers
                 AvukatAd = ihtar.Avukat?.AVKT_AD ?? string.Empty,
                 SubeId = ihtar.SUBE_ID,
                 SubeAd = ihtar.Sube?.SUBE_ADI ?? string.Empty,
-                UrunId = urun?.URUN_ID ?? 0,
+                UrunId = urun?.URUN_ID ?? Guid.Empty,
                 UrunAd = urun?.Urun?.URUN_AD ?? string.Empty,
                 SilTarZmn = ihtar.SIL_TAR_ZMN
             };
@@ -136,7 +136,7 @@ namespace Presentation.Controllers
                     GRS_TAR_ZMN = DateTime.Now
                 };
 
-                if (model.UrunId > 0)
+                if (model.UrunId != Guid.Empty)
                 {
                     entity.IhtarUrunler = new List<IhtarUrun>
                     {
@@ -175,7 +175,7 @@ namespace Presentation.Controllers
                 entity.SUBE_ID = model.SubeId;
 
                 // Ürün güncellemesi (tek ürün için)
-                if (model.UrunId > 0)
+                if (model.UrunId != Guid.Empty)
                 {
                     // İlgili ürün ilişkisini güncelle
                     var urunRelation = entity.IhtarUrunler.FirstOrDefault();
@@ -208,7 +208,7 @@ namespace Presentation.Controllers
 
         // SİLME (soft delete)
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(Guid id)
         {
             try
             {

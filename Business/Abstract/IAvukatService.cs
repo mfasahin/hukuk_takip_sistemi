@@ -1,4 +1,5 @@
 ﻿using Entity.Concrete;
+using System;
 using System.Collections.Generic;
 
 namespace Business.Abstract
@@ -9,6 +10,6 @@ namespace Business.Abstract
         void Add(Avukat avukat);
         void Update(Avukat avukat);
         void Delete(Avukat avukat);
-        Avukat GetById(int id);
+        Avukat GetById(Guid id);
     }
 }

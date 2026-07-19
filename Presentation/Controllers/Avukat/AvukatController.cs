@@ -79,7 +79,7 @@ namespace Presentation.Controllers
 
         //lİSTELEME
         [HttpGet]
-        public ActionResult GetAvukat(int id)
+        public ActionResult GetAvukat(Guid id)
         {
             var avukat = _avukatService.GetById(id);
             if (avukat == null) return HttpNotFound();
@@ -135,7 +135,7 @@ namespace Presentation.Controllers
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(Guid id)
         {
             try
             {

@@ -26,7 +26,7 @@ namespace Business.Concrete
         }
 
         // Id’ye göre şube getir
-        public Sube GetById(int id)
+        public Sube GetById(Guid id)
         {
             return _subeDal.Get(s => s.SUBE_ID == id);
         }

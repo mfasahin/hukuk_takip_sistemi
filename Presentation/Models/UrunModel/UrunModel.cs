@@ -5,7 +5,7 @@ namespace Presentation.Models
 {
     public class UrunModel
     {
-        public int UrunId { get; set; } //PK
+        public Guid UrunId { get; set; } //PK
 
         public string UrunAd { get; set; } // NOT NULL
 

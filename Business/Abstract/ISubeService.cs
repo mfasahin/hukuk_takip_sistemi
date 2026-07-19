@@ -13,6 +13,6 @@ namespace Business.Abstract
         void Add(Sube sube);
         void Update(Sube sube);
         void Delete(Sube sube);
-        Sube GetById(int id);
+        Sube GetById(Guid id);
     }
 }

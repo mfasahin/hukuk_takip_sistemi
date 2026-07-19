@@ -41,7 +41,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetIcra(int id)
+        public ActionResult GetIcra(Guid id)
         {
             var dto = _icraService.GetByIdWithRelations(id);
             if (dto == null) return HttpNotFound();
@@ -111,7 +111,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(Guid id)
         {
             try
             {

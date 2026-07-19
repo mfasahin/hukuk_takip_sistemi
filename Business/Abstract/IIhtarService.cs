@@ -1,5 +1,6 @@
 ﻿using Entity.Concrete;
 using Entity.Dto;
+using System;
 using System.Collections.Generic;
 
 namespace Business.Abstract
@@ -10,9 +11,9 @@ namespace Business.Abstract
         void Add(Ihtar ihtar);
         void Update(Ihtar ihtar);
         void Delete(Ihtar ihtar);
-        Ihtar GetById(int id);
+        Ihtar GetById(Guid id);
 
         List<IhtarDto> GetIhtarWithRelations();
-        Ihtar GetByIdWithRelations(int id);
+        Ihtar GetByIdWithRelations(Guid id);
     }
 }

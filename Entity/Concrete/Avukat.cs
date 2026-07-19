@@ -1,36 +1,33 @@
-﻿using System;
+﻿using Entity.Abstract;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-
 namespace Entity.Concrete
 {
     [Table("AVUKAT", Schema = "dbo")]
-    public class Avukat
+    public class Avukat : BaseEntity
     {
+
         [Key]
-        public int AVUKAT_ID { get; set; } //PK
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public Guid AVUKAT_ID { get; set; } //PK
 
-        [Required]
         [StringLength(25)]
-        public string AVKT_AD { get; set; } // NOT NULL
+        public string AVKT_AD { get; set; }
 
-        [Required]
         [StringLength(25)]
-        public string AVKT_SOYAD { get; set; } // NOT NULL
+        public string AVKT_SOYAD { get; set; }
 
-        [Required]
         [StringLength(10)]
-        public string TBB_SICIL_NO { get; set; } // NOT NULL
+        public string TBB_SICIL_NO { get; set; }
 
-        [Required]
         [StringLength(25)]
-        public string AVKT_EPOSTA { get; set; } // NOT NULL
+        public string AVKT_EPOSTA { get; set; }
 
-        [Required]
         [StringLength(15)]
-        public string AVKT_TEL_NO { get; set; } // NOT NULL
+        public string AVKT_TEL_NO { get; set; }
 
         [StringLength(50)]
         public string HKK_BURO_AD { get; set; }
@@ -40,15 +37,6 @@ namespace Entity.Concrete
 
         [StringLength(15)]
         public string OFIS_TEL_NO { get; set; }
-
-        public DateTime? GRS_TAR_ZMN { get; set; }
-        public int? GRS_KULLANICI_ID { get; set; }
-
-        public DateTime? GNC_TAR_ZMN { get; set; }
-        public int? GNC_KULLANICI_ID { get; set; }
-
-        public DateTime? SIL_TAR_ZMN { get; set; }
-        public int? SIL_KULLANICI_ID { get; set; }
 
         public virtual ICollection<Ihtar> Ihtars { get; set; }
     }
