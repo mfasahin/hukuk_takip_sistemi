@@ -1,32 +1,65 @@
-﻿using Entity.Concrete;
+﻿using System;
+using System.Linq;
+using Entity.Concrete;
 using Presentation.Models;
-using System;
 
 namespace Presentation.Mapping
 {
-    public static class UrunMappingExtansion
+    public static class IhtarMappingExtansion
     {
-        public static UrunModel ToModel(this Urun entity) // Entity -> Model
+        // Entity -> Model
+        public static IhtarModel ToModel(this Ihtar entity)
         {
             if (entity == null) return null;
 
-            return new UrunModel
+            return new IhtarModel
             {
+                IhtarId = entity.IHTAR_ID,
+                MusteriId = entity.MUSTERI_ID,
+                SubeId = entity.SUBE_ID,
+                AvukatId = entity.AVUKAT_ID,
                 UrunId = entity.URUN_ID,
-                UrunAd = entity.URUN_AD,
-                UrunKod = entity.URUN_KOD,
-                SonGecerlilikTar = entity.SON_GECERLILIK_TAR,
+
+                MusteriAd = entity.Musteri?.MUSTERI_AD,
+                SubeAd = entity.Sube?.SUBE_AD,
+                AvukatAd = entity.Avukat?.AVUKAT_AD,
+                UrunAd = entity.Urun?.URUN_AD,
+
+                BorcTutar = entity.BORC_TUTAR,
+                IhtarTarZmn = entity.IHTAR_TAR_ZMN,
+
+                // Navigation: ürünler
+                Urunler = entity.Urunler?.Select(u => u.ToModel()).ToList(),
+
+                // Çoklu seçim için
+                SecilenUrunler = entity.Urunler?.Select(u => u.URUN_ID).ToList()
             };
         }
-        public static void ApplyTo(this UrunModel model, Urun entity) // Model -> Entity Update için
+
+        // Model -> Entity (Update için)
+        public static void ApplyTo(this IhtarModel model, Ihtar entity)
         {
-            entity.URUN_AD = model.UrunAd;
-            entity.URUN_KOD = model.UrunKod;
-            entity.SON_GECERLILIK_TAR = model.SonGecerlilikTar;
+            entity.MUSTERI_ID = model.MusteriId;
+            entity.SUBE_ID = model.SubeId;
+            entity.AVUKAT_ID = model.AvukatId;
+            entity.URUN_ID = model.UrunId;
+
+            entity.BORC_TUTAR = model.BorcTutar;
+            entity.IHTAR_TAR_ZMN = model.IhtarTarZmn;
+
+            // Seçilen ürünler üzerinden entity listesi güncellenebilir
+            if (model.SecilenUrunler != null)
+            {
+                entity.Urunler = model.SecilenUrunler
+                    .Select(id => new Urun { URUN_ID = id })
+                    .ToList();
+            }
         }
-        public static Urun ToEntity(this UrunModel model) // Model -> Entity Create için
+
+        // Model -> Entity (Create için)
+        public static Ihtar ToEntity(this IhtarModel model)
         {
-            var entity = new Urun { URUN_ID = Guid.NewGuid() };
+            var entity = new Ihtar { IHTAR_ID = Guid.NewGuid() };
             model.ApplyTo(entity);
             return entity;
         }

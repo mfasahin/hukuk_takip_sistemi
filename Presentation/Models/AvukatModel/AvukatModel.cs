@@ -6,20 +6,22 @@ namespace Presentation.Models
     {
         public Guid AvukatId { get; set; } //PK
 
-        public string AvktAd { get; set; } // NOT NULL
+        public string AvktAd { get; set; } 
 
-        public string AvktSoyad { get; set; } // NOT NULL
+        public string AvktSoyad { get; set; } 
 
-        public string TbbSicilNo { get; set; } // NOT NULL
+        public string TbbSicilNo { get; set; } 
 
-        public string AvktEposta { get; set; } // NOT NULL
+        public string AvktEposta { get; set; } 
 
-        public string AvktTelNo { get; set; } // NOT NULL
+        public string AvktTelNo { get; set; } 
 
         public string HkkBuroAd { get; set; }
 
         public string HkkBuroAdres { get; set; }
 
         public string OfisTelNo { get; set; }
+
+
     }
 }

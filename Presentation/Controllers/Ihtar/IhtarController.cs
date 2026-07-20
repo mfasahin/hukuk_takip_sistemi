@@ -1,7 +1,9 @@
 ﻿using Business.Abstract;
-using Presentation.Mapping;
+using Entity.Concrete;
+using Entity.Dto;
 using Presentation.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -31,57 +33,86 @@ namespace Presentation.Controllers
 
         public ActionResult Index()
         {
-            var viewModel = new IhtarIndexViewModel
+            var ihtarList = _ihtarService.GetIhtarWithRelations();
+
+            var model = ihtarList.Select(i => new IhtarDto
             {
-                Ihtarlar = _ihtarService.GetIhtarWithRelations()
-                    .Select(e => e.ToModel())
-                    .ToList(),
+                IhtarId = i.IhtarId,
+                BorcTutar = i.BorcTutar,
+                IhtarTarih = i.IhtarTarih,
+                MusteriId = i.MusteriId,
+                MusteriAd = i.MusteriAd,
+                AvukatId = i.AvukatId,
+                AvukatAd = i.AvukatAd,
+                SubeId = i.SubeId,
+                SubeAd = i.SubeAd,
+                UrunId = i.UrunId,
+                UrunAd = i.UrunAd,
+                SilTarZmn = i.SilTarZmn
+            }).ToList();
 
-                MusteriList = _musteriService.GetAll()
-                    .Where(m => m.SIL_TAR_ZMN == null)
-                    .Select(m => new SelectListItem
-                    {
-                        Value = m.MUSTERI_ID.ToString(),
-                        Text = m.MUST_AD + " " + m.MUST_SOYAD
-                    }).ToList(),
+            ViewBag.MusteriList = _musteriService.GetAll()
+                .Where(m => m.SIL_TAR_ZMN == null)
+                .Select(m => new SelectListItem
+                {
+                    Value = m.MUSTERI_ID.ToString(),
+                    Text = m.MUST_AD + " " + m.MUST_SOYAD
+                }).ToList();
 
-                SubeList = _subeService.GetAll()
-                    .Select(s => new SelectListItem
-                    {
-                        Value = s.SUBE_ID.ToString(),
-                        Text = s.SUBE_ADI
-                    }).ToList(),
+            ViewBag.SubeList = _subeService.GetAll()
+                .Select(s => new SelectListItem
+                {
+                    Value = s.SUBE_ID.ToString(),
+                    Text = s.SUBE_ADI
+                }).ToList();
 
-                AvukatList = _avukatService.GetAll()
-                    .Select(a => new SelectListItem
-                    {
-                        Value = a.AVUKAT_ID.ToString(),
-                        Text = a.AVKT_AD
-                    }).ToList(),
+            ViewBag.AvukatList = _avukatService.GetAll()
+                .Select(a => new SelectListItem
+                {
+                    Value = a.AVUKAT_ID.ToString(),
+                    Text = a.AVKT_AD
+                }).ToList();
 
-                UrunList = _urunService.GetAll()
-                    .Select(u => new SelectListItem
-                    {
-                        Value = u.URUN_ID.ToString(),
-                        Text = u.URUN_AD
-                    }).ToList()
-            };
+            ViewBag.UrunList = _urunService.GetAll()
+                .Select(u => new SelectListItem
+                {
+                    Value = u.URUN_ID.ToString(),
+                    Text = u.URUN_AD
+                }).ToList();
 
-            return View(viewModel);
+            return View(model);
         }
 
         [HttpGet]
         public ActionResult GetIhtar(Guid id)
         {
-            var entity = _ihtarService.GetByIdWithRelations(id);
-            if (entity == null) return HttpNotFound();
+            var ihtar = _ihtarService.GetByIdWithRelations(id);
+            if (ihtar == null) return HttpNotFound();
 
-            return Json(entity.ToModel(), JsonRequestBehavior.AllowGet);
+            var urun = ihtar.IhtarUrunler?.FirstOrDefault();
+
+            var dto = new IhtarDto
+            {
+                IhtarId = ihtar.IHTAR_ID,
+                BorcTutar = ihtar.BORC_TUTAR,
+                IhtarTarih = ihtar.IHTAR_TAR_ZMN,
+                MusteriId = ihtar.MUSTERI_ID,
+                MusteriAd = ihtar.Musteri?.MUST_AD ?? string.Empty,
+                AvukatId = ihtar.AVUKAT_ID,
+                AvukatAd = ihtar.Avukat?.AVKT_AD ?? string.Empty,
+                SubeId = ihtar.SUBE_ID,
+                SubeAd = ihtar.Sube?.SUBE_ADI ?? string.Empty,
+                UrunId = urun?.URUN_ID ?? Guid.Empty,
+                UrunAd = urun?.Urun?.URUN_AD ?? string.Empty,
+                SilTarZmn = ihtar.SIL_TAR_ZMN
+            };
+
+            return Json(dto, JsonRequestBehavior.AllowGet);
         }
 
         // EKLEME
         [HttpPost]
-        public ActionResult Create(IhtarModel model)
+        public ActionResult Create(IhtarDto model)
         {
             if (!ModelState.IsValid)
             {
@@ -95,7 +126,24 @@ namespace Presentation.Controllers
 
             try
             {
-                var entity = model.ToEntity();
+                var entity = new Ihtar
+                {
+                    BORC_TUTAR = model.BorcTutar,
+                    IHTAR_TAR_ZMN = model.IhtarTarih,
+                    MUSTERI_ID = model.MusteriId,
+                    AVUKAT_ID = model.AvukatId,
+                    SUBE_ID = model.SubeId,
+                    GRS_TAR_ZMN = DateTime.Now
+                };
+
+                if (model.UrunId != Guid.Empty)
+                {
+                    entity.IhtarUrunler = new List<IhtarUrun>
+                    {
+                        new IhtarUrun { URUN_ID = model.UrunId }
+                    };
+                }
+
                 _ihtarService.Add(entity);
 
                 return Json(new { success = true });
@@ -108,7 +156,7 @@ namespace Presentation.Controllers
 
         // GÜNCELLEME
         [HttpPost]
-        public ActionResult Update(IhtarModel model)
+        public ActionResult Update(IhtarDto model)
         {
             if (!ModelState.IsValid)
                 return Json(new { success = false, error = "ModelState geçersiz" });
@@ -119,8 +167,32 @@ namespace Presentation.Controllers
                 if (entity == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
 
-                model.ApplyTo(entity);
-                model.SyncUrunler(entity);
+                // Alanları DTO’dan entity’ye aktar
+                entity.BORC_TUTAR = model.BorcTutar;
+                entity.IHTAR_TAR_ZMN = model.IhtarTarih;
+                entity.MUSTERI_ID = model.MusteriId;
+                entity.AVUKAT_ID = model.AvukatId;
+                entity.SUBE_ID = model.SubeId;
+
+                // Ürün güncellemesi (tek ürün için)
+                if (model.UrunId != Guid.Empty)
+                {
+                    // İlgili ürün ilişkisini güncelle
+                    var urunRelation = entity.IhtarUrunler.FirstOrDefault();
+                    if (urunRelation != null)
+                    {
+                        urunRelation.URUN_ID = model.UrunId;
+                    }
+                    else
+                    {
+                        entity.IhtarUrunler.Add(new IhtarUrun
+                        {
+                            URUN_ID = model.UrunId,
+                            IHTAR_ID = entity.IHTAR_ID
+                        });
+                    }
+                }
+
                 entity.GNC_TAR_ZMN = DateTime.Now;
 
                 _ihtarService.Update(entity);
@@ -132,6 +204,7 @@ namespace Presentation.Controllers
                 return Json(new { success = false, error = ex.Message });
             }
         }
+
 
         // SİLME (soft delete)
         [HttpPost]
