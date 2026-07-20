@@ -162,6 +162,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Mapping\MusteriMappingExtansion.cs" />
     <Compile Include="Models\AvukatModel\AvukatModel.cs" />
     <Compile Include="Models\BaseModel\BaseModel.cs" />
     <Compile Include="Models\IcraMahkemeModel\IcraMahkemeModel.cs" />

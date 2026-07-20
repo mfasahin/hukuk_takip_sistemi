@@ -9,7 +9,6 @@ namespace Entity.Concrete
     [Table("AVUKAT", Schema = "dbo")]
     public class Avukat : BaseEntity
     {
-
         [Key]
         public Guid AVUKAT_ID { get; set; } //PK
 
