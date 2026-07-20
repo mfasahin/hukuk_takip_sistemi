@@ -29,7 +29,7 @@ namespace Presentation.Models
         public List<UrunModel> Urunler { get; set; }
 
         // Seçilen ürünler (ekleme/güncelleme için)
-        public List<int> SecilenUrunler { get; set; }
+        public List<Guid> SecilenUrunler { get; set; }
 
     }
 }
