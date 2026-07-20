@@ -1,9 +1,9 @@
 ﻿using Business.Abstract;
-using Presentation.Models;
 using Presentation.Mapping;
+using Presentation.Models;
 using System;
-using System.Web.Mvc;
 using System.Linq;
+using System.Web.Mvc;
 
 public class MusteriController : Controller
 {
@@ -19,20 +19,10 @@ public class MusteriController : Controller
     {
         var model = _musteriService.GetAll()
             .Where(m => m.SIL_TAR_ZMN == null)
-            .Select(m => m.ToModel())      // <-- extension method çağrısı
+            .Select(m => m.ToModel())
             .ToList();
 
         return View(model);
-    }
-
-    // TEKİL KAYIT (modal doldurma için)
-    [HttpGet]
-    public ActionResult GetMusteri(Guid id)
-    {
-        var entity = _musteriService.GetById(id);
-        if (entity == null) return HttpNotFound();
-
-        return Json(entity.ToModel(), JsonRequestBehavior.AllowGet);   // <-- burada da
     }
 
     // EKLEME
@@ -44,7 +34,7 @@ public class MusteriController : Controller
 
         try
         {
-            var entity = model.ToEntity();          // <-- burada da
+            var entity = model.ToEntity();
             entity.GRS_TAR_ZMN = DateTime.Now;
 
             _musteriService.Add(entity);
@@ -56,6 +46,15 @@ public class MusteriController : Controller
         }
     }
 
+    // TEKİL KAYIT (modal doldurma için)
+    [HttpGet]
+    public ActionResult GetMusteri(Guid id)
+    {
+        var entity = _musteriService.GetById(id);
+        if (entity == null) return HttpNotFound();
+
+        return Json(entity.ToModel(), JsonRequestBehavior.AllowGet);
+    }
     // GÜNCELLEME
     [HttpPost]
     public ActionResult Update(MusteriModel model)
@@ -69,10 +68,31 @@ public class MusteriController : Controller
             if (entity == null)
                 return Json(new { success = false, error = "Kayıt bulunamadı" });
 
-            model.ApplyTo(entity);                  // <-- burada da
+            model.ApplyTo(entity);
             entity.GNC_TAR_ZMN = DateTime.Now;
 
             _musteriService.Update(entity);
+            return Json(new { success = true });
+        }
+        catch (Exception ex)
+        {
+            return Json(new { success = false, error = ex.Message });
+        }
+    }
+    // SİLME
+    [HttpPost]
+    public ActionResult Delete(Guid id)
+    {
+        try
+        {
+            var entity = _musteriService.GetById(id);
+            if (entity == null)
+                return Json(new { success = false, error = "Kayıt bulunamadı" });
+
+            // Soft delete 
+            entity.SIL_TAR_ZMN = DateTime.Now;
+            _musteriService.Delete(entity);
+
             return Json(new { success = true });
         }
         catch (Exception ex)

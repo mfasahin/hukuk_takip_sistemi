@@ -7,7 +7,7 @@ namespace Presentation.Mapping
     public static class MusteriMappingExtensions
     {
         // Entity -> Model (listeleme, GET için)
-        public static MusteriModel ToModel(this Musteri entity)
+        public static MusteriModel ToModel(this Musteri entity) // Entity -> Model
         {
             if (entity == null) return null;
 
@@ -26,7 +26,7 @@ namespace Presentation.Mapping
         }
 
         // Model'deki alanları var olan bir entity'ye uygular (Update için)
-        public static void ApplyTo(this MusteriModel model, Musteri entity)
+        public static void ApplyTo(this MusteriModel model, Musteri entity) // Model -> Entity Update için
         {
             entity.MUST_NO = model.MustNo;
             entity.MUST_AD = model.MustAd;
@@ -38,7 +38,7 @@ namespace Presentation.Mapping
         }
 
         // Model -> yeni Entity (Create için)
-        public static Musteri ToEntity(this MusteriModel model)
+        public static Musteri ToEntity(this MusteriModel model) // Model -> Entity Create için
         {
             var entity = new Musteri { MUSTERI_ID = Guid.NewGuid() };
             model.ApplyTo(entity);
