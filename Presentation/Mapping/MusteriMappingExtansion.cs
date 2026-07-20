@@ -21,7 +21,6 @@ namespace Presentation.Mapping
                 MustVknNo = entity.MUST_VKN_NO,
                 MustEposta = entity.MUST_EPOSTA,
                 MustTelNo = entity.MUST_TEL_NO,
-                SilTarZmn = entity.SIL_TAR_ZMN
             };
         }
 

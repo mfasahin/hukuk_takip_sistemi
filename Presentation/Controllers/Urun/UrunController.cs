@@ -1,5 +1,5 @@
 ﻿using Business.Abstract;
-using Entity.Concrete;
+using Presentation.Mapping;
 using Presentation.Models;
 using System;
 using System.Linq;
@@ -11,56 +11,35 @@ namespace Presentation.Controllers
     {
         private readonly IUrunService _urunService;
 
-        // Constructor: DI ile IMusteriService enjekte ediliyor
         public UrunController(IUrunService urunService)
         {
             _urunService = urunService;
         }
 
+        // LİSTELEME
         public ActionResult Index()
         {
-            // Tüm ürünleri getir
-            var urunList = _urunService.GetAll(); // List<Entity.Concrete.Urun>
-
-            // SilinmeTarihi dolu olanları filtrele (yani silinmişleri gösterme)
-            var aktifUrunler = urunList
-                .Where(u => u.SIL_TAR_ZMN == null) // sadece silinmemiş kayıtlar
+            var model = _urunService.GetAll()
+                .Where(m => m.SIL_TAR_ZMN == null)
+                .Select(m => m.ToModel())
                 .ToList();
 
-            // Entity → ViewModel dönüşümü
-            var model = aktifUrunler.Select(u => new Presentation.Models.UrunModel
-            {
-                UrunId = u.URUN_ID,
-                UrunAd = u.URUN_AD,
-                UrunKod = u.URUN_KOD,
-                SonGecerlilikTar = u.SON_GECERLILIK_TAR,
-                SilTarZmn = u.SIL_TAR_ZMN
-            }).ToList();
-
-            return View(model); // IEnumerable<UrunModel> gönderiyoruz
+            return View(model);
         }
 
+        // EKLEME
         [HttpPost]
         public ActionResult Create(UrunModel model)
         {
             if (!ModelState.IsValid)
-            {
-                return Json(new { success = false, error = "Geçersiz model" });
-            }
+                return Json(new { success = false, error = "ModelState geçersiz" });
 
             try
             {
-                var urun = new Urun
-                {
-                    URUN_ID = model.UrunId,
-                    URUN_AD = model.UrunAd,
-                    URUN_KOD = model.UrunKod,
-                    SON_GECERLILIK_TAR = model.SonGecerlilikTar,
-                    GRS_TAR_ZMN = DateTime.Now
-                };
+                var entity = model.ToEntity();
+                entity.GRS_TAR_ZMN = DateTime.Now;
 
-                _urunService.Add(urun);
-
+                _urunService.Add(entity);
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -69,25 +48,17 @@ namespace Presentation.Controllers
             }
         }
 
+        // TEKİL KAYIT (modal doldurma için)
         [HttpGet]
         public ActionResult GetUrun(Guid id)
         {
-            var urun = _urunService.GetById(id);
-            if (urun == null) return HttpNotFound();
+            var entity = _urunService.GetById(id);
+            if (entity == null) return HttpNotFound();
 
-            var model = new UrunModel
-            {
-                UrunId = urun.URUN_ID,
-                UrunAd = urun.URUN_AD,
-                UrunKod = urun.URUN_KOD,
-                SonGecerlilikTar = urun.SON_GECERLILIK_TAR,
-                //GNC_TAR_ZMN = musteri.GNC_TAR_ZMN
-            };
-
-            return Json(model, JsonRequestBehavior.AllowGet);
+            return Json(entity.ToModel(), JsonRequestBehavior.AllowGet);
         }
 
-        // GÜNCELLEME 
+        // GÜNCELLEME
         [HttpPost]
         public ActionResult Update(UrunModel model)
         {
@@ -100,13 +71,10 @@ namespace Presentation.Controllers
                 if (entity == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
 
-                entity.URUN_AD = model.UrunAd;
-                entity.URUN_KOD = model.UrunKod;
-                entity.SON_GECERLILIK_TAR = model.SonGecerlilikTar;
+                model.ApplyTo(entity);
                 entity.GNC_TAR_ZMN = DateTime.Now;
 
                 _urunService.Update(entity);
-
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -115,9 +83,8 @@ namespace Presentation.Controllers
             }
         }
 
-        //SİLME
+        // SİLME
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         public ActionResult Delete(Guid id)
         {
             try
@@ -126,9 +93,9 @@ namespace Presentation.Controllers
                 if (entity == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
 
-                // Soft delete → SilinmeTarihi doldur
+                // Soft delete 
                 entity.SIL_TAR_ZMN = DateTime.Now;
-                _urunService.Update(entity);
+                _urunService.Delete(entity);
 
                 return Json(new { success = true });
             }
