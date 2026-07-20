@@ -9,7 +9,6 @@ namespace Entity.Concrete
     public class Icra : BaseEntity
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid ICRA_ID { get; set; } // PK
 
         [Required]

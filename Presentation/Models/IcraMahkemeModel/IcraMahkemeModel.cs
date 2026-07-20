@@ -2,7 +2,7 @@
 
 namespace Presentation.Models
 {
-    public class IcraMahkemeModel
+    public class IcraMahkemeModel : BaseModel   
     {
         public Guid MahkemeId { get; set; } // PK
 

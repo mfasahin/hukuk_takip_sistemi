@@ -68,9 +68,9 @@
     <Compile Include="Concrete\EfMusteriDal.cs" />
     <Compile Include="Concrete\EfSubeDal.cs" />
     <Compile Include="Concrete\EfUrunDal.cs" />
-    <Compile Include="Migrations\202607191606219_InitGuid.cs" />
-    <Compile Include="Migrations\202607191606219_InitGuid.Designer.cs">
-      <DependentUpon>202607191606219_InitGuid.cs</DependentUpon>
+    <Compile Include="Migrations\202607200656203_initCreate.cs" />
+    <Compile Include="Migrations\202607200656203_initCreate.Designer.cs">
+      <DependentUpon>202607200656203_initCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -90,8 +90,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202607191606219_InitGuid.resx">
-      <DependentUpon>202607191606219_InitGuid.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202607200656203_initCreate.resx">
+      <DependentUpon>202607200656203_initCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

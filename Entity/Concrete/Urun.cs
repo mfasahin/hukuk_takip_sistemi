@@ -10,7 +10,6 @@ namespace Entity.Concrete
     public class Urun : BaseEntity
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid URUN_ID { get; set; } //PK
 
         [StringLength(25)]

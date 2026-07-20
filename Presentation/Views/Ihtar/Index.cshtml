@@ -42,7 +42,7 @@
                 <td>@ihtar.SubeAd</td>
                 <td>@ihtar.AvukatAd</td>
                 <td>
-                    @if (ihtar.UrunId > 0)
+                    @if (ihtar.UrunId != Guid.Empty)
                     {
                         <span>@ihtar.UrunAd</span>
                     }

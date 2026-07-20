@@ -10,7 +10,6 @@ namespace Entity.Concrete
     public class Sube : BaseEntity
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid SUBE_ID { get; set; } //PK
 
         [StringLength(5)]

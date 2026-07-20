@@ -10,7 +10,6 @@ namespace Entity.Concrete
     public class IcraMahkeme : BaseEntity
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid MAHKEME_ID { get; set; } // PK
 
         [StringLength(100)]

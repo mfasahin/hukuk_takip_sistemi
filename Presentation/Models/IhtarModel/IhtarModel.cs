@@ -4,15 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Presentation.Models
 {
-    public class IhtarModel
+    public class IhtarModel : BaseModel
     {
-
-        public DateTime? GrsTarZmn { get; set; }
-
-        public DateTime? GncTarZmn { get; set; }
-
-        public DateTime? SilTarZmn { get; set; }
-
         public Guid IhtarId { get; set; }
 
         // FK alanları

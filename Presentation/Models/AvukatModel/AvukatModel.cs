@@ -2,7 +2,7 @@
 
 namespace Presentation.Models
 {
-    public class AvukatModel
+    public class AvukatModel : BaseModel
     {
         public Guid AvukatId { get; set; } //PK
 
@@ -21,11 +21,5 @@ namespace Presentation.Models
         public string HkkBuroAdres { get; set; }
 
         public string OfisTelNo { get; set; }
-
-        public DateTime? GrsTarZmn { get; set; }
-
-        public DateTime? GncTarZmn { get; set; } 
-
-        public DateTime? SilTarZmn { get; set; } // soft delete için
     }
 }

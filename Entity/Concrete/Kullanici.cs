@@ -9,7 +9,6 @@ namespace Entity.Concrete
     public class Kullanici : BaseEntity
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid KULLANICI_ID { get; set; } //PK
 
         [StringLength(25)]

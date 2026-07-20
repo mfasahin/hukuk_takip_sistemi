@@ -11,7 +11,6 @@ namespace Entity.Concrete
     {
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid AVUKAT_ID { get; set; } //PK
 
         [StringLength(25)]

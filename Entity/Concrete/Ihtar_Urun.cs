@@ -9,7 +9,6 @@ namespace Entity.Concrete
     public class IhtarUrun : BaseEntity
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid IHTAR_URUN_ID { get; set; } // PK
 
         [Required]

@@ -10,8 +10,7 @@ namespace Entity.Concrete
     public class Musteri : BaseEntity
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public Guid MUSTERI_ID { get; set; }   // PK
+        public Guid MUSTERI_ID { get; set; }  // PK
 
         [StringLength(8)]
         public string MUST_NO { get; set; }

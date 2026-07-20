@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace Presentation.Models
 {
-    public class IcraModel
+    public class IcraModel : BaseModel
     {
         public Guid IcraId { get; set; } // PK
 

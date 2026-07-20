@@ -2,7 +2,7 @@
 
 namespace Presentation.Models
 {
-    public class IhtarUrunModel
+    public class IhtarUrunModel : BaseModel
     {
         public Guid IhtarUrunId { get; set; } // PK
 

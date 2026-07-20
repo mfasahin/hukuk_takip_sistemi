@@ -163,6 +163,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AvukatModel\AvukatModel.cs" />
+    <Compile Include="Models\BaseModel\BaseModel.cs" />
     <Compile Include="Models\IcraMahkemeModel\IcraMahkemeModel.cs" />
     <Compile Include="Models\IcraModel\IcraModel.cs" />
     <Compile Include="Models\IhtarModel\IhtarModel.cs" />

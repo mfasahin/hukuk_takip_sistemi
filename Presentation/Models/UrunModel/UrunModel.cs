@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Presentation.Models
 {
-    public class UrunModel
+    public class UrunModel : BaseModel
     {
         public Guid UrunId { get; set; } //PK
 
@@ -13,11 +13,5 @@ namespace Presentation.Models
 
         [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? SonGecerlilikTar { get; set; }
-
-        public DateTime? GrsTarZmn { get; set; }
-
-        public DateTime? GncTarZmn { get; set; }
-
-        public DateTime? SilTarZmn { get; set; }
     }
 }

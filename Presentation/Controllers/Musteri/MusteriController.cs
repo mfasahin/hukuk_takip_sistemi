@@ -3,7 +3,6 @@ using Entity.Concrete;
 using Presentation.Models;
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Web.Mvc;
 
 namespace Presentation.Controllers
@@ -56,6 +55,7 @@ namespace Presentation.Controllers
             {
                 var musteri = new Musteri
                 {
+                    MUSTERI_ID = Guid.NewGuid(),
                     MUST_NO = model.MustNo,
                     MUST_AD = model.MustAd,
                     MUST_SOYAD = model.MustSoyad,

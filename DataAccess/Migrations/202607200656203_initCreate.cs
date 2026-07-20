@@ -3,7 +3,7 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitGuid : DbMigration
+    public partial class initCreate : DbMigration
     {
         public override void Up()
         {
@@ -21,11 +21,11 @@
                         HKK_BURO_ADRES = c.String(maxLength: 70),
                         OFIS_TEL_NO = c.String(maxLength: 15),
                         GRS_TAR_ZMN = c.DateTime(),
-                        GRS_KULLANICI_ID = c.Int(),
+                        GRS_KULLANICI_ID = c.Guid(),
                         GNC_TAR_ZMN = c.DateTime(),
-                        GNC_KULLANICI_ID = c.Int(),
+                        GNC_KULLANICI_ID = c.Guid(),
                         SIL_TAR_ZMN = c.DateTime(),
-                        SIL_KULLANICI_ID = c.Int(),
+                        SIL_KULLANICI_ID = c.Guid(),
                     })
                 .PrimaryKey(t => t.AVUKAT_ID);
             
@@ -40,11 +40,11 @@
                         BORC_TUTAR = c.Decimal(nullable: false, precision: 18, scale: 2),
                         IHTAR_TAR_ZMN = c.DateTime(nullable: false),
                         GRS_TAR_ZMN = c.DateTime(),
-                        GRS_KULLANICI_ID = c.Int(),
+                        GRS_KULLANICI_ID = c.Guid(),
                         GNC_TAR_ZMN = c.DateTime(),
-                        GNC_KULLANICI_ID = c.Int(),
+                        GNC_KULLANICI_ID = c.Guid(),
                         SIL_TAR_ZMN = c.DateTime(),
-                        SIL_KULLANICI_ID = c.Int(),
+                        SIL_KULLANICI_ID = c.Guid(),
                     })
                 .PrimaryKey(t => t.IHTAR_ID)
                 .ForeignKey("dbo.AVUKAT", t => t.AVUKAT_ID, cascadeDelete: true)
@@ -62,11 +62,11 @@
                         URUN_ID = c.Guid(nullable: false),
                         IHTAR_ID = c.Guid(nullable: false),
                         GRS_TAR_ZMN = c.DateTime(),
-                        GRS_KULLANICI_ID = c.Int(),
+                        GRS_KULLANICI_ID = c.Guid(),
                         GNC_TAR_ZMN = c.DateTime(),
-                        GNC_KULLANICI_ID = c.Int(),
+                        GNC_KULLANICI_ID = c.Guid(),
                         SIL_TAR_ZMN = c.DateTime(),
-                        SIL_KULLANICI_ID = c.Int(),
+                        SIL_KULLANICI_ID = c.Guid(),
                     })
                 .PrimaryKey(t => t.IHTAR_URUN_ID)
                 .ForeignKey("dbo.IHTAR", t => t.IHTAR_ID, cascadeDelete: true)
@@ -83,11 +83,11 @@
                         URUN_KOD = c.String(maxLength: 5),
                         SON_GECERLILIK_TAR = c.DateTime(),
                         GRS_TAR_ZMN = c.DateTime(),
-                        GRS_KULLANICI_ID = c.Int(),
+                        GRS_KULLANICI_ID = c.Guid(),
                         GNC_TAR_ZMN = c.DateTime(),
-                        GNC_KULLANICI_ID = c.Int(),
+                        GNC_KULLANICI_ID = c.Guid(),
                         SIL_TAR_ZMN = c.DateTime(),
-                        SIL_KULLANICI_ID = c.Int(),
+                        SIL_KULLANICI_ID = c.Guid(),
                     })
                 .PrimaryKey(t => t.URUN_ID);
             
@@ -104,11 +104,11 @@
                         MUST_EPOSTA = c.String(maxLength: 50),
                         MUST_TEL_NO = c.String(maxLength: 15),
                         GRS_TAR_ZMN = c.DateTime(),
-                        GRS_KULLANICI_ID = c.Int(),
+                        GRS_KULLANICI_ID = c.Guid(),
                         GNC_TAR_ZMN = c.DateTime(),
-                        GNC_KULLANICI_ID = c.Int(),
+                        GNC_KULLANICI_ID = c.Guid(),
                         SIL_TAR_ZMN = c.DateTime(),
-                        SIL_KULLANICI_ID = c.Int(),
+                        SIL_KULLANICI_ID = c.Guid(),
                     })
                 .PrimaryKey(t => t.MUSTERI_ID);
             
@@ -123,11 +123,11 @@
                         SUBE_ADRES = c.String(maxLength: 75),
                         SUBE_TEL_NO = c.String(maxLength: 15),
                         GRS_TAR_ZMN = c.DateTime(),
-                        GRS_KULLANICI_ID = c.Int(),
+                        GRS_KULLANICI_ID = c.Guid(),
                         GNC_TAR_ZMN = c.DateTime(),
-                        GNC_KULLANICI_ID = c.Int(),
+                        GNC_KULLANICI_ID = c.Guid(),
                         SIL_TAR_ZMN = c.DateTime(),
-                        SIL_KULLANICI_ID = c.Int(),
+                        SIL_KULLANICI_ID = c.Guid(),
                     })
                 .PrimaryKey(t => t.SUBE_ID);
             
@@ -141,11 +141,11 @@
                         ICRA_TAKIP_TAR = c.DateTime(nullable: false),
                         ICRA_DOSYA_NO = c.String(maxLength: 15),
                         GRS_TAR_ZMN = c.DateTime(),
-                        GRS_KULLANICI_ID = c.Int(),
+                        GRS_KULLANICI_ID = c.Guid(),
                         GNC_TAR_ZMN = c.DateTime(),
-                        GNC_KULLANICI_ID = c.Int(),
+                        GNC_KULLANICI_ID = c.Guid(),
                         SIL_TAR_ZMN = c.DateTime(),
-                        SIL_KULLANICI_ID = c.Int(),
+                        SIL_KULLANICI_ID = c.Guid(),
                     })
                 .PrimaryKey(t => t.ICRA_ID)
                 .ForeignKey("dbo.IHTAR_URUN", t => t.IHTAR_URUN_ID, cascadeDelete: true)
@@ -160,11 +160,11 @@
                         MAHKEME_ID = c.Guid(nullable: false),
                         MAHKEME_AD = c.String(maxLength: 100),
                         GRS_TAR_ZMN = c.DateTime(),
-                        GRS_KULLANICI_ID = c.Int(),
+                        GRS_KULLANICI_ID = c.Guid(),
                         GNC_TAR_ZMN = c.DateTime(),
-                        GNC_KULLANICI_ID = c.Int(),
+                        GNC_KULLANICI_ID = c.Guid(),
                         SIL_TAR_ZMN = c.DateTime(),
-                        SIL_KULLANICI_ID = c.Int(),
+                        SIL_KULLANICI_ID = c.Guid(),
                     })
                 .PrimaryKey(t => t.MAHKEME_ID);
             
@@ -176,11 +176,11 @@
                         KULLANICI_AD = c.String(maxLength: 25),
                         SIFRE = c.String(maxLength: 25),
                         GRS_TAR_ZMN = c.DateTime(),
-                        GRS_KULLANICI_ID = c.Int(),
+                        GRS_KULLANICI_ID = c.Guid(),
                         GNC_TAR_ZMN = c.DateTime(),
-                        GNC_KULLANICI_ID = c.Int(),
+                        GNC_KULLANICI_ID = c.Guid(),
                         SIL_TAR_ZMN = c.DateTime(),
-                        SIL_KULLANICI_ID = c.Int(),
+                        SIL_KULLANICI_ID = c.Guid(),
                     })
                 .PrimaryKey(t => t.KULLANICI_ID);
             

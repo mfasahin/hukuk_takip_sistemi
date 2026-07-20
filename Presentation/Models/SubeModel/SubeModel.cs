@@ -2,7 +2,7 @@
 
 namespace Presentation.Models
 {
-    public class SubeModel
+    public class SubeModel : BaseModel
     {
         public Guid SubeId { get; set; } //PK
 

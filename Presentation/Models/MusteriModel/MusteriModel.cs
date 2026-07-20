@@ -2,7 +2,7 @@
 
 namespace Presentation.Models
 {
-    public class MusteriModel
+    public class MusteriModel : BaseModel
     {
         public Guid MusteriId { get; set; }   // PK
 
@@ -19,12 +19,5 @@ namespace Presentation.Models
         public string MustEposta { get; set; }
 
         public string MustTelNo{ get; set; }
-
-        public DateTime? GrsTarZmn { get; set; }
-
-        public DateTime? GncTarZmn { get; set; }
-
-        public DateTime? SilTarZmn { get; set; } // soft delete için
-
     }
 }
