@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entity.Concrete;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -30,6 +31,7 @@ namespace Presentation.Models
 
         // Seçilen ürünler (ekleme/güncelleme için)
         public List<Guid> SecilenUrunler { get; set; }
+        public virtual ICollection<IhtarUrun> IhtarUrunler { get; set; }
 
     }
 }

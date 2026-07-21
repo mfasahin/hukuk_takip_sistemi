@@ -1,5 +1,5 @@
 ﻿using Business.Abstract;
-using Presentation.Mapping;
+using Entity.Concrete;
 using Presentation.Models;
 using System;
 using System.Linq;
@@ -19,10 +19,21 @@ namespace Presentation.Controllers
         // LİSTELEME
         public ActionResult Index()
         {
-            var model = _musteriService.GetAll()
+            var musteriList = _musteriService.GetAll()
                 .Where(m => m.SIL_TAR_ZMN == null)
-                .Select(m => m.ToModel())
                 .ToList();
+
+            var model = musteriList.Select(m => new MusteriModel
+            {
+                MusteriId = m.MUSTERI_ID,
+                MustNo = m.MUST_NO,
+                MustAd = m.MUST_AD,
+                MustSoyad = m.MUST_SOYAD,
+                MustKimlikNo = m.MUST_KIMLIK_NO,
+                MustVknNo = m.MUST_VKN_NO,
+                MustEposta = m.MUST_EPOSTA,
+                MustTelNo = m.MUST_TEL_NO
+            }).ToList();
 
             return View(model);
         }
@@ -36,10 +47,20 @@ namespace Presentation.Controllers
 
             try
             {
-                var entity = model.ToEntity();
-                entity.GRS_TAR_ZMN = DateTime.Now;
+                var musteri = new Musteri
+                {
+                    MUSTERI_ID = Guid.NewGuid(),
+                    MUST_NO = model.MustNo,
+                    MUST_AD = model.MustAd,
+                    MUST_SOYAD = model.MustSoyad,
+                    MUST_KIMLIK_NO = model.MustKimlikNo,
+                    MUST_VKN_NO = model.MustVknNo,
+                    MUST_EPOSTA = model.MustEposta,
+                    MUST_TEL_NO = model.MustTelNo,
+                    GRS_TAR_ZMN = DateTime.Now
+                };
 
-                _musteriService.Add(entity);
+                _musteriService.Add(musteri);
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -52,10 +73,22 @@ namespace Presentation.Controllers
         [HttpGet]
         public ActionResult GetMusteri(Guid id)
         {
-            var entity = _musteriService.GetById(id);
-            if (entity == null) return HttpNotFound();
+            var musteri = _musteriService.GetById(id);
+            if (musteri == null) return HttpNotFound();
 
-            return Json(entity.ToModel(), JsonRequestBehavior.AllowGet);
+            var model = new MusteriModel
+            {
+                MusteriId = musteri.MUSTERI_ID,
+                MustNo = musteri.MUST_NO,
+                MustAd = musteri.MUST_AD,
+                MustSoyad = musteri.MUST_SOYAD,
+                MustKimlikNo = musteri.MUST_KIMLIK_NO,
+                MustVknNo = musteri.MUST_VKN_NO,
+                MustEposta = musteri.MUST_EPOSTA,
+                MustTelNo = musteri.MUST_TEL_NO
+            };
+
+            return Json(model, JsonRequestBehavior.AllowGet);
         }
 
         // GÜNCELLEME
@@ -67,14 +100,20 @@ namespace Presentation.Controllers
 
             try
             {
-                var entity = _musteriService.GetById(model.MusteriId);
-                if (entity == null)
+                var musteri = _musteriService.GetById(model.MusteriId);
+                if (musteri == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
 
-                model.ApplyTo(entity);
-                entity.GNC_TAR_ZMN = DateTime.Now;
+                musteri.MUST_NO = model.MustNo;
+                musteri.MUST_AD = model.MustAd;
+                musteri.MUST_SOYAD = model.MustSoyad;
+                musteri.MUST_KIMLIK_NO = model.MustKimlikNo;
+                musteri.MUST_VKN_NO = model.MustVknNo;
+                musteri.MUST_EPOSTA = model.MustEposta;
+                musteri.MUST_TEL_NO = model.MustTelNo;
+                musteri.GNC_TAR_ZMN = DateTime.Now;
 
-                _musteriService.Update(entity);
+                _musteriService.Update(musteri);
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -89,13 +128,13 @@ namespace Presentation.Controllers
         {
             try
             {
-                var entity = _musteriService.GetById(id);
-                if (entity == null)
+                var musteri = _musteriService.GetById(id);
+                if (musteri == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
 
-                // Soft delete 
-                entity.SIL_TAR_ZMN = DateTime.Now;
-                _musteriService.Delete(entity);
+                // Soft delete
+                musteri.SIL_TAR_ZMN = DateTime.Now;
+                _musteriService.Update(musteri);   
 
                 return Json(new { success = true });
             }

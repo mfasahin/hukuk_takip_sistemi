@@ -20,5 +20,6 @@ namespace Entity.Concrete
         // Navigation Properties
         public virtual Ihtar Ihtar { get; set; }
         public virtual Urun Urun { get; set; }
+
     }
 }

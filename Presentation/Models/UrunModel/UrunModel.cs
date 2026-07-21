@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Entity.Concrete;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Presentation.Models
@@ -13,5 +15,7 @@ namespace Presentation.Models
 
         [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? SonGecerlilikTar { get; set; }
+
+        public virtual ICollection<IhtarUrun> IhtarUrunler { get; set; }
     }
 }
