@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entity.Concrete;
+using System;
 
 namespace Presentation.Models
 {
@@ -7,10 +8,10 @@ namespace Presentation.Models
         public Guid IhtarUrunId { get; set; } // PK
 
         public Guid UrunId { get; set; } // FK
-        public UrunModel Urun { get; set; }
+        public virtual Urun Urun { get; set; }
 
         public Guid IhtarId { get; set; } // FK
 
-        public IhtarModel Ihtar { get; set; }
+        public virtual Ihtar Ihtar { get; set; }
     }
 }

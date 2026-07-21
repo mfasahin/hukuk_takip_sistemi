@@ -35,7 +35,7 @@ namespace Presentation
             container.RegisterType<IUrunDal, EfUrunDal>();          
             container.RegisterType<IIhtarUrunDal, EfIhtarUrunDal>();
 
-            container.RegisterType<IIcraDal, EfIcraDal>();            
+            //container.RegisterType<IIcraDal, EfIcraDal>();            
             container.RegisterType<IMahkemeDal, EfMahkemeDal>();
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));

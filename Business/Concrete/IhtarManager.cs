@@ -45,9 +45,13 @@ namespace Business.Concrete
         {
             return _ihtarDal.GetIhtarWithRelations();
         }
-        public Ihtar GetByIdWithRelations(Guid id)
+        public IhtarDto GetByIdWithRelations(Guid id)
         {
             return _ihtarDal.GetByIdWithRelations(id);
+        }
+        public Ihtar GetEntityWithUrunlerIncluded(Guid id)
+        {
+            return _ihtarDal.GetEntityWithUrunlerIncluded(id);
         }
     }
 }

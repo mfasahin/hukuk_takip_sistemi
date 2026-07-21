@@ -61,10 +61,10 @@
     <Compile Include="Concrete\Musteri.cs" />
     <Compile Include="Concrete\Sube.cs" />
     <Compile Include="Concrete\Urun.cs" />
-    <Compile Include="Dto\IcraDto.cs" />
-    <Compile Include="Dto\IhtarDto.cs" />
-    <Compile Include="Dto\IhtarUrunDto.cs" />
-    <Compile Include="Dto\UrunDto.cs" />
+    <Compile Include="Dto\Icra\IcraDto.cs" />
+    <Compile Include="Dto\Ihtar\IhtarDto.cs" />
+    <Compile Include="Dto\IhtarUrun\IhtarUrunDto.cs" />
+    <Compile Include="Dto\Urun\UrunDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

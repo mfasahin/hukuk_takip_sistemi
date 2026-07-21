@@ -6,6 +6,6 @@ namespace Entity.Dto
     {
         public Guid UrunId { get; set; }
         public string UrunAd { get; set; }
-        public int UrunKod { get; set; }
+        //public int UrunKod { get; set; }
     }
 }

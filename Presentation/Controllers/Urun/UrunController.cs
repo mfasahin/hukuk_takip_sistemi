@@ -1,6 +1,5 @@
 ﻿using Business.Abstract;
 using Entity.Concrete;
-using Presentation.Mapping;
 using Presentation.Models;
 using System;
 using System.Linq;
@@ -30,7 +29,7 @@ namespace Presentation.Controllers
                 UrunAd = u.URUN_AD,
                 UrunKod = u.URUN_KOD,
                 SonGecerlilikTar = u.SON_GECERLILIK_TAR,
- 
+
             }).ToList();
 
             return View(model);
@@ -76,7 +75,7 @@ namespace Presentation.Controllers
                 UrunAd = urun.URUN_AD,
                 UrunKod = urun.URUN_KOD,
                 SonGecerlilikTar = urun.SON_GECERLILIK_TAR,
-    
+
             };
 
             return Json(model, JsonRequestBehavior.AllowGet);

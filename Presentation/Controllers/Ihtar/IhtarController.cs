@@ -1,7 +1,6 @@
 ﻿using Business.Abstract;
 using Entity.Concrete;
 using Entity.Dto;
-using Presentation.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,40 +15,27 @@ namespace Presentation.Controllers
         private readonly ISubeService _subeService;
         private readonly IAvukatService _avukatService;
         private readonly IUrunService _urunService;
+        private readonly IIhtarUrunService _ihtarUrunService;
 
         public IhtarController(
             IIhtarService ihtarService,
             IMusteriService musteriService,
             ISubeService subeService,
             IAvukatService avukatService,
+            IIhtarUrunService ihtarUrunService,
             IUrunService urunService)
         {
             _ihtarService = ihtarService;
             _musteriService = musteriService;
             _subeService = subeService;
             _avukatService = avukatService;
+            _ihtarUrunService = ihtarUrunService;
             _urunService = urunService;
         }
 
         public ActionResult Index()
         {
-            var ihtarList = _ihtarService.GetIhtarWithRelations();
-
-            var model = ihtarList.Select(i => new IhtarDto
-            {
-                IhtarId = i.IhtarId,
-                BorcTutar = i.BorcTutar,
-                IhtarTarih = i.IhtarTarih,
-                MusteriId = i.MusteriId,
-                MusteriAd = i.MusteriAd,
-                AvukatId = i.AvukatId,
-                AvukatAd = i.AvukatAd,
-                SubeId = i.SubeId,
-                SubeAd = i.SubeAd,
-                UrunId = i.UrunId,
-                UrunAd = i.UrunAd,
-                SilTarZmn = i.SilTarZmn
-            }).ToList();
+            var ihtarListesi = _ihtarService.GetIhtarWithRelations();
 
             ViewBag.MusteriList = _musteriService.GetAll()
                 .Where(m => m.SIL_TAR_ZMN == null)
@@ -60,6 +46,7 @@ namespace Presentation.Controllers
                 }).ToList();
 
             ViewBag.SubeList = _subeService.GetAll()
+                .Where(s => s.SIL_TAR_ZMN == null)
                 .Select(s => new SelectListItem
                 {
                     Value = s.SUBE_ID.ToString(),
@@ -67,47 +54,32 @@ namespace Presentation.Controllers
                 }).ToList();
 
             ViewBag.AvukatList = _avukatService.GetAll()
+                .Where(a => a.SIL_TAR_ZMN == null)
                 .Select(a => new SelectListItem
                 {
                     Value = a.AVUKAT_ID.ToString(),
                     Text = a.AVKT_AD
                 }).ToList();
 
+            // Çoklu seçim (multi-select) dropdown için
             ViewBag.UrunList = _urunService.GetAll()
+                .Where(u => u.SIL_TAR_ZMN == null)
                 .Select(u => new SelectListItem
                 {
                     Value = u.URUN_ID.ToString(),
                     Text = u.URUN_AD
                 }).ToList();
 
-            return View(model);
+            return View(ihtarListesi);
         }
 
         [HttpGet]
         public ActionResult GetIhtar(Guid id)
         {
-            var ihtar = _ihtarService.GetByIdWithRelations(id);
-            if (ihtar == null) return HttpNotFound();
+            var ihtarDto = _ihtarService.GetByIdWithRelations(id);
+            if (ihtarDto == null) return HttpNotFound();
 
-            var urun = ihtar.IhtarUrunler?.FirstOrDefault();
-
-            var dto = new IhtarDto
-            {
-                IhtarId = ihtar.IHTAR_ID,
-                BorcTutar = ihtar.BORC_TUTAR,
-                IhtarTarih = ihtar.IHTAR_TAR_ZMN,
-                MusteriId = ihtar.MUSTERI_ID,
-                MusteriAd = ihtar.Musteri?.MUST_AD ?? string.Empty,
-                AvukatId = ihtar.AVUKAT_ID,
-                AvukatAd = ihtar.Avukat?.AVKT_AD ?? string.Empty,
-                SubeId = ihtar.SUBE_ID,
-                SubeAd = ihtar.Sube?.SUBE_ADI ?? string.Empty,
-                UrunId = urun?.URUN_ID ?? Guid.Empty,
-                UrunAd = urun?.Urun?.URUN_AD ?? string.Empty,
-                SilTarZmn = ihtar.SIL_TAR_ZMN
-            };
-
-            return Json(dto, JsonRequestBehavior.AllowGet);
+            return Json(ihtarDto, JsonRequestBehavior.AllowGet);
         }
 
         // EKLEME
@@ -126,8 +98,9 @@ namespace Presentation.Controllers
 
             try
             {
-                var entity = new Ihtar
+                var ihtar = new Ihtar
                 {
+                    IHTAR_ID = Guid.NewGuid(),
                     BORC_TUTAR = model.BorcTutar,
                     IHTAR_TAR_ZMN = model.IhtarTarih,
                     MUSTERI_ID = model.MusteriId,
@@ -136,15 +109,22 @@ namespace Presentation.Controllers
                     GRS_TAR_ZMN = DateTime.Now
                 };
 
-                if (model.UrunId != Guid.Empty)
+                ihtar.IhtarUrunler = new List<IhtarUrun>();
+                if (model.SecilenUrunler != null)
                 {
-                    entity.IhtarUrunler = new List<IhtarUrun>
+                    foreach (var urunId in model.SecilenUrunler.Distinct())
                     {
-                        new IhtarUrun { URUN_ID = model.UrunId }
-                    };
+                        ihtar.IhtarUrunler.Add(new IhtarUrun
+                        {
+                            IHTAR_URUN_ID = Guid.NewGuid(),
+                            IHTAR_ID = ihtar.IHTAR_ID,
+                            URUN_ID = urunId,
+                            GRS_TAR_ZMN = DateTime.Now
+                        });
+                    }
                 }
 
-                _ihtarService.Add(entity);
+                _ihtarService.Add(ihtar);
 
                 return Json(new { success = true });
             }
@@ -163,41 +143,38 @@ namespace Presentation.Controllers
 
             try
             {
-                var entity = _ihtarService.GetByIdWithRelations(model.IhtarId);
-                if (entity == null)
+                var ihtar = _ihtarService.GetEntityWithUrunlerIncluded(model.IhtarId);
+                if (ihtar == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
 
-                // Alanları DTO’dan entity’ye aktar
-                entity.BORC_TUTAR = model.BorcTutar;
-                entity.IHTAR_TAR_ZMN = model.IhtarTarih;
-                entity.MUSTERI_ID = model.MusteriId;
-                entity.AVUKAT_ID = model.AvukatId;
-                entity.SUBE_ID = model.SubeId;
+                ihtar.BORC_TUTAR = model.BorcTutar;
+                ihtar.IHTAR_TAR_ZMN = model.IhtarTarih;
+                ihtar.MUSTERI_ID = model.MusteriId;
+                ihtar.AVUKAT_ID = model.AvukatId;
+                ihtar.SUBE_ID = model.SubeId;
+                ihtar.GNC_TAR_ZMN = DateTime.Now;
+                
+                _ihtarService.Update(ihtar);
 
-                // Ürün güncellemesi (tek ürün için)
-                if (model.UrunId != Guid.Empty)
+                foreach (var eu in ihtar.IhtarUrunler.ToList())
+                    _ihtarUrunService.Delete(eu);
+
+                if (model.Urunler != null)
                 {
-                    // İlgili ürün ilişkisini güncelle
-                    var urunRelation = entity.IhtarUrunler.FirstOrDefault();
-                    if (urunRelation != null)
+                    foreach (var urunDto in model.Urunler)
                     {
-                        urunRelation.URUN_ID = model.UrunId;
-                    }
-                    else
-                    {
-                        entity.IhtarUrunler.Add(new IhtarUrun
+                        var yeni = new IhtarUrun
                         {
-                            URUN_ID = model.UrunId,
-                            IHTAR_ID = entity.IHTAR_ID
-                        });
+                            IHTAR_ID = ihtar.IHTAR_ID,
+                            URUN_ID = urunDto.UrunId
+                        };
+                        _ihtarUrunService.Add(yeni);
                     }
                 }
 
-                entity.GNC_TAR_ZMN = DateTime.Now;
-
-                _ihtarService.Update(entity);
-
                 return Json(new { success = true });
+
+
             }
             catch (Exception ex)
             {
@@ -205,19 +182,18 @@ namespace Presentation.Controllers
             }
         }
 
-
         // SİLME (soft delete)
         [HttpPost]
         public ActionResult Delete(Guid id)
         {
             try
             {
-                var entity = _ihtarService.GetById(id);
-                if (entity == null)
+                var ihtar = _ihtarService.GetById(id);
+                if (ihtar == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
 
-                entity.SIL_TAR_ZMN = DateTime.Now;
-                _ihtarService.Update(entity);
+                ihtar.SIL_TAR_ZMN = DateTime.Now;
+                _ihtarService.Update(ihtar);
 
                 return Json(new { success = true });
             }

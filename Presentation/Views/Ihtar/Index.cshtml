@@ -42,9 +42,9 @@
                 <td>@ihtar.SubeAd</td>
                 <td>@ihtar.AvukatAd</td>
                 <td>
-                    @if (ihtar.UrunId != Guid.Empty)
+                    @if (ihtar.Urunler != null && ihtar.Urunler.Any())
                     {
-                        <span>@ihtar.UrunAd</span>
+                        <span>@string.Join(", ", ihtar.Urunler.Select(u => u.UrunAd))</span>
                     }
                     else
                     {

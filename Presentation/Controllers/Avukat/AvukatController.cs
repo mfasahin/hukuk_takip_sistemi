@@ -1,6 +1,5 @@
 ﻿using Business.Abstract;
 using Entity.Concrete;
-using Presentation.Mapping;
 using Presentation.Models;
 using System;
 using System.Linq;

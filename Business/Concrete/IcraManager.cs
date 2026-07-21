@@ -16,11 +16,39 @@ namespace Business.Concrete
             _icraDal = icraDal;
         }
 
-        public List<IcraDto> GetIcraWithRelations() => _icraDal.GetIcraWithRelations();
-        public IcraDto GetByIdWithRelations(Guid id) => _icraDal.GetByIdWithRelations(id);
-        public List<IhtarUrunDto> GetIhtarUrun() => _icraDal.GetIhtarUrun();
-        public Icra GetById(Guid id) => _icraDal.Get(i => i.ICRA_ID == id);
-        public void Add(Icra icra) => _icraDal.Add(icra);
-        public void Update(Icra icra) => _icraDal.Update(icra);
+        public List<IcraDto> GetIcraWithRelations()
+        {
+            return _icraDal.GetIcraWithRelations();
+        }
+
+        public IcraDto GetByIdWithRelations(Guid id)
+        {
+            return _icraDal.GetByIdWithRelations(id);
+        }
+
+        public List<IhtarUrunDto> GetIhtarUrun()
+        {
+            return _icraDal.GetIhtarUrun();
+        }
+
+        public Icra GetById(Guid id)
+        {
+            return _icraDal.Get(i => i.ICRA_ID == id);
+        }
+
+        public void Add(Icra icra)
+        {
+            _icraDal.Add(icra);
+        }
+
+        public void Update(Icra icra)
+        {
+            _icraDal.Update(icra);
+        }
+
+        public void Delete(Icra icra)
+        {
+            _icraDal.Delete(icra);
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace DataAccess.Abstract
     public interface IIhtarDal : IEntityRepository<Ihtar>
     {
         List<IhtarDto> GetIhtarWithRelations();
-        Ihtar GetByIdWithRelations(Guid id);
+        IhtarDto GetByIdWithRelations(Guid id);
+        Ihtar GetEntityWithUrunlerIncluded(Guid id);
     }
 }

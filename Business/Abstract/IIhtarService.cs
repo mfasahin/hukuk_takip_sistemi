@@ -14,6 +14,7 @@ namespace Business.Abstract
         Ihtar GetById(Guid id);
 
         List<IhtarDto> GetIhtarWithRelations();
-        Ihtar GetByIdWithRelations(Guid id);
+        IhtarDto GetByIdWithRelations(Guid id);
+        Ihtar GetEntityWithUrunlerIncluded(Guid id);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using DataAccess.Abstract;
 using Entity.Concrete;
+using Entity.Dto;
 using System;
 using System.Collections.Generic;
 
@@ -38,5 +39,6 @@ namespace Business.Concrete
         {
             return _ihtarUrunDal.Get(i => i.IHTAR_URUN_ID == id);
         }
+ 
     }
 }
