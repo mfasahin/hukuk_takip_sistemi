@@ -4,6 +4,7 @@ using Entity.Concrete;
 using Entity.Dto;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Business.Concrete
 {
@@ -39,6 +40,13 @@ namespace Business.Concrete
         {
             return _ihtarUrunDal.Get(i => i.IHTAR_URUN_ID == id);
         }
- 
+
+        // IhtarUrunManager.cs
+        public List<IhtarUrun> GetByIhtarId(Guid ihtarId)
+        {
+            return _ihtarUrunDal.GetAll(x => x.IHTAR_ID == ihtarId).ToList();
+        }
+
+
     }
 }

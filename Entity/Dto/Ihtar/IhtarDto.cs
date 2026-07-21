@@ -30,8 +30,7 @@ namespace Entity.Dto
 
         public DateTime? SilTarZmn { get; set; }
         public List<UrunDto> Urunler { get; set; }
-        public List<Guid> SecilenUrunler { get; set; } = new List<Guid>();
-
+        //public List<Guid> SecilenUrunler { get; set; } = new List<Guid>();
 
     }
 }

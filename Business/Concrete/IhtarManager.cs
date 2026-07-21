@@ -53,5 +53,10 @@ namespace Business.Concrete
         {
             return _ihtarDal.GetEntityWithUrunlerIncluded(id);
         }
+
+        public void UpdateIhtarWithUrunler(IhtarDto model)
+        {
+            _ihtarDal.UpdateIhtarWithUrunler(model);
+        }  
     }
 }

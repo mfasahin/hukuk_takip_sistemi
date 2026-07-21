@@ -11,5 +11,7 @@ namespace DataAccess.Abstract
         List<IhtarDto> GetIhtarWithRelations();
         IhtarDto GetByIdWithRelations(Guid id);
         Ihtar GetEntityWithUrunlerIncluded(Guid id);
+        void UpdateIhtarWithUrunler(IhtarDto model);
+
     }
 }

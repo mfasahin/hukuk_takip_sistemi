@@ -6,7 +6,7 @@
         <div class="modal-content">
             @using (Html.BeginForm("Create", "Ihtar", FormMethod.Post, new { id = "createForm" }))
             {
-                @Html.AntiForgeryToken()
+               // @Html.AntiForgeryToken()
                 <div class="modal-header">
                     <h5 class="modal-title" id="createModalLabel">Yeni İhtar</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
@@ -16,33 +16,39 @@
                     <div class="container-fluid">
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @Html.LabelFor(m => m.BorcTutar, "Borç Tutarı")
-                                @Html.TextBoxFor(m => m.BorcTutar, new { @class = "form-control", type = "number", step = "0.01", placeholder = "Borç tutarını giriniz" })
-                                @Html.ValidationMessageFor(m => m.BorcTutar, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="col-md-4">
-                                @Html.LabelFor(m => m.IhtarTarih, "İhtar Tarihi")
-                                @Html.TextBoxFor(m => m.IhtarTarih, new { @class = "form-control", type = "date" })
-                                @Html.ValidationMessageFor(m => m.IhtarTarih, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="col-md-4">
                                 @Html.LabelFor(m => m.MusteriId, "Müşteri")
                                 @Html.DropDownListFor(m => m.MusteriId,
                                     ViewBag.MusteriList as IEnumerable<SelectListItem>,
                                     "Müşteri Seç",
                                     new { @class = "form-select" })
-                                @Html.ValidationMessageFor(m => m.MusteriId, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-4">
+                                @Html.LabelFor(m => m.UrunId, "Ürün")
+                                @Html.DropDownListFor(m => m.UrunId,
+                                ViewBag.UrunList as IEnumerable<SelectListItem>,
+                                "Ürün Seç",
+                                new { @class = "form-select" })
+
+                            </div>
+                            <div class="col-md-4">
+                                @Html.LabelFor(m => m.BorcTutar, "Borç Tutarı")
+                                @Html.TextBoxFor(m => m.BorcTutar,
+                                    new { @class = "form-control", type = "number", step = "0.01" })
                             </div>
                         </div>
 
                         <div class="row mb-3">
+                            <div class="col-md-4">
+                                @Html.LabelFor(m => m.IhtarTarih, "İhtar Tarihi")
+                                @Html.TextBoxFor(m => m.IhtarTarih,
+                                    new { @class = "form-control", type = "date" })
+                            </div>
                             <div class="col-md-4">
                                 @Html.LabelFor(m => m.SubeId, "Şube")
                                 @Html.DropDownListFor(m => m.SubeId,
                                     ViewBag.SubeList as IEnumerable<SelectListItem>,
                                     "Şube Seç",
                                     new { @class = "form-select" })
-                                @Html.ValidationMessageFor(m => m.SubeId, "", new { @class = "text-danger" })
                             </div>
                             <div class="col-md-4">
                                 @Html.LabelFor(m => m.AvukatId, "Avukat")
@@ -50,21 +56,10 @@
                                     ViewBag.AvukatList as IEnumerable<SelectListItem>,
                                     "Avukat Seç",
                                     new { @class = "form-select" })
-                                @Html.ValidationMessageFor(m => m.AvukatId, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
-                        <!-- Ürün Seçimi -->
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                @Html.LabelFor(m => m.UrunId, "Ürün")
-                                @Html.DropDownListFor(m => m.UrunId,
-                                    ViewBag.UrunList as IEnumerable<SelectListItem>,
-                                    "Ürün Seç",
-                                    new { @class = "form-select" })
-                                @Html.ValidationMessageFor(m => m.UrunId, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
+                        <div class="mb-3" id="createUrunListesi"></div>
                     </div>
                 </div>
 
@@ -95,23 +90,32 @@
                     <div class="container-fluid">
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @Html.LabelFor(m => m.BorcTutar, "Borç Tutarı")
-                                @Html.TextBoxFor(m => m.BorcTutar, new { @class = "form-control", id = "BorcTutar", type = "number", step = "0.01" })
-                            </div>
-                            <div class="col-md-4">
-                                @Html.LabelFor(m => m.IhtarTarih, "İhtar Tarihi")
-                                @Html.TextBoxFor(m => m.IhtarTarih, new { @class = "form-control", id = "IhtarTarih", type = "date" })
-                            </div>
-                            <div class="col-md-4">
                                 @Html.LabelFor(m => m.MusteriId, "Müşteri")
                                 @Html.DropDownListFor(m => m.MusteriId,
                                     ViewBag.MusteriList as IEnumerable<SelectListItem>,
                                     "Müşteri Seç",
                                     new { @class = "form-select", id = "MusteriId" })
                             </div>
+                            <div class="col-md-4">
+                                @Html.LabelFor(m => m.UrunId, "Ürün")
+                                @Html.DropDownListFor(m => m.UrunId,
+                                    ViewBag.UrunList as IEnumerable<SelectListItem>,
+                                    "Ürün Seç",
+                                    new { @class = "form-select", id = "UrunId" })
+                            </div>
+                            <div class="col-md-4">
+                                @Html.LabelFor(m => m.BorcTutar, "Borç Tutarı")
+                                @Html.TextBoxFor(m => m.BorcTutar,
+                                    new { @class = "form-control", id = "BorcTutar", type = "number", step = "0.01" })
+                            </div>
                         </div>
 
                         <div class="row mb-3">
+                            <div class="col-md-4">
+                                @Html.LabelFor(m => m.IhtarTarih, "İhtar Tarihi")
+                                @Html.TextBoxFor(m => m.IhtarTarih,
+                                    new { @class = "form-control", id = "IhtarTarih", type = "date" })
+                            </div>
                             <div class="col-md-4">
                                 @Html.LabelFor(m => m.SubeId, "Şube")
                                 @Html.DropDownListFor(m => m.SubeId,
@@ -128,15 +132,7 @@
                             </div>
                         </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                @Html.LabelFor(m => m.UrunId, "Ürün")
-                                @Html.DropDownListFor(m => m.UrunId,
-                                    ViewBag.UrunList as IEnumerable<SelectListItem>,
-                                    "Ürün Seç",
-                                    new { @class = "form-select", id = "UrunId" })
-                            </div>
-                        </div>
+                        <div class="mb-3" id="createUrunListesi"></div>
                     </div>
                 </div>
 

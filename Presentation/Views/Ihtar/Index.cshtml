@@ -27,7 +27,7 @@
             <th>İhtar Tarihi</th>
             <th>Şube</th>
             <th>Avukat</th>
-            <th>Ürünler</th>
+            <th>Ürün</th>
             <th>İşlem</th>
         </tr>
     </thead>
@@ -44,7 +44,7 @@
                 <td>
                     @if (ihtar.Urunler != null && ihtar.Urunler.Any())
                     {
-                        <span>@string.Join(", ", ihtar.Urunler.Select(u => u.UrunAd))</span>
+                        <span>@ihtar.Urunler.First().UrunAd</span>
                     }
                     else
                     {

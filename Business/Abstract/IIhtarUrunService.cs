@@ -12,6 +12,8 @@ namespace Business.Abstract
         void Update(IhtarUrun ihtarUrun);
         void Delete(IhtarUrun ihtarUrun);
         IhtarUrun GetById(Guid id);
-        
+
+        List<IhtarUrun> GetByIhtarId(Guid ihtarId);
+
     }
 }
