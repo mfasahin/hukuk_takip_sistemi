@@ -14,10 +14,10 @@
                 <div class="modal-body">
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            @Html.LabelFor(m => m.IhtarUrunId, "İhtar / Ürün")
+                            @*@Html.LabelFor(m => m.IhtarUrunId, "İhtar / Ürün")
                             @Html.DropDownListFor(m => m.IhtarUrunId,
                                 ViewBag.IhtarUrunList as IEnumerable<SelectListItem>,
-                                "Seçiniz", new { @class = "form-select" })
+                                "Seçiniz", new { @class = "form-select" })*@
                         </div>
                         <div class="col-md-6">
                             @Html.LabelFor(m => m.MahkemeId, "Mahkeme")
@@ -28,8 +28,7 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            @Html.LabelFor(m => m.IcraTakipTar, "İcra Takip Tarihi")
-                            @Html.TextBoxFor(m => m.IcraTakipTar, new { @class = "form-control", type = "date" })
+                            
                         </div>
                         <div class="col-md-6">
                             @Html.LabelFor(m => m.IcraDosyaNo, "İcra Dosya No")
@@ -62,10 +61,10 @@
                 <div class="modal-body">
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            @Html.LabelFor(m => m.IhtarUrunId, "İhtar / Ürün")
-                            @Html.DropDownListFor(m => m.IhtarUrunId,
-                                ViewBag.IhtarUrunList as IEnumerable<SelectListItem>,
-                                "Seçiniz", new { @class = "form-select" })
+                            @*@Html.LabelFor(m => m.IcraDosyaNo, "Dosya Numarası")
+                            @Html.DropDownListFor(m => m.IcraDosyaNo,
+                                ViewBag.IcraDosyaNo as IEnumerable<SelectListItem>,
+                                "Seçiniz", new { @class = "form-select" })*@
                         </div>
                         <div class="col-md-6">
                             @Html.LabelFor(m => m.MahkemeId, "Mahkeme")
@@ -76,8 +75,7 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            @Html.LabelFor(m => m.IcraTakipTar, "İcra Takip Tarihi")
-                            @Html.TextBoxFor(m => m.IcraTakipTar, new { @class = "form-control", type = "date" })
+                            
                         </div>
                         <div class="col-md-6">
                             @Html.LabelFor(m => m.IcraDosyaNo, "İcra Dosya No")

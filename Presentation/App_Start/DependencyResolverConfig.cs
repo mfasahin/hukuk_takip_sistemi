@@ -34,7 +34,7 @@ namespace Presentation.App_Start
             container.RegisterType<IIhtarUrunDal, EfIhtarUrunDal>();
 
             container.RegisterType<IIcraService, IcraManager>();
-            //container.RegisterType<IIcraDal, EfIcraDal>();
+            container.RegisterType<IIcraDal, EfIcraDal>();
 
             container.RegisterType<IMahkemeService, MahkemeManager>();
             container.RegisterType<IMahkemeDal, EfMahkemeDal>();

@@ -41,7 +41,7 @@ namespace Presentation.Controllers
                 .Select(m => new SelectListItem
                 {
                     Value = m.MUSTERI_ID.ToString(),
-                    Text = m.MUST_AD + " " + m.MUST_SOYAD
+                    Text = m.MUST_NO + "-" + m.MUST_AD + " " + m.MUST_SOYAD
                 }).ToList();
 
             ViewBag.SubeList = _subeService.GetAll()
@@ -160,7 +160,6 @@ namespace Presentation.Controllers
             try
             {
 
-
                 _ihtarService.UpdateIhtarWithUrunler(model);
                 return Json(new { success = true });
             }
@@ -169,8 +168,6 @@ namespace Presentation.Controllers
                 return Json(new { success = false, error = ex.Message });
             }
         }
-
-
 
         // SİLME (soft delete)
         [HttpPost]

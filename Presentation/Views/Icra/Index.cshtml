@@ -14,13 +14,11 @@
     <thead>
         <tr>
             <th>Dosya No</th>
-            <th>Takip Tarihi</th>
             <th>Mahkeme</th>
             <th>Müşteri</th>
             <th>Ürün</th>
             <th>Borç Tutarı</th>
             <th>Avukat</th>
-            <th>Şube</th>
             <th>İşlem</th>
         </tr>
     </thead>
@@ -29,13 +27,11 @@
         {
             <tr>
                 <td>@icra.IcraDosyaNo</td>
-                <td>@icra.IcraTakipTar.ToString("dd.MM.yyyy")</td>
                 <td>@icra.MahkemeAd</td>
                 <td>@icra.MusteriAd</td>
                 <td>@icra.UrunAd</td>
                 <td>@icra.BorcTutar</td>
                 <td>@icra.AvukatAd</td>
-                <td>@icra.SubeAd</td>
                 <td>
                     <button class="btn btn-sm btn-warning updateBtn" data-id="@icra.IcraId">Güncelle</button>
                     <button class="btn btn-sm btn-danger deleteBtn" data-id="@icra.IcraId">Sil</button>

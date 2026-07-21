@@ -36,11 +36,11 @@
         {
             <tr>
                 <td><input type="checkbox" class="rowCheckbox" value="@ihtar.IhtarId" /></td>
-                <td>@ihtar.MusteriAd</td>
+                <td>@ihtar.MusteriAd  @ihtar.MusteriSoyad</td>
                 <td>@ihtar.BorcTutar</td>
                 <td>@ihtar.IhtarTarih.ToString("dd.MM.yyyy")</td>
                 <td>@ihtar.SubeAd</td>
-                <td>@ihtar.AvukatAd</td>
+                <td>@ihtar.AvukatAd @ihtar.AvukatSoyad</td>
                 <td>
                     @if (ihtar.Urunler != null && ihtar.Urunler.Any())
                     {

@@ -25,6 +25,13 @@ namespace Entity.Dto
         public string AvukatAd { get; set; }
         public string AvukatSoyad { get; set; }
 
+        public Guid IhtarUrunId { get; set; }
+        public Guid MahkemeId { get; set; }
+        public string MahkemeAd { get; set; }
+
+
+        public DateTime? SilTarZmn { get; set; }
+
         //List<IhtarUrunDto>
     }
 
