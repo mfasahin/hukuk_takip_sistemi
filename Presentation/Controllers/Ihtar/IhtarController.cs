@@ -2,7 +2,6 @@
 using Entity.Concrete;
 using Entity.Dto;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -58,7 +57,7 @@ namespace Presentation.Controllers
                 .Select(a => new SelectListItem
                 {
                     Value = a.AVUKAT_ID.ToString(),
-                    Text = a.AVKT_AD
+                    Text = a.AVKT_AD + " " + a.AVKT_SOYAD
                 }).ToList();
 
             ViewBag.UrunList = _urunService.GetAll()
@@ -148,7 +147,8 @@ namespace Presentation.Controllers
             {
                 var errors = ModelState
                     .Where(x => x.Value.Errors.Count > 0)
-                    .Select(x => new {
+                    .Select(x => new
+                    {
                         Field = x.Key,
                         Errors = x.Value.Errors.Select(e => e.ErrorMessage).ToList()
                     })
@@ -159,7 +159,7 @@ namespace Presentation.Controllers
 
             try
             {
-                
+
 
                 _ihtarService.UpdateIhtarWithUrunler(model);
                 return Json(new { success = true });

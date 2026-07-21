@@ -1,7 +1,9 @@
 ﻿using Entity.Concrete;
+using Entity.Dto;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace Presentation.Models
 {
@@ -32,6 +34,14 @@ namespace Presentation.Models
         // Seçilen ürünler (ekleme/güncelleme için)
         public List<Guid> SecilenUrunler { get; set; }
         public virtual ICollection<IhtarUrun> IhtarUrunler { get; set; }
+        public List<IhtarDto> IhtarListesi { get; set; }
+
+
+        // Dropdown listeleri
+        public IEnumerable<SelectListItem> MusteriList { get; set; }
+        public IEnumerable<SelectListItem> SubeList { get; set; }
+        public IEnumerable<SelectListItem> AvukatList { get; set; }
+        public IEnumerable<SelectListItem> UrunList { get; set; }
 
     }
 }
