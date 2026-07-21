@@ -1,108 +1,134 @@
-﻿//using Business.Abstract;
-//using Presentation.Mapping;
-//using Presentation.Models;
-//using System;
-//using System.Linq;
-//using System.Web.Mvc;
+﻿using Business.Abstract;
+using Entity.Concrete;
+using Presentation.Mapping;
+using Presentation.Models;
+using System;
+using System.Linq;
+using System.Web.Mvc;
 
-//namespace Presentation.Controllers
-//{
-//    public class UrunController : Controller
-//    {
-//        private readonly IUrunService _urunService;
+namespace Presentation.Controllers
+{
+    public class UrunController : Controller
+    {
+        private readonly IUrunService _urunService;
 
-//        public UrunController(IUrunService urunService)
-//        {
-//            _urunService = urunService;
-//        }
+        public UrunController(IUrunService urunService)
+        {
+            _urunService = urunService;
+        }
 
-//        // LİSTELEME
-//        public ActionResult Index()
-//        {
-//            var model = _urunService.GetAll()
-//                .Where(m => m.SIL_TAR_ZMN == null)
-//                .Select(m => m.ToModel())
-//                .ToList();
+        // LİSTELEME
+        public ActionResult Index()
+        {
+            var urunList = _urunService.GetAll()
+                .Where(m => m.SIL_TAR_ZMN == null)
+                .ToList();
 
-//            return View(model);
-//        }
+            var model = urunList.Select(u => new UrunModel
+            {
+                UrunId = u.URUN_ID,
+                UrunAd = u.URUN_AD,
+                UrunKod = u.URUN_KOD,
+                SonGecerlilikTar = u.SON_GECERLILIK_TAR,
+ 
+            }).ToList();
 
-//        // EKLEME
-//        [HttpPost]
-//        public ActionResult Create(UrunModel model)
-//        {
-//            if (!ModelState.IsValid)
-//                return Json(new { success = false, error = "ModelState geçersiz" });
+            return View(model);
+        }
 
-//            try
-//            {
-//                var entity = model.ToEntity();
-//                entity.GRS_TAR_ZMN = DateTime.Now;
+        // EKLEME
+        [HttpPost]
+        public ActionResult Create(UrunModel model)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { success = false, error = "ModelState geçersiz" });
 
-//                _urunService.Add(entity);
-//                return Json(new { success = true });
-//            }
-//            catch (Exception ex)
-//            {
-//                return Json(new { success = false, error = ex.Message });
-//            }
-//        }
+            try
+            {
+                var urun = new Urun
+                {
+                    URUN_ID = Guid.NewGuid(),
+                    URUN_AD = model.UrunAd,
+                    URUN_KOD = model.UrunKod,
+                    SON_GECERLILIK_TAR = model.SonGecerlilikTar,
+                    GRS_TAR_ZMN = DateTime.Now
+                };
 
-//        // TEKİL KAYIT (modal doldurma için)
-//        [HttpGet]
-//        public ActionResult GetUrun(Guid id)
-//        {
-//            var entity = _urunService.GetById(id);
-//            if (entity == null) return HttpNotFound();
+                _urunService.Add(urun);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
 
-//            return Json(entity.ToModel(), JsonRequestBehavior.AllowGet);
-//        }
+        // TEKİL KAYIT (modal doldurma için)
+        [HttpGet]
+        public ActionResult GetUrun(Guid id)
+        {
+            var urun = _urunService.GetById(id);
+            if (urun == null) return HttpNotFound();
 
-//        // GÜNCELLEME
-//        [HttpPost]
-//        public ActionResult Update(UrunModel model)
-//        {
-//            if (!ModelState.IsValid)
-//                return Json(new { success = false, error = "ModelState geçersiz" });
+            var model = new UrunModel
+            {
+                UrunId = urun.URUN_ID,
+                UrunAd = urun.URUN_AD,
+                UrunKod = urun.URUN_KOD,
+                SonGecerlilikTar = urun.SON_GECERLILIK_TAR,
+    
+            };
 
-//            try
-//            {
-//                var entity = _urunService.GetById(model.UrunId);
-//                if (entity == null)
-//                    return Json(new { success = false, error = "Kayıt bulunamadı" });
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
 
-//                model.ApplyTo(entity);
-//                entity.GNC_TAR_ZMN = DateTime.Now;
+        // GÜNCELLEME
+        [HttpPost]
+        public ActionResult Update(UrunModel model)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { success = false, error = "ModelState geçersiz" });
 
-//                _urunService.Update(entity);
-//                return Json(new { success = true });
-//            }
-//            catch (Exception ex)
-//            {
-//                return Json(new { success = false, error = ex.Message });
-//            }
-//        }
+            try
+            {
+                var urun = _urunService.GetById(model.UrunId);
+                if (urun == null)
+                    return Json(new { success = false, error = "Kayıt bulunamadı" });
 
-//        // SİLME
-//        [HttpPost]
-//        public ActionResult Delete(Guid id)
-//        {
-//            try
-//            {
-//                var entity = _urunService.GetById(id);
-//                if (entity == null)
-//                    return Json(new { success = false, error = "Kayıt bulunamadı" });
+                urun.URUN_AD = model.UrunAd;
+                urun.URUN_KOD = model.UrunKod;
+                urun.SON_GECERLILIK_TAR = model.SonGecerlilikTar;
+                urun.GNC_TAR_ZMN = DateTime.Now;
 
-//                // Soft delete 
-//                entity.SIL_TAR_ZMN = DateTime.Now;
-//                _urunService.Delete(entity);
+                _urunService.Update(urun);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
 
-//                return Json(new { success = true });
-//            }
-//            catch (Exception ex)
-//            {
-//                return Json(new { success = false, error = ex.Message });
-//            }
-//        }
-//    }
-//}
+        // SİLME
+        [HttpPost]
+        public ActionResult Delete(Guid id)
+        {
+            try
+            {
+                var urun = _urunService.GetById(id);
+                if (urun == null)
+                    return Json(new { success = false, error = "Kayıt bulunamadı" });
+
+                // Soft delete 
+                urun.SIL_TAR_ZMN = DateTime.Now;
+                _urunService.Delete(urun);
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+    }
+}

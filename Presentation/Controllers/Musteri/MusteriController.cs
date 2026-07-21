@@ -134,7 +134,7 @@ namespace Presentation.Controllers
 
                 // Soft delete
                 musteri.SIL_TAR_ZMN = DateTime.Now;
-                _musteriService.Update(musteri);   
+                _musteriService.Delete(musteri);
 
                 return Json(new { success = true });
             }
