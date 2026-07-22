@@ -10,6 +10,8 @@ namespace Entity.Dto
         public string UrunAd { get; set; }  
         public string MusteriAd { get; set; }
         public DateTime IhtarTarih { get; set; }
+
+        public decimal BorcTutar {  get; set; }
         //public string DisplayText { get; set; }
     }
 }

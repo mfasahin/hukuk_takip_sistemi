@@ -68,14 +68,25 @@ namespace Presentation.Controllers
             return View(model);
         }
 
+        // 1. Kademe: Müşteri seçilince ürün listesini döndürür
         [HttpGet]
-        public JsonResult GetIhtarUrunByMusteri(Guid musteriId)
+        public JsonResult GetUrunlerByMusteri(Guid musteriId)
         {
-            var list = _icraService.GetIhtarUrunByMusteri(musteriId)
+            var list = _icraService.GetUrunlerByMusteri(musteriId)
+                .Select(x => new { value = x.UrunId, text = x.UrunAd });
+
+            return Json(list, JsonRequestBehavior.AllowGet);
+        }
+
+        // 2. Kademe: Müşteri + Ürün seçilince ihtar listesini döndürür
+        [HttpGet]
+        public JsonResult GetIhtarlarByMusteriVeUrun(Guid musteriId, Guid urunId)
+        {
+            var list = _icraService.GetIhtarlarByMusteriVeUrun(musteriId, urunId)
                 .Select(x => new
                 {
                     value = x.IhtarUrunId,
-                    text = x.UrunAd + " - " + x.IhtarTarih.ToString("dd.MM.yyyy")
+                    text = x.IhtarTarih.ToString("dd.MM.yyyy") + " - Borç: " + x.BorcTutar
                 });
 
             return Json(list, JsonRequestBehavior.AllowGet);

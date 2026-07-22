@@ -52,54 +52,92 @@
 
 @section Scripts {
     <script src="~/Scripts/crud.js"></script>
-    @*<script>
-        initCrud("Icra", ["IcraId", "IhtarUrunId", "MahkemeId", "IcraTakipTar", "IcraDosyaNo"]);
-    </script>*@
-
     <script>
-        // Seçilen müşteriye göre İhtar/Ürün dropdown'ını doldurur
-        function loadIhtarUrunOptions(musteriId, prefix, callback) {
-            var $select = $("#" + prefix + "IhtarUrunSelect");
-            $select.empty().append('<option value="">Seçiniz</option>');
+        // Ürün dropdown'ını doldurur (1. kademe sonucu)
+        function loadUrunOptions(musteriId, prefix, callback) {
+            var $urunSelect = $("#" + prefix + "UrunSelect");
+            var $ihtarSelect = $("#" + prefix + "IhtarUrunSelect");
+
+            $urunSelect.empty();
+            $ihtarSelect.empty().append('<option value="">Önce ürün seçiniz</option>').prop("disabled", true);
 
             if (!musteriId) {
+                $urunSelect.append('<option value="">Önce müşteri seçiniz</option>').prop("disabled", true);
                 if (callback) callback();
                 return;
             }
 
-            $.get('/Icra/GetIhtarUrunByMusteri', { musteriId: musteriId })
+            $.get('/Icra/GetUrunlerByMusteri', { musteriId: musteriId })
                 .done(function (list) {
+                    $urunSelect.append('<option value="">Seçiniz</option>');
                     list.forEach(function (item) {
-                        $select.append('<option value="' + item.value + '">' + item.text + '</option>');
+                        $urunSelect.append('<option value="' + item.value + '">' + item.text + '</option>');
                     });
+                    $urunSelect.prop("disabled", false);
                     if (callback) callback();
                 });
         }
 
-        // Create modal: müşteri değişince İhtar/Ürün listesini yenile
+        // İhtar dropdown'ını doldurur (2. kademe sonucu)
+        function loadIhtarOptions(musteriId, urunId, prefix, callback) {
+            var $ihtarSelect = $("#" + prefix + "IhtarUrunSelect");
+            $ihtarSelect.empty();
+
+            if (!urunId) {
+                $ihtarSelect.append('<option value="">Önce ürün seçiniz</option>').prop("disabled", true);
+                if (callback) callback();
+                return;
+            }
+
+            $.get('/Icra/GetIhtarlarByMusteriVeUrun', { musteriId: musteriId, urunId: urunId })
+                .done(function (list) {
+                    $ihtarSelect.append('<option value="">Seçiniz</option>');
+                    list.forEach(function (item) {
+                        $ihtarSelect.append('<option value="' + item.value + '">' + item.text + '</option>');
+                    });
+                    $ihtarSelect.prop("disabled", false);
+                    if (callback) callback();
+                });
+        }
+
+        // CREATE MODAL kademeleri
         $(document).on("change", "#createMusteriSelect", function () {
-            loadIhtarUrunOptions($(this).val(), "create");
+            loadUrunOptions($(this).val(), "create");
+        });
+        $(document).on("change", "#createUrunSelect", function () {
+            var musteriId = $("#createMusteriSelect").val();
+            loadIhtarOptions(musteriId, $(this).val(), "create");
         });
 
-        // Update modal: müşteri değişince İhtar/Ürün listesini yenile
+        // UPDATE MODAL kademeleri
         $(document).on("change", "#updateMusteriSelect", function () {
-            loadIhtarUrunOptions($(this).val(), "update");
+            loadUrunOptions($(this).val(), "update");
+        });
+        $(document).on("change", "#updateUrunSelect", function () {
+            var musteriId = $("#updateMusteriSelect").val();
+            loadIhtarOptions(musteriId, $(this).val(), "update");
         });
 
-        // Create modal her açıldığında formu sıfırla
+        // Create modal her açıldığında sıfırla
         $("#createModal").on("show.bs.modal", function () {
             $("#createMusteriSelect").val("");
-            $("#createIhtarUrunSelect").empty().append('<option value="">Önce müşteri seçiniz</option>');
+            $("#createUrunSelect").empty().append('<option value="">Önce müşteri seçiniz</option>').prop("disabled", true);
+            $("#createIhtarUrunSelect").empty().append('<option value="">Önce ürün seçiniz</option>').prop("disabled", true);
         });
 
         initCrud("Icra", ["IcraId", "MahkemeId", "IcraDosyaNo", "IcraTakipTar"], {
             onGetSuccess: function (data) {
-                // Önce müşteriyi seç
+                // 1. Kademe: Müşteriyi seç, ürün listesini yükle
                 $("#updateMusteriSelect").val(data.MusteriId);
 
-                // Sonra o müşteriye ait İhtar/Ürün listesini yükle, yüklenince doğru kaydı seç
-                loadIhtarUrunOptions(data.MusteriId, "update", function () {
-                    $("#updateIhtarUrunSelect").val(data.IhtarUrunId);
+                loadUrunOptions(data.MusteriId, "update", function () {
+                    // 2. Kademe: Ürünü seç, ihtar listesini yükle
+                    $("#updateUrunSelect").val(data.UrunId);
+
+                    loadIhtarOptions(data.MusteriId, data.UrunId, "update", function () {
+                        // 3. Kademe: Doğru ihtar kaydını seç
+                        $("#updateIhtarUrunSelect").val(data.IhtarUrunId);
+                    });
                 });
             }
         });

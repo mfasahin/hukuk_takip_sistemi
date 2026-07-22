@@ -51,9 +51,18 @@ namespace Business.Concrete
             _icraDal.Delete(icra);
         }
 
-        public List<IhtarUrunDto> GetIhtarUrunByMusteri(Guid musteriID)
+        //public List<IhtarUrunDto> GetIhtarUrunByMusteri(Guid musteriID)
+        //{
+        //    return _icraDal.GetIhtarUrunByMusteri(musteriID);
+        //}
+
+        public List<UrunDto> GetUrunlerByMusteri(Guid musteriId)
         {
-            return _icraDal.GetIhtarUrunByMusteri(musteriID);
+            return _icraDal.GetUrunlerByMusteri(musteriId);
+        }
+        public List<IhtarUrunDto> GetIhtarlarByMusteriVeUrun(Guid musteriId, Guid urunId)
+        {
+            return _icraDal.GetIhtarlarByMusteriVeUrun(musteriId, urunId);
         }
     }
 }

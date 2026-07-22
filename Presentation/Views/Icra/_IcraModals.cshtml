@@ -1,4 +1,5 @@
 ﻿@model Entity.Dto.IcraDto
+@using System.Linq
 
 <!-- Create Modal -->
 <div class="modal fade" id="createModal" tabindex="-1">
@@ -13,9 +14,9 @@
                 </div>
                 <div class="modal-body">
                     <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label>Müşteri</label>
-                            <select class="form-select" id="createMusteriSelect" name="MusteriId">
+                            <select class="form-select" id="createMusteriSelect">
                                 <option value="">Seçiniz</option>
                                 @foreach (var item in (ViewBag.MusteriList as IEnumerable<SelectListItem>))
                                 {
@@ -23,21 +24,27 @@
                                 }
                             </select>
                         </div>
-                        <div class="col-md-6">
-                            @Html.LabelFor(m => m.MahkemeId, "Mahkeme")
-                            @Html.DropDownListFor(m => m.MahkemeId,
-                                ViewBag.MahkemeList as IEnumerable<SelectListItem>,
-                                "Seçiniz", new { @class = "form-select" })
+                        <div class="col-md-4">
+                            <label>Ürün</label>
+                            <select class="form-select" id="createUrunSelect" disabled>
+                                <option value="">Önce müşteri seçiniz</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label>İhtar</label>
+                            @Html.DropDownListFor(m => m.IhtarUrunId,
+                                Enumerable.Empty<SelectListItem>(),
+                                "Önce ürün seçiniz",
+                                new { @class = "form-select", id = "createIhtarUrunSelect", disabled = "disabled" })
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label>İhtar / Ürün</label>
-                            @Html.DropDownListFor(m => m.IhtarUrunId,
-                                Enumerable.Empty<SelectListItem>(),
-                                "Önce müşteri seçiniz",
-                                new { @class = "form-select", id = "createIhtarUrunSelect" })
+                            @Html.LabelFor(m => m.MahkemeId, "Mahkeme")
+                            @Html.DropDownListFor(m => m.MahkemeId,
+                                ViewBag.MahkemeList as IEnumerable<SelectListItem>,
+                                "Seçiniz", new { @class = "form-select" })
                         </div>
                         <div class="col-md-6">
                             @Html.LabelFor(m => m.IcraDosyaNo, "İcra Dosya No")
@@ -76,9 +83,9 @@
                 </div>
                 <div class="modal-body">
                     <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label>Müşteri</label>
-                            <select class="form-select" id="updateMusteriSelect" name="MusteriId">
+                            <select class="form-select" id="updateMusteriSelect">
                                 <option value="">Seçiniz</option>
                                 @foreach (var item in (ViewBag.MusteriList as IEnumerable<SelectListItem>))
                                 {
@@ -86,21 +93,27 @@
                                 }
                             </select>
                         </div>
-                        <div class="col-md-6">
-                            @Html.LabelFor(m => m.MahkemeId, "Mahkeme")
-                            @Html.DropDownListFor(m => m.MahkemeId,
-                                ViewBag.MahkemeList as IEnumerable<SelectListItem>,
-                                "Seçiniz", new { @class = "form-select" })
+                        <div class="col-md-4">
+                            <label>Ürün</label>
+                            <select class="form-select" id="updateUrunSelect" disabled>
+                                <option value="">Önce müşteri seçiniz</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label>İhtar</label>
+                            @Html.DropDownListFor(m => m.IhtarUrunId,
+                                Enumerable.Empty<SelectListItem>(),
+                                "Önce ürün seçiniz",
+                                new { @class = "form-select", id = "updateIhtarUrunSelect", disabled = "disabled" })
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label>İhtar / Ürün</label>
-                            @Html.DropDownListFor(m => m.IhtarUrunId,
-                                Enumerable.Empty<SelectListItem>(),
-                                "Önce müşteri seçiniz",
-                                new { @class = "form-select", id = "updateIhtarUrunSelect" })
+                            @Html.LabelFor(m => m.MahkemeId, "Mahkeme")
+                            @Html.DropDownListFor(m => m.MahkemeId,
+                                ViewBag.MahkemeList as IEnumerable<SelectListItem>,
+                                "Seçiniz", new { @class = "form-select" })
                         </div>
                         <div class="col-md-6">
                             @Html.LabelFor(m => m.IcraDosyaNo, "İcra Dosya No")
