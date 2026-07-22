@@ -8,9 +8,9 @@ namespace DataAccess.Abstract
 {
     public interface IIhtarDal : IEntityRepository<Ihtar>
     {
-        List<IhtarDto> GetIhtarWithRelations();
-        IhtarDto GetByIdWithRelations(Guid id);
-        Ihtar GetEntityWithUrunlerIncluded(Guid id);
+        List<IhtarDto> GetIhtarDto();
+        IhtarDto GetByIdIhtarDto(Guid id);
+        Ihtar GetIhtarWithUrunler(Guid id);
         void UpdateIhtarWithUrunler(IhtarDto model);
 
     }

@@ -13,9 +13,9 @@ namespace Business.Abstract
         void Delete(Ihtar ihtar);
         Ihtar GetById(Guid id);
 
-        List<IhtarDto> GetIhtarWithRelations();
-        IhtarDto GetByIdWithRelations(Guid id);
-        Ihtar GetEntityWithUrunlerIncluded(Guid id);
+        List<IhtarDto> GetIhtarDto();
+        IhtarDto GetByIdIhtarDto(Guid id);
+        Ihtar GetIhtarWithUrunler(Guid id);
 
         void UpdateIhtarWithUrunler(IhtarDto model);
     }

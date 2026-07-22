@@ -34,7 +34,7 @@ namespace Presentation.Controllers
 
         public ActionResult Index()
         {
-            var ihtarListesi = _ihtarService.GetIhtarWithRelations();
+            var ihtarListesi = _ihtarService.GetIhtarDto();
 
             ViewBag.MusteriList = _musteriService.GetAll()
                 .Where(m => m.SIL_TAR_ZMN == null)
@@ -126,7 +126,7 @@ namespace Presentation.Controllers
         [HttpGet]
         public ActionResult GetIhtar(Guid id)
         {
-            var ihtarDto = _ihtarService.GetByIdWithRelations(id);
+            var ihtarDto = _ihtarService.GetByIdIhtarDto(id);
             if (ihtarDto == null) return HttpNotFound();
 
             // Eğer ürün ilişkisi varsa, seçili ürünü DTO’ya yaz

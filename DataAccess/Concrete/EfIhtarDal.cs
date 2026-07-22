@@ -11,7 +11,7 @@ namespace DataAccess.Concrete
     public class EfIhtarDal : EfEntityRepositoryBase<Ihtar, AppDbContext>, IIhtarDal
     {
         // Ortak DTO sorgusu - hem liste hem tekil kayıt için kullanılır.
-        private IQueryable<IhtarDto> BuildIhtarDtoQuery(AppDbContext context)
+        private IQueryable<IhtarDto> CreateIhtarDtoQuery(AppDbContext context)
         {
             return from i in context.IHTAR
                    join m in context.MUSTERI on i.MUSTERI_ID equals m.MUSTERI_ID
@@ -51,21 +51,21 @@ namespace DataAccess.Concrete
                    };
         }
 
-        public List<IhtarDto> GetIhtarWithRelations()
+        public List<IhtarDto> GetIhtarDto()
         {
             using (var context = new AppDbContext())
             {
-                return BuildIhtarDtoQuery(context)
+                return CreateIhtarDtoQuery(context)
                     .Where(dto => dto.SilTarZmn == null)
                     .ToList();
             }
         }
 
-        public IhtarDto GetByIdWithRelations(Guid id)
+        public IhtarDto GetByIdIhtarDto(Guid id)
         {
             using (var context = new AppDbContext())
             {
-                var dto = BuildIhtarDtoQuery(context)
+                var dto = CreateIhtarDtoQuery(context)
                     .FirstOrDefault(x => x.IhtarId == id);
 
                 if (dto != null)
@@ -84,7 +84,7 @@ namespace DataAccess.Concrete
             }
         }
 
-        public Ihtar GetEntityWithUrunlerIncluded(Guid id)
+        public Ihtar GetIhtarWithUrunler(Guid id)
         {
             using (var context = new AppDbContext())
             {

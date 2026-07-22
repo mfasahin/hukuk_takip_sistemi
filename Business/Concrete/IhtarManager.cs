@@ -41,17 +41,17 @@ namespace Business.Concrete
             return _ihtarDal.Get(Ihtar => Ihtar.IHTAR_ID == id);
         }
 
-        public List<IhtarDto> GetIhtarWithRelations()
+        public List<IhtarDto> GetIhtarDto()
         {
-            return _ihtarDal.GetIhtarWithRelations();
+            return _ihtarDal.GetIhtarDto();
         }
-        public IhtarDto GetByIdWithRelations(Guid id)
+        public IhtarDto GetByIdIhtarDto(Guid id)
         {
-            return _ihtarDal.GetByIdWithRelations(id);
+            return _ihtarDal.GetByIdIhtarDto(id);
         }
-        public Ihtar GetEntityWithUrunlerIncluded(Guid id)
+        public Ihtar GetIhtarWithUrunler(Guid id)
         {
-            return _ihtarDal.GetEntityWithUrunlerIncluded(id);
+            return _ihtarDal.GetIhtarWithUrunler(id);
         }
 
         public void UpdateIhtarWithUrunler(IhtarDto model)
