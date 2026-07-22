@@ -15,5 +15,6 @@ namespace Business.Abstract
 
         IcraDto GetByIdWithRelations(Guid id);
         List<IhtarUrunDto> GetIhtarUrun();
+        List<IhtarUrunDto> GetIhtarUrunByMusteri(Guid musteriId);
     }
 }

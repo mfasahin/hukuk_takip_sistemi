@@ -10,27 +10,44 @@ namespace Presentation.Controllers
     public class IcraController : Controller
     {
         private readonly IIcraService _icraService;
+        private readonly IMusteriService _musteriService;
+        private readonly IAvukatService _avukatService;
         private readonly IMahkemeService _mahkemeService;
-        private readonly IIhtarUrunService _ihtarUrunService;
         private readonly IUrunService _urunService;
 
         public IcraController(
             IIcraService icraService,
+            IMusteriService musteriService,
             IMahkemeService mahkemeService,
-            IIhtarUrunService ihtarUrunService,
+            IAvukatService avukatService,
             IUrunService urunService)
         {
             _icraService = icraService;
+            _musteriService = musteriService;
             _mahkemeService = mahkemeService;
-            _ihtarUrunService = ihtarUrunService;
             _urunService = urunService;
+            _avukatService = avukatService;
         }
 
         public ActionResult Index()
         {
-            var model = _icraService.GetIcraWithRelations()
-                .Where(i => i.SilTarZmn == null) // Soft delete filtresi
-                .ToList();
+            var model = _icraService.GetIcraWithRelations();
+
+            ViewBag.MusteriList = _musteriService.GetAll()
+                .Where(m => m.SIL_TAR_ZMN == null)
+                .Select(m => new SelectListItem
+                {
+                    Value = m.MUSTERI_ID.ToString(),
+                    Text = m.MUST_AD + " " + m.MUST_SOYAD
+                }).ToList();
+
+            ViewBag.AvukatList = _avukatService.GetAll()
+                .Where(a => a.SIL_TAR_ZMN == null)
+                .Select(a => new SelectListItem
+                {
+                    Value = a.AVUKAT_ID.ToString(),
+                    Text = a.AVKT_AD + " " + a.AVKT_SOYAD
+                }).ToList();
 
             ViewBag.MahkemeList = _mahkemeService.GetAll()
                 .Where(m => m.SIL_TAR_ZMN == null)
@@ -40,15 +57,28 @@ namespace Presentation.Controllers
                     Text = m.MAHKEME_AD
                 }).ToList();
 
-            ViewBag.UrunList = _urunService.GetAll()
-                .Where(u => u.SIL_TAR_ZMN == null)
-                .Select(u => new SelectListItem
+            // İcra bir IhtarUrun'a bağlanıyor - dropdown'da hangi ihtar/ürün olduğu görünmeli
+            ViewBag.IhtarUrunList = _icraService.GetIhtarUrun()
+                .Select(x => new SelectListItem
                 {
-                    Value = u.URUN_ID.ToString(),
-                    //Text = u.URUN_AD // Daha anlamlı alan gösterimi
+                    Value = x.IhtarUrunId.ToString(),
+                    Text = x.MusteriAd + " - " + x.UrunAd + " - " + x.IhtarTarih.ToString("dd.MM.yyyy")
                 }).ToList();
 
             return View(model);
+        }
+
+        [HttpGet]
+        public JsonResult GetIhtarUrunByMusteri(Guid musteriId)
+        {
+            var list = _icraService.GetIhtarUrunByMusteri(musteriId)
+                .Select(x => new
+                {
+                    value = x.IhtarUrunId,
+                    text = x.UrunAd + " - " + x.IhtarTarih.ToString("dd.MM.yyyy")
+                });
+
+            return Json(list, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -67,9 +97,11 @@ namespace Presentation.Controllers
             {
                 var entity = new Icra
                 {
+                    ICRA_ID = Guid.NewGuid(),
                     IHTAR_URUN_ID = model.IhtarUrunId,
                     MAHKEME_ID = model.MahkemeId,
                     ICRA_DOSYA_NO = model.IcraDosyaNo,
+                    ICRA_TAKIP_TAR = model.IcraTakipTar,
                     GRS_TAR_ZMN = DateTime.Now
                 };
 
@@ -87,10 +119,9 @@ namespace Presentation.Controllers
         public ActionResult GetIcra(Guid id)
         {
             var dto = _icraService.GetByIdWithRelations(id);
-            if (dto == null)
-                return Json(new { success = false, error = "Kayıt bulunamadı" }, JsonRequestBehavior.AllowGet);
+            if (dto == null) return HttpNotFound();
 
-            return Json(new { success = true, data = dto }, JsonRequestBehavior.AllowGet);
+            return Json(dto, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -108,6 +139,7 @@ namespace Presentation.Controllers
                 entity.IHTAR_URUN_ID = model.IhtarUrunId;
                 entity.MAHKEME_ID = model.MahkemeId;
                 entity.ICRA_DOSYA_NO = model.IcraDosyaNo;
+                entity.ICRA_TAKIP_TAR = model.IcraTakipTar;
                 entity.GNC_TAR_ZMN = DateTime.Now;
 
                 _icraService.Update(entity);

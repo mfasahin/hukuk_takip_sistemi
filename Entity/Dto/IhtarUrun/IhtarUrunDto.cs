@@ -8,6 +8,8 @@ namespace Entity.Dto
         public Guid IhtarId { get; set; }
         public Guid UrunId { get; set; }
         public string UrunAd { get; set; }  
+        public string MusteriAd { get; set; }
+        public DateTime IhtarTarih { get; set; }
         //public string DisplayText { get; set; }
     }
 }

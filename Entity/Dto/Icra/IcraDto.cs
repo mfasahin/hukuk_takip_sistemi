@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Entity.Dto
 {
@@ -7,6 +6,7 @@ namespace Entity.Dto
     {
         public Guid IcraId { get; set; }
         public string IcraMahkemesi { get; set; }
+        public DateTime IcraTakipTar {  get; set; }
         public string IcraDosyaNo { get; set; }
 
         // İlişkili alanlar (müşteri, ürün, ihtar, avukat)

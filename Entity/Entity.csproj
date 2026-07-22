@@ -52,15 +52,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\BaseEntity.cs" />
-    <Compile Include="Concrete\Avukat.cs" />
-    <Compile Include="Concrete\Icra.cs" />
-    <Compile Include="Concrete\Icra_Mahkeme.cs" />
-    <Compile Include="Concrete\Ihtar.cs" />
-    <Compile Include="Concrete\Ihtar_Urun.cs" />
-    <Compile Include="Concrete\Kullanici.cs" />
-    <Compile Include="Concrete\Musteri.cs" />
-    <Compile Include="Concrete\Sube.cs" />
-    <Compile Include="Concrete\Urun.cs" />
+    <Compile Include="Concrete\Avukat\Avukat.cs" />
+    <Compile Include="Concrete\Icra\Icra.cs" />
+    <Compile Include="Concrete\Icra_Mahkeme\Icra_Mahkeme.cs" />
+    <Compile Include="Concrete\Ihtar\Ihtar.cs" />
+    <Compile Include="Concrete\Ihtar_Urun\Ihtar_Urun.cs" />
+    <Compile Include="Concrete\Kullanici\Kullanici.cs" />
+    <Compile Include="Concrete\Musteri\Musteri.cs" />
+    <Compile Include="Concrete\Sube\Sube.cs" />
+    <Compile Include="Concrete\Urun\Urun.cs" />
     <Compile Include="Dto\Icra\IcraDto.cs" />
     <Compile Include="Dto\Ihtar\IhtarDto.cs" />
     <Compile Include="Dto\IhtarUrun\IhtarUrunDto.cs" />

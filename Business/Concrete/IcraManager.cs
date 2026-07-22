@@ -50,5 +50,10 @@ namespace Business.Concrete
         {
             _icraDal.Delete(icra);
         }
+
+        public List<IhtarUrunDto> GetIhtarUrunByMusteri(Guid musteriID)
+        {
+            return _icraDal.GetIhtarUrunByMusteri(musteriID);
+        }
     }
 }

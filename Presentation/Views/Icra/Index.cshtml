@@ -3,21 +3,26 @@
     ViewBag.Title = "İcra Takip";
 }
 
+<h2>İcra Takip</h2>
+
 <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
-    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">
+    <button type="button" class="btn btn-success"
+            data-bs-toggle="modal"
+            data-bs-target="#createModal">
         İcra Ekle
     </button>
 </div>
 
-<h2>İcra Takip</h2>
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Dosya No</th>
-            <th>Mahkeme</th>
+            <th><input type="checkbox" id="selectAll" /></th>
             <th>Müşteri</th>
             <th>Ürün</th>
             <th>Borç Tutarı</th>
+            <th>İcra Takip Tarihi</th>
+            <th>Mahkeme</th>
+            <th>İcra Dosya Numarası</th>
             <th>Avukat</th>
             <th>İşlem</th>
         </tr>
@@ -26,12 +31,14 @@
         @foreach (var icra in Model)
         {
             <tr>
-                <td>@icra.IcraDosyaNo</td>
-                <td>@icra.MahkemeAd</td>
-                <td>@icra.MusteriAd</td>
+                <td><input type="checkbox" class="rowCheckbox" value="@icra.IcraId" /></td>
+                <td>@icra.MusteriAd @icra.MusteriSoyad</td>
                 <td>@icra.UrunAd</td>
                 <td>@icra.BorcTutar</td>
-                <td>@icra.AvukatAd</td>
+                <td>@icra.IcraTakipTar.ToString("dd.MM.yyyy")</td>
+                <td>@icra.MahkemeAd</td>
+                <td>@icra.IcraDosyaNo</td>
+                <td>@icra.AvukatAd @icra.AvukatSoyad</td>
                 <td>
                     <button class="btn btn-sm btn-warning updateBtn" data-id="@icra.IcraId">Güncelle</button>
                     <button class="btn btn-sm btn-danger deleteBtn" data-id="@icra.IcraId">Sil</button>
@@ -45,7 +52,56 @@
 
 @section Scripts {
     <script src="~/Scripts/crud.js"></script>
-    <script>
+    @*<script>
         initCrud("Icra", ["IcraId", "IhtarUrunId", "MahkemeId", "IcraTakipTar", "IcraDosyaNo"]);
+    </script>*@
+
+    <script>
+        // Seçilen müşteriye göre İhtar/Ürün dropdown'ını doldurur
+        function loadIhtarUrunOptions(musteriId, prefix, callback) {
+            var $select = $("#" + prefix + "IhtarUrunSelect");
+            $select.empty().append('<option value="">Seçiniz</option>');
+
+            if (!musteriId) {
+                if (callback) callback();
+                return;
+            }
+
+            $.get('/Icra/GetIhtarUrunByMusteri', { musteriId: musteriId })
+                .done(function (list) {
+                    list.forEach(function (item) {
+                        $select.append('<option value="' + item.value + '">' + item.text + '</option>');
+                    });
+                    if (callback) callback();
+                });
+        }
+
+        // Create modal: müşteri değişince İhtar/Ürün listesini yenile
+        $(document).on("change", "#createMusteriSelect", function () {
+            loadIhtarUrunOptions($(this).val(), "create");
+        });
+
+        // Update modal: müşteri değişince İhtar/Ürün listesini yenile
+        $(document).on("change", "#updateMusteriSelect", function () {
+            loadIhtarUrunOptions($(this).val(), "update");
+        });
+
+        // Create modal her açıldığında formu sıfırla
+        $("#createModal").on("show.bs.modal", function () {
+            $("#createMusteriSelect").val("");
+            $("#createIhtarUrunSelect").empty().append('<option value="">Önce müşteri seçiniz</option>');
+        });
+
+        initCrud("Icra", ["IcraId", "MahkemeId", "IcraDosyaNo", "IcraTakipTar"], {
+            onGetSuccess: function (data) {
+                // Önce müşteriyi seç
+                $("#updateMusteriSelect").val(data.MusteriId);
+
+                // Sonra o müşteriye ait İhtar/Ürün listesini yükle, yüklenince doğru kaydı seç
+                loadIhtarUrunOptions(data.MusteriId, "update", function () {
+                    $("#updateIhtarUrunSelect").val(data.IhtarUrunId);
+                });
+            }
+        });
     </script>
 }
