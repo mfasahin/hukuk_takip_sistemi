@@ -41,7 +41,6 @@ namespace Business.Concrete
             return _ihtarUrunDal.Get(i => i.IHTAR_URUN_ID == id);
         }
 
-        // IhtarUrunManager.cs
         public List<IhtarUrun> GetByIhtarId(Guid ihtarId)
         {
             return _ihtarUrunDal.GetAll(x => x.IHTAR_ID == ihtarId).ToList();

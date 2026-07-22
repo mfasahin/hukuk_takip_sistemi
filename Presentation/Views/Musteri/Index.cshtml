@@ -50,9 +50,24 @@
                 <td>@musteri.MustEposta</td>
                 <td>@musteri.MustTelNo</td>
                 <td>
-                    <button class="btn btn-sm btn-warning updateBtn" data-id="@musteri.MusteriId">Güncelle</button>
-                    <button class="btn btn-sm btn-danger deleteBtn" data-id="@musteri.MusteriId">Sil</button>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item text-danger updateBtn" data-id="@musteri.MusteriId">Güncelle</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item text-danger deleteBtn" data-id="@musteri.MusteriId">Sil</a>
+                            </li>
+                        </ul>
+                    </div>
                 </td>
+                @*<td>
+            <button class="btn btn-sm btn-warning updateBtn" data-id="@musteri.MusteriId">Güncelle</button>
+            <button class="btn btn-sm btn-danger deleteBtn" data-id="@musteri.MusteriId">Sil</button>
+        </td>*@
             </tr>
         }
     </tbody>

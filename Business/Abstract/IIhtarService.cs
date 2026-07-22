@@ -15,8 +15,6 @@ namespace Business.Abstract
 
         List<IhtarDto> GetIhtarDto();
         IhtarDto GetByIdIhtarDto(Guid id);
-        Ihtar GetIhtarWithUrunler(Guid id);
-
         void UpdateIhtarWithUrunler(IhtarDto model);
     }
 }

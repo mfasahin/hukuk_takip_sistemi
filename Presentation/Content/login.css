@@ -1,0 +1,97 @@
+﻿/* Genel Sayfa Ayarları */
+body {
+    background-color: #e6eefc; /* Görseldeki açık mavi arka plan */
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header Şeridi */
+.login-header {
+    background-color: #0b4e8a; /* Halkbank Mavisı */
+    padding: 18px 0;
+    width: 100%;
+}
+.login-header-1 {
+    background-color: #ffffff; /* Halkbank Mavisı */
+    padding: 18px 0;
+    width: 100%;
+}
+
+    /* Logo kapsayıcı div'e göre tam uyumlu */
+    .login-header .logo {
+        max-width: 100%;
+        height: auto;
+        max-height: 55px; /* İsteğe göre yükseklik limiti */
+        object-fit: contain;
+        display: inline-block;
+    }
+
+/* Form Konumlandırma - Üstten Düzgün Boşluk Bırakıldı */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Tam ortalamak yerine yukarıya daha yakın hizalar */
+    padding-top: 70px; /* Header ile container arasındaki boşluk */
+    padding-bottom: 40px;
+    min-height: calc(100vh - 90px);
+}
+
+.login-form-wrapper {
+    width: 100%;
+    max-width: 360px; /* Görseldeki forma uygun genişlik */
+}
+
+/* Form Elemanları Style */
+.custom-label {
+    color: #0b4e8a;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 6px;
+}
+
+/* İnput Kutuları (Oval ve Siyah Kenarlıklı) */
+.custom-input {
+    border: 2px solid #000000;
+    border-radius: 25px;
+    height: 48px;
+    padding: 0 20px;
+    font-size: 1rem;
+    background-color: #ffffff;
+    box-shadow: none !important;
+}
+
+    .custom-input:focus {
+        border-color: #0b4e8a;
+    }
+
+/* Giriş Butonu */
+.btn-login {
+    background-color: #0b4e8a;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1.1rem;
+    border-radius: 25px; /* Tam oval görünüm */
+    height: 50px;
+    border: none;
+    transition: background-color 0.2s ease;
+    margin-top: 10px;
+}
+
+    .btn-login:hover {
+        background-color: #083864;
+        color: #ffffff;
+    }
+
+/* Kayıt Linki */
+.register-link {
+    color: #0b4e8a;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+    .register-link:hover {
+        text-decoration: underline;
+    }

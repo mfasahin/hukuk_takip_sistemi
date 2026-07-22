@@ -36,6 +36,7 @@ namespace Presentation.Controllers
 
         public ActionResult Index()
         {
+            //var ihtarListesi = _ihtarService.GetIhtarDto();
             var ihtarListesi = _ihtarService.GetIhtarDto();
 
             ViewBag.MusteriList = _musteriService.GetAll()

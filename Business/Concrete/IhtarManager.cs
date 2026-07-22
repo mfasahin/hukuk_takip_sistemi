@@ -49,10 +49,6 @@ namespace Business.Concrete
         {
             return _ihtarDal.GetByIdIhtarDto(id);
         }
-        public Ihtar GetIhtarWithUrunler(Guid id)
-        {
-            return _ihtarDal.GetIhtarWithUrunler(id);
-        }
 
         public void UpdateIhtarWithUrunler(IhtarDto model)
         {

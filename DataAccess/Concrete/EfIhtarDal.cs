@@ -11,7 +11,7 @@ namespace DataAccess.Concrete
     public class EfIhtarDal : EfEntityRepositoryBase<Ihtar, AppDbContext>, IIhtarDal
     {
         // Ortak DTO sorgusu - hem liste hem tekil kayıt için kullanılır.
-        private IQueryable<IhtarDto> CreateIhtarDtoQuery(AppDbContext context)
+        private IQueryable<IhtarDto> IhtarDtoQuery(AppDbContext context)
         {
             return from i in context.IHTAR
                    join m in context.MUSTERI on i.MUSTERI_ID equals m.MUSTERI_ID
@@ -44,11 +44,13 @@ namespace DataAccess.Concrete
                    };
         }
 
+
+        // silinmemiş ihtar bilgileri DTO listesi olarak döner
         public List<IhtarDto> GetIhtarDto()
         {
             using (var context = new AppDbContext())
             {
-                return CreateIhtarDtoQuery(context)
+                return IhtarDtoQuery(context)
                     .Where(dto => dto.SilTarZmn == null)
                     .ToList();
             }
@@ -58,7 +60,7 @@ namespace DataAccess.Concrete
         {
             using (var context = new AppDbContext())
             {
-                var dto = CreateIhtarDtoQuery(context)
+                var dto = IhtarDtoQuery(context)
                     .FirstOrDefault(x => x.IhtarId == id);
 
                 if (dto != null)
@@ -69,30 +71,11 @@ namespace DataAccess.Concrete
 
                     if (ihtarUrun != null)
                     {
-                        dto.UrunId = ihtarUrun.URUN_ID; // tek ürün ID’sini DTO’ya yaz
+                        dto.UrunId = ihtarUrun.URUN_ID;
                     }
                 }
 
                 return dto;
-            }
-        }
-
-        public Ihtar GetIhtarWithUrunler(Guid id)
-        {
-            using (var context = new AppDbContext())
-            {
-                var ihtar = context.IHTAR.FirstOrDefault(i => i.IHTAR_ID == id);
-                if (ihtar == null) return null;
-
-                var urunler = context.IHTAR_URUN
-                    .Where(iu => iu.IHTAR_ID == id)
-                    .ToList();
-
-                context.Entry(ihtar)
-                       .Collection(i => i.IhtarUrunler)
-                       .IsLoaded = true;
-
-                return ihtar;
             }
         }
 

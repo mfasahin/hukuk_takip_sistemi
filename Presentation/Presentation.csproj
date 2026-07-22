@@ -202,6 +202,7 @@
     <Content Include="Content\bootstrap\js\bootstrap.min.js" />
     <Content Include="Content\images\halkbank_logo_2.jpg" />
     <Content Include="Content\jquery\jquery-4.0.0.min.js" />
+    <Content Include="Content\login.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -260,7 +261,7 @@
     <Content Include="Views\Ihtar\_IhtarModals.cshtml" />
     <Content Include="Views\Icra\Index.cshtml" />
     <Content Include="Views\Icra\_IcraModals.cshtml" />
-    <Content Include="Views\Kullanici\login.cshtml" />
+    <Content Include="Views\Kullanici\Login.cshtml" />
     <Content Include="Views\Kullanici\Register.cshtml" />
   </ItemGroup>
   <ItemGroup>

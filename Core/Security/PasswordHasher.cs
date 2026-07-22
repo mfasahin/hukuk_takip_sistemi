@@ -34,7 +34,7 @@ namespace Core.Security
             {
                 byte[] actualHash = rfc.GetBytes(HashSize);
                 return actualHash.Length == expectedHash.Length &&
-                        actualHash.SequenceEqual(expectedHash);   // System.Linq gerekir
+                        actualHash.SequenceEqual(expectedHash);   
             }
         }
     }
