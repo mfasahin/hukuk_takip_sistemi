@@ -21,7 +21,5 @@ namespace Presentation.Models
         public string HkkBuroAdres { get; set; }
 
         public string OfisTelNo { get; set; }
-
-
     }
 }

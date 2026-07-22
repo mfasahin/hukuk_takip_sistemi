@@ -45,6 +45,7 @@
     <Compile Include="Abstract\IIcraService.cs" />
     <Compile Include="Abstract\IIhtarService.cs" />
     <Compile Include="Abstract\IIhtarUrunService.cs" />
+    <Compile Include="Abstract\IKullaniciService.cs" />
     <Compile Include="Abstract\IMahkemeService.cs" />
     <Compile Include="Abstract\IMusteriService.cs" />
     <Compile Include="Abstract\ISubeService.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="Concrete\IcraManager.cs" />
     <Compile Include="Concrete\IhtarManager.cs" />
     <Compile Include="Concrete\IhtarUrunManager.cs" />
+    <Compile Include="Concrete\KullaniciManager.cs" />
     <Compile Include="Concrete\MahkemeManager.cs" />
     <Compile Include="Concrete\MusteriManager.cs" />
     <Compile Include="Concrete\SubeManager.cs" />

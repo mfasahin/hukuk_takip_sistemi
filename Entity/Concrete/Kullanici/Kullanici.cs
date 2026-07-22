@@ -14,7 +14,7 @@ namespace Entity.Concrete
         [StringLength(25)]
         public string KULLANICI_AD { get; set; } 
 
-        [StringLength(25)]
+        [StringLength(200)]
         public string SIFRE { get; set; }
 
     }

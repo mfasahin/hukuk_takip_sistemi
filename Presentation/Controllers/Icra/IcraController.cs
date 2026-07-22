@@ -1,12 +1,14 @@
 ﻿using Business.Abstract;
 using Entity.Concrete;
 using Entity.Dto;
+using Presentation.Filters;
 using System;
 using System.Linq;
 using System.Web.Mvc;
 
 namespace Presentation.Controllers
 {
+    [RequireLogin]
     public class IcraController : Controller
     {
         private readonly IIcraService _icraService;

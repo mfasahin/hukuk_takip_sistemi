@@ -38,6 +38,9 @@ namespace Presentation
             container.RegisterType<IIcraDal, EfIcraDal>();            
             container.RegisterType<IMahkemeDal, EfMahkemeDal>();
 
+            container.RegisterType<IKullaniciService, KullaniciManager>();
+            container.RegisterType<IKullaniciDal, EfKullaniciDal>();
+
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }

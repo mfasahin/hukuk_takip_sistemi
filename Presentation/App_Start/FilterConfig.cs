@@ -1,4 +1,4 @@
-﻿using System.Web;
+﻿using Presentation.Filters;
 using System.Web.Mvc;
 
 namespace Presentation
@@ -8,6 +8,7 @@ namespace Presentation
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new RequireLoginAttribute());   
         }
     }
 }

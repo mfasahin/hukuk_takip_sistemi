@@ -1,0 +1,47 @@
+﻿@model Presentation.Models.KullaniciModel
+@{
+    ViewBag.Title = "Giriş Yap";
+    Layout = null;   // login sayfası genelde ana layout'u kullanmaz
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <title>Giriş Yap</title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container" style="max-width:400px; margin-top:100px;">
+        <h3 class="mb-4 text-center">Giriş Yap</h3>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger">@ViewBag.Error</div>
+        }
+
+        @using (Html.BeginForm("Login", "Kullanici", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.KullaniciAd, "Kullanıcı Adı")
+                @Html.TextBoxFor(m => m.KullaniciAd, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.KullaniciAd, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.Sifre, "Şifre")
+                @Html.PasswordFor(m => m.Sifre, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Sifre, "", new { @class = "text-danger" })
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
+        }
+
+        <div class="text-center mt-3">
+            <a href="@Url.Action("Register", "Kullanici")">Hesabınız yok mu? Kayıt olun</a>
+        </div>
+    </div>
+</body>
+</html>

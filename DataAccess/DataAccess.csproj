@@ -55,6 +55,7 @@
     <Compile Include="Abstract\IIcraDal.cs" />
     <Compile Include="Abstract\IIhtarDal.cs" />
     <Compile Include="Abstract\IIhtarUrunDal.cs" />
+    <Compile Include="Abstract\IKullaniciDal.cs" />
     <Compile Include="Abstract\IMahkemeDal.cs" />
     <Compile Include="Abstract\IMusteriDal.cs" />
     <Compile Include="Abstract\ISubeDal.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Concrete\EfIcraDal.cs" />
     <Compile Include="Concrete\EfIhtarDal.cs" />
     <Compile Include="Concrete\EfIhtarUrunDal.cs" />
+    <Compile Include="Concrete\EfKullaniciDal.cs" />
     <Compile Include="Concrete\EfMahkemeDal.cs" />
     <Compile Include="Concrete\EfMusteriDal.cs" />
     <Compile Include="Concrete\EfSubeDal.cs" />
@@ -71,6 +73,10 @@
     <Compile Include="Migrations\202607200656203_initCreate.cs" />
     <Compile Include="Migrations\202607200656203_initCreate.Designer.cs">
       <DependentUpon>202607200656203_initCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202607221143359_ChangedKullanici.cs" />
+    <Compile Include="Migrations\202607221143359_ChangedKullanici.Designer.cs">
+      <DependentUpon>202607221143359_ChangedKullanici.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -92,6 +98,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202607200656203_initCreate.resx">
       <DependentUpon>202607200656203_initCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202607221143359_ChangedKullanici.resx">
+      <DependentUpon>202607221143359_ChangedKullanici.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

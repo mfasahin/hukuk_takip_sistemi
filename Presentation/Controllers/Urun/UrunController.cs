@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Entity.Concrete;
+using Presentation.Filters;
 using Presentation.Models;
 using System;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Web.Mvc;
 
 namespace Presentation.Controllers
 {
+    [RequireLogin]
     public class UrunController : Controller
     {
         private readonly IUrunService _urunService;
@@ -20,15 +22,14 @@ namespace Presentation.Controllers
         public ActionResult Index()
         {
             var urunList = _urunService.GetAll()
-                .Where(m => m.SIL_TAR_ZMN == null)
-                .ToList();
+                .Where(m => m.SIL_TAR_ZMN == null);
 
             var model = urunList.Select(u => new UrunModel
             {
                 UrunId = u.URUN_ID,
                 UrunAd = u.URUN_AD,
                 UrunKod = u.URUN_KOD,
-                SonGecerlilikTar = u.SON_GECERLILIK_TAR,
+                SonGecerlilikTar = u.SON_GECERLILIK_TAR
 
             }).ToList();
 
@@ -50,7 +51,6 @@ namespace Presentation.Controllers
                     URUN_AD = model.UrunAd,
                     URUN_KOD = model.UrunKod,
                     SON_GECERLILIK_TAR = model.SonGecerlilikTar,
-                    GRS_TAR_ZMN = DateTime.Now
                 };
 
                 _urunService.Add(urun);
@@ -74,7 +74,7 @@ namespace Presentation.Controllers
                 UrunId = urun.URUN_ID,
                 UrunAd = urun.URUN_AD,
                 UrunKod = urun.URUN_KOD,
-                SonGecerlilikTar = urun.SON_GECERLILIK_TAR,
+                SonGecerlilikTar = urun.SON_GECERLILIK_TAR
 
             };
 
@@ -97,7 +97,6 @@ namespace Presentation.Controllers
                 urun.URUN_AD = model.UrunAd;
                 urun.URUN_KOD = model.UrunKod;
                 urun.SON_GECERLILIK_TAR = model.SonGecerlilikTar;
-                urun.GNC_TAR_ZMN = DateTime.Now;
 
                 _urunService.Update(urun);
                 return Json(new { success = true });
@@ -118,8 +117,6 @@ namespace Presentation.Controllers
                 if (urun == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
 
-                // Soft delete 
-                urun.SIL_TAR_ZMN = DateTime.Now;
                 _urunService.Delete(urun);
 
                 return Json(new { success = true });

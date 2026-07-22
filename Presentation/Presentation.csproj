@@ -157,8 +157,10 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Icra\IcraController.cs" />
     <Compile Include="Controllers\Ihtar\IhtarController.cs" />
+    <Compile Include="Controllers\Kullanici\KullaniciController.cs" />
     <Compile Include="Controllers\Musteri\MusteriController.cs" />
     <Compile Include="Controllers\Urun\UrunController.cs" />
+    <Compile Include="Filters\RequireLoginAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -258,6 +260,8 @@
     <Content Include="Views\Ihtar\_IhtarModals.cshtml" />
     <Content Include="Views\Icra\Index.cshtml" />
     <Content Include="Views\Icra\_IcraModals.cshtml" />
+    <Content Include="Views\Kullanici\login.cshtml" />
+    <Content Include="Views\Kullanici\Register.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Business\Business.csproj">

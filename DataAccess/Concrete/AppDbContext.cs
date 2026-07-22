@@ -1,7 +1,9 @@
-﻿using Entity.Abstract;
+﻿using Core;
+using Entity.Abstract;
 using Entity.Concrete;
 using System;
 using System.Data.Entity;
+using System.Runtime.InteropServices;
 
 namespace DataAccess.Concrete
 {
@@ -39,18 +41,20 @@ namespace DataAccess.Concrete
                 if (entry.State == EntityState.Added)
                 {
                     entry.Entity.GRS_TAR_ZMN = DateTime.Now;
-                    // GRS_KULLANICI_ID boş kalacak
+                    entry.Entity.GRS_KULLANICI_ID = CurrentUser.UserId;
                 }
                 else if (entry.State == EntityState.Modified)
                 {
                     entry.Entity.GNC_TAR_ZMN = DateTime.Now;
-                    // GNC_KULLANICI_ID boş kalacak
+                    entry.Entity.GNC_KULLANICI_ID = CurrentUser.UserId;
+
                 }
                 else if (entry.State == EntityState.Deleted)
                 {
                     entry.State = EntityState.Modified; // soft delete
                     entry.Entity.SIL_TAR_ZMN = DateTime.Now;
-                    // SIL_KULLANICI_ID boş kalacak
+                    entry.Entity.SIL_KULLANICI_ID = CurrentUser.UserId;
+
                 }
             }
 

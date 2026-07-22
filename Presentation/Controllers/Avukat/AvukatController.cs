@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Entity.Concrete;
+using Presentation.Filters;
 using Presentation.Models;
 using System;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Web.Mvc;
 
 namespace Presentation.Controllers
 {
+    [RequireLogin]
     public class AvukatController : Controller
     {
         private readonly IAvukatService _avukatService;
@@ -20,8 +22,7 @@ namespace Presentation.Controllers
         public ActionResult Index()
         {
             var avukatList = _avukatService.GetAll()
-                .Where(m => m.SIL_TAR_ZMN == null)
-                .ToList();
+                .Where(m => m.SIL_TAR_ZMN == null);
 
             var model = avukatList.Select(m => new AvukatModel
             {
@@ -58,8 +59,7 @@ namespace Presentation.Controllers
                     AVKT_EPOSTA = model.AvktEposta,
                     HKK_BURO_AD = model.HkkBuroAd,
                     HKK_BURO_ADRES = model.HkkBuroAdres,
-                    OFIS_TEL_NO = model.OfisTelNo,
-                    GRS_TAR_ZMN = DateTime.Now
+                    OFIS_TEL_NO = model.OfisTelNo
                 };
 
                 _avukatService.Add(avukat);
@@ -115,7 +115,6 @@ namespace Presentation.Controllers
                 avukat.HKK_BURO_AD = model.HkkBuroAd;
                 avukat.HKK_BURO_ADRES = model.HkkBuroAdres;
                 avukat.OFIS_TEL_NO = model.OfisTelNo;
-                avukat.GNC_TAR_ZMN = DateTime.Now;
 
                 _avukatService.Update(avukat);
                 return Json(new { success = true });
@@ -136,8 +135,6 @@ namespace Presentation.Controllers
                 if (avukat == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
 
-                // Soft delete 
-                avukat.SIL_TAR_ZMN = DateTime.Now;
                 _avukatService.Delete(avukat);
 
                 return Json(new { success = true });

@@ -17,7 +17,9 @@ namespace DataAccess.Concrete
                    join m in context.MUSTERI on i.MUSTERI_ID equals m.MUSTERI_ID
                    join a in context.AVUKAT on i.AVUKAT_ID equals a.AVUKAT_ID
                    join s in context.SUBE on i.SUBE_ID equals s.SUBE_ID
-                   select new IhtarDto
+                   join ih in context.IHTAR_URUN on i.IHTAR_ID equals ih.IHTAR_ID
+                   join u in context.URUN on ih.URUN_ID equals u.URUN_ID
+                   select new IhtarDto 
                    {
                        IhtarId = i.IHTAR_ID,
                        BorcTutar = i.BORC_TUTAR,
@@ -38,16 +40,7 @@ namespace DataAccess.Concrete
 
                        SilTarZmn = i.SIL_TAR_ZMN,
 
-
-
-                       Urunler = (from iu in context.IHTAR_URUN
-                                  join u in context.URUN on iu.URUN_ID equals u.URUN_ID
-                                  where iu.IHTAR_ID == i.IHTAR_ID
-                                  select new UrunDto
-                                  {
-                                      UrunId = u.URUN_ID,
-                                      UrunAd = u.URUN_AD
-                                  }).ToList()
+                       UrunAd = u.URUN_AD
                    };
         }
 

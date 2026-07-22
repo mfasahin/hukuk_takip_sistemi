@@ -41,16 +41,8 @@
                 <td>@ihtar.IhtarTarih.ToString("dd.MM.yyyy")</td>
                 <td>@ihtar.SubeAd</td>
                 <td>@ihtar.AvukatAd @ihtar.AvukatSoyad</td>
-                <td>
-                    @if (ihtar.Urunler != null && ihtar.Urunler.Any())
-                    {
-                        <span>@ihtar.Urunler.First().UrunAd</span>
-                    }
-                    else
-                    {
-                        <span class="text-muted">Ürün yok</span>
-                    }
-                </td>
+                <td> @ihtar.UrunAd </td>
+                    
                 <td>
                     <button class="btn btn-sm btn-warning updateBtn" data-id="@ihtar.IhtarId">Güncelle</button>
                     <button class="btn btn-sm btn-danger deleteBtn" data-id="@ihtar.IhtarId">Sil</button>

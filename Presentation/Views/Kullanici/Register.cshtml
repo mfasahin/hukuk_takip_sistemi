@@ -1,0 +1,53 @@
+﻿@model Presentation.Models.KullaniciRegisterModel
+@{
+    ViewBag.Title = "Kayıt Ol";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <title>Kayıt Ol</title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container" style="max-width:400px; margin-top:100px;">
+        <h3 class="mb-4 text-center">Kayıt Ol</h3>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger">@ViewBag.Error</div>
+        }
+
+        @using (Html.BeginForm("Register", "Kullanici", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.KullaniciAd, "Kullanıcı Adı")
+                @Html.TextBoxFor(m => m.KullaniciAd, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.KullaniciAd, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.Sifre, "Şifre")
+                @Html.PasswordFor(m => m.Sifre, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Sifre, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.SifreTekrar, "Şifre Tekrar")
+                @Html.PasswordFor(m => m.SifreTekrar, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.SifreTekrar, "", new { @class = "text-danger" })
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Kayıt Ol</button>
+
+            <div class="text-center mt-3">
+                <a href="@Url.Action("Login", "Kullanici")">Zaten hesabınız var mı? Giriş yapın</a>
+            </div>
+        }
+    </div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Entity.Concrete;
+using Presentation.Filters;
 using Presentation.Models;
 using System;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Web.Mvc;
 
 namespace Presentation.Controllers
 {
+    [RequireLogin]
     public class MusteriController : Controller
     {
         private readonly IMusteriService _musteriService;
@@ -20,8 +22,7 @@ namespace Presentation.Controllers
         public ActionResult Index()
         {
             var musteriList = _musteriService.GetAll()
-                .Where(m => m.SIL_TAR_ZMN == null)
-                .ToList();
+                .Where(m => m.SIL_TAR_ZMN == null);
 
             var model = musteriList.Select(m => new MusteriModel
             {
@@ -57,7 +58,6 @@ namespace Presentation.Controllers
                     MUST_VKN_NO = model.MustVknNo,
                     MUST_EPOSTA = model.MustEposta,
                     MUST_TEL_NO = model.MustTelNo,
-                    GRS_TAR_ZMN = DateTime.Now
                 };
 
                 _musteriService.Add(musteri);
@@ -111,7 +111,6 @@ namespace Presentation.Controllers
                 musteri.MUST_VKN_NO = model.MustVknNo;
                 musteri.MUST_EPOSTA = model.MustEposta;
                 musteri.MUST_TEL_NO = model.MustTelNo;
-                musteri.GNC_TAR_ZMN = DateTime.Now;
 
                 _musteriService.Update(musteri);
                 return Json(new { success = true });
@@ -132,8 +131,6 @@ namespace Presentation.Controllers
                 if (musteri == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
 
-                // Soft delete
-                musteri.SIL_TAR_ZMN = DateTime.Now;
                 _musteriService.Delete(musteri);
 
                 return Json(new { success = true });
