@@ -33,7 +33,7 @@ namespace Presentation.Controllers
 
         public ActionResult Index()
         {
-            var model = _icraService.GetIcraWithRelations();
+            var model = _icraService.GetIcraDto();
 
             ViewBag.MusteriList = _musteriService.GetAll()
                 .Where(m => m.SIL_TAR_ZMN == null)
@@ -60,7 +60,7 @@ namespace Presentation.Controllers
                 }).ToList();
 
             // İcra bir IhtarUrun'a bağlanıyor - dropdown'da hangi ihtar/ürün olduğu görünmeli
-            ViewBag.IhtarUrunList = _icraService.GetIhtarUrun()
+            ViewBag.IhtarUrunList = _icraService.GetIcraDto()
                 .Select(x => new SelectListItem
                 {
                     Value = x.IhtarUrunId.ToString(),
@@ -131,7 +131,7 @@ namespace Presentation.Controllers
         [HttpGet]
         public ActionResult GetIcra(Guid id)
         {
-            var dto = _icraService.GetByIdWithRelations(id);
+            var dto = _icraService.GetByIdIcra(id);
             if (dto == null) return HttpNotFound();
 
             return Json(dto, JsonRequestBehavior.AllowGet);

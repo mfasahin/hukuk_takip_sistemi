@@ -1,5 +1,4 @@
 ﻿using Business.Abstract;
-using DataAccess.Concrete;
 using Entity.Concrete;
 using Entity.Dto;
 using Presentation.Filters;
@@ -161,7 +160,6 @@ namespace Presentation.Controllers
             try
             {
                 var IHTAR = _ihtarService.GetById(ihtarDto.IhtarId);
-                
 
                 if (IHTAR == null)
                     return Json(new { success = false, error = "İhtar kaydı bulunamadı" });
@@ -174,8 +172,6 @@ namespace Presentation.Controllers
                 IHTAR.SUBE_ID = ihtarDto.SubeId;
 
                 _ihtarService.Update(IHTAR);
-
-                //var ihtarUrun = _ihtarUrunService.GetById(model.IhtarId);
 
                 var ihtarUrun = _ihtarUrunService.GetById(ihtarUrunDto.IhtarUrunId);
 
@@ -202,7 +198,7 @@ namespace Presentation.Controllers
                 {
                     // Ürün seçilmemişse mevcut ilişkiyi kaldır
                     if (ihtarUrun != null)
-                    _ihtarUrunService.Delete(ihtarUrunDto.IhtarUrunId);
+                        _ihtarUrunService.Delete(ihtarUrunDto.IhtarUrunId);
                 }
 
                 return Json(new { success = true });

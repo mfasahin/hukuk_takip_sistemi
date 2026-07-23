@@ -8,10 +8,8 @@ namespace DataAccess.Abstract
 {
     public interface IIcraDal : IEntityRepository<Icra>
     {
-        List<IcraDto> GetIcraWithRelations();
-        IcraDto GetByIdWithRelations(Guid id);
-        List<IhtarUrunDto> GetIhtarUrun();
-        //List<IhtarUrunDto> GetIhtarUrunByMusteri(Guid musteriId);
+        List<IcraDto> GetIcraDto();
+        IcraDto GetByIdIcra(Guid id);
         List<UrunDto> GetUrunlerByMusteri(Guid musteriId);
         List<IhtarUrunDto> GetIhtarlarByMusteriVeUrun(Guid musteriId, Guid urunId);
     }

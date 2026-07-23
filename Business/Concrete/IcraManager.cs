@@ -16,21 +16,6 @@ namespace Business.Concrete
             _icraDal = icraDal;
         }
 
-        public List<IcraDto> GetIcraWithRelations()
-        {
-            return _icraDal.GetIcraWithRelations();
-        }
-
-        public IcraDto GetByIdWithRelations(Guid id)
-        {
-            return _icraDal.GetByIdWithRelations(id);
-        }
-
-        public List<IhtarUrunDto> GetIhtarUrun()
-        {
-            return _icraDal.GetIhtarUrun();
-        }
-
         public Icra GetById(Guid id)
         {
             return _icraDal.Get(i => i.ICRA_ID == id);
@@ -50,12 +35,15 @@ namespace Business.Concrete
         {
             _icraDal.Delete(icra);
         }
+        public List<IcraDto> GetIcraDto()
+        {
+            return _icraDal.GetIcraDto();
+        }
 
-        //public List<IhtarUrunDto> GetIhtarUrunByMusteri(Guid musteriID)
-        //{
-        //    return _icraDal.GetIhtarUrunByMusteri(musteriID);
-        //}
-
+        public IcraDto GetByIdIcra(Guid id)
+        {
+            return _icraDal.GetByIdIcra(id);
+        }
         public List<UrunDto> GetUrunlerByMusteri(Guid musteriId)
         {
             return _icraDal.GetUrunlerByMusteri(musteriId);

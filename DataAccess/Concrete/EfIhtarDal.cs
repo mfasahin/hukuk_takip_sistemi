@@ -13,34 +13,34 @@ namespace DataAccess.Concrete
         // Ortak DTO sorgusu - hem liste hem tekil kayıt için kullanılır.
         private IQueryable<IhtarDto> IhtarDtoQuery(AppDbContext context)
         {
-            return from i in context.IHTAR
-                   join m in context.MUSTERI on i.MUSTERI_ID equals m.MUSTERI_ID
-                   join a in context.AVUKAT on i.AVUKAT_ID equals a.AVUKAT_ID
-                   join s in context.SUBE on i.SUBE_ID equals s.SUBE_ID
-                   join ih in context.IHTAR_URUN on i.IHTAR_ID equals ih.IHTAR_ID
-                   join u in context.URUN on ih.URUN_ID equals u.URUN_ID
+            return from ihtar in context.IHTAR
+                   join musteri in context.MUSTERI on ihtar.MUSTERI_ID equals musteri.MUSTERI_ID
+                   join avukat in context.AVUKAT on ihtar.AVUKAT_ID equals avukat.AVUKAT_ID
+                   join sube in context.SUBE on ihtar.SUBE_ID equals sube.SUBE_ID
+                   join ihtarurun in context.IHTAR_URUN on ihtar.IHTAR_ID equals ihtarurun.IHTAR_ID
+                   join urun in context.URUN on ihtarurun.URUN_ID equals urun.URUN_ID
                    select new IhtarDto
                    {
-                       IhtarId = i.IHTAR_ID,
-                       BorcTutar = i.BORC_TUTAR,
-                       IhtarTarih = i.IHTAR_TAR_ZMN,
+                       IhtarId = ihtar.IHTAR_ID,
+                       BorcTutar = ihtar.BORC_TUTAR,
+                       IhtarTarih = ihtar.IHTAR_TAR_ZMN,
 
-                       MusteriId = m.MUSTERI_ID,
-                       MusteriNo = m.MUST_NO,
-                       MusteriAd = m.MUST_AD,
-                       MusteriSoyad = m.MUST_SOYAD,
+                       MusteriId = musteri.MUSTERI_ID,
+                       MusteriNo = musteri.MUST_NO,
+                       MusteriAd = musteri.MUST_AD,
+                       MusteriSoyad = musteri.MUST_SOYAD,
 
-                       SubeId = s.SUBE_ID,
-                       SubeAd = s.SUBE_ADI,
-                       SubeKod = s.SUBE_KODU,
+                       SubeId = sube.SUBE_ID,
+                       SubeAd = sube.SUBE_ADI,
+                       SubeKod = sube.SUBE_KODU,
 
-                       AvukatId = a.AVUKAT_ID,
-                       AvukatAd = a.AVKT_AD,
-                       AvukatSoyad = a.AVKT_SOYAD,
+                       AvukatId = avukat.AVUKAT_ID,
+                       AvukatAd = avukat.AVKT_AD,
+                       AvukatSoyad = avukat.AVKT_SOYAD,
 
-                       SilTarZmn = i.SIL_TAR_ZMN,
+                       SilTarZmn = ihtar.SIL_TAR_ZMN,
 
-                       UrunAd = u.URUN_AD
+                       UrunAd = urun.URUN_AD
                    };
         }
 

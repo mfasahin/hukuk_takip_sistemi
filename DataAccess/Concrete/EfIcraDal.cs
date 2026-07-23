@@ -45,7 +45,7 @@ namespace DataAccess.Concrete
                    };
         }
 
-        public List<IcraDto> GetIcraWithRelations()
+        public List<IcraDto> GetIcraDto()
         {
             using (var context = new AppDbContext())
             {
@@ -55,49 +55,12 @@ namespace DataAccess.Concrete
             }
         }
 
-        public IcraDto GetByIdWithRelations(Guid id)
+        public IcraDto GetByIdIcra(Guid id)
         {
             using (var context = new AppDbContext())
             {
                 return BuildIcraDtoQuery(context)
                     .FirstOrDefault(x => x.IcraId == id);
-            }
-        }
-
-        // Create/Update formundaki "hangi ihtar-ürün'e icra bağlanacak" dropdown'ı için
-        public List<IhtarUrunDto> GetIhtarUrun()
-        {
-            using (var context = new AppDbContext())
-            {
-                // 1. Adım: Ham veriyi SQL'e çevrilebilir haliyle çek
-                var raw = (from iu in context.IHTAR_URUN
-                           join ihtar in context.IHTAR on iu.IHTAR_ID equals ihtar.IHTAR_ID
-                           join urun in context.URUN on iu.URUN_ID equals urun.URUN_ID
-                           join musteri in context.MUSTERI on ihtar.MUSTERI_ID equals musteri.MUSTERI_ID
-                           where ihtar.SIL_TAR_ZMN == null
-                           select new
-                           {
-                               iu.IHTAR_URUN_ID,
-                               iu.IHTAR_ID,
-                               iu.URUN_ID,
-                               MusteriAdi = musteri.MUST_AD + " " + musteri.MUST_SOYAD,
-                               UrunAdi = urun.URUN_AD,
-                               ihtar.IHTAR_TAR_ZMN
-                           })
-                          .ToList();
-
-                // 2. Adım: DTO'ya dönüştür (formatlama gerekiyorsa burada, bellekte yapılır)
-                var result = raw.Select(x => new IhtarUrunDto
-                {
-                    IhtarUrunId = x.IHTAR_URUN_ID,
-                    IhtarId = x.IHTAR_ID,
-                    UrunId = x.URUN_ID,
-                    UrunAd = x.UrunAdi,
-                    MusteriAd = x.MusteriAdi,
-                    IhtarTarih = x.IHTAR_TAR_ZMN
-                }).ToList();
-
-                return result;
             }
         }
 
