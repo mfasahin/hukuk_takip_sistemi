@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Entity.Concrete;
+using Entity.Dto;
 using Presentation.Filters;
 using Presentation.Models;
 using System;
@@ -38,7 +39,7 @@ namespace Presentation.Controllers
 
         // EKLEME
         [HttpPost]
-        public ActionResult Create(UrunModel model)
+        public ActionResult Create(UrunDto model)
         {
             if (!ModelState.IsValid)
                 return Json(new { success = false, error = "ModelState geçersiz" });
@@ -50,7 +51,7 @@ namespace Presentation.Controllers
                     URUN_ID = Guid.NewGuid(),
                     URUN_AD = model.UrunAd,
                     URUN_KOD = model.UrunKod,
-                    SON_GECERLILIK_TAR = model.SonGecerlilikTar,
+                    SON_GECERLILIK_TAR = model.SonGecerlilikTar
                 };
 
                 _urunService.Add(urun);
@@ -83,7 +84,7 @@ namespace Presentation.Controllers
 
         // GÜNCELLEME
         [HttpPost]
-        public ActionResult Update(UrunModel model)
+        public ActionResult Update(UrunDto model)
         {
             if (!ModelState.IsValid)
                 return Json(new { success = false, error = "ModelState geçersiz" });

@@ -19,7 +19,7 @@ namespace DataAccess.Concrete
                    join s in context.SUBE on i.SUBE_ID equals s.SUBE_ID
                    join ih in context.IHTAR_URUN on i.IHTAR_ID equals ih.IHTAR_ID
                    join u in context.URUN on ih.URUN_ID equals u.URUN_ID
-                   select new IhtarDto 
+                   select new IhtarDto
                    {
                        IhtarId = i.IHTAR_ID,
                        BorcTutar = i.BORC_TUTAR,
@@ -79,58 +79,6 @@ namespace DataAccess.Concrete
             }
         }
 
-        // GERÇEK İMPLEMENTASYON - tüm güncelleme işlemi tek context içinde
-        public void UpdateIhtarWithUrunler(IhtarDto model)
-        {
-            using (var context = new AppDbContext())
-            {
-                var ihtar = context.IHTAR.FirstOrDefault(i => i.IHTAR_ID == model.IhtarId);
-                if (ihtar == null)
-                    throw new Exception("Kayıt bulunamadı");
-
-                // İhtar alanlarını güncelle
-                ihtar.BORC_TUTAR = model.BorcTutar;
-                ihtar.IHTAR_TAR_ZMN = model.IhtarTarih;
-                ihtar.MUSTERI_ID = model.MusteriId;
-                ihtar.AVUKAT_ID = model.AvukatId;
-                ihtar.SUBE_ID = model.SubeId;
-                ihtar.GNC_TAR_ZMN = DateTime.Now;
-
-                // Mevcut ürün ilişkisini bul
-                var mevcutIhtarUrun = context.IHTAR_URUN
-                    .FirstOrDefault(iu => iu.IHTAR_ID == model.IhtarId);
-
-                // Eğer ürün seçilmişse güncelle/ekle
-                if (model.UrunId != Guid.Empty)
-                {
-                    if (mevcutIhtarUrun != null)
-                    {
-                        // Güncelle
-                        mevcutIhtarUrun.URUN_ID = model.UrunId;
-                        mevcutIhtarUrun.GNC_TAR_ZMN = DateTime.Now;
-                    }
-                    else
-                    {
-                        // Yeni ekle
-                        context.IHTAR_URUN.Add(new IhtarUrun
-                        {
-                            IHTAR_URUN_ID = Guid.NewGuid(),
-                            IHTAR_ID = ihtar.IHTAR_ID,
-                            URUN_ID = model.UrunId,
-                            GRS_TAR_ZMN = DateTime.Now
-                        });
-                    }
-                }
-                else
-                {
-                    // Ürün seçilmemişse mevcut ilişkiyi kaldır
-                    if (mevcutIhtarUrun != null)
-                        context.IHTAR_URUN.Remove(mevcutIhtarUrun);
-                }
-
-                context.SaveChanges();
-            }
-        }
-
     }
+
 }

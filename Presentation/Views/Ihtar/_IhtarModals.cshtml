@@ -6,7 +6,7 @@
         <div class="modal-content">
             @using (Html.BeginForm("Create", "Ihtar", FormMethod.Post, new { id = "createForm" }))
             {
-               // @Html.AntiForgeryToken()
+                @Html.AntiForgeryToken()
                 <div class="modal-header">
                     <h5 class="modal-title" id="createModalLabel">Yeni İhtar</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
@@ -16,43 +16,43 @@
                     <div class="container-fluid">
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @Html.LabelFor(m => m.MusteriId, "Müşteri")
-                                @Html.DropDownListFor(m => m.MusteriId,
+                                    @Html.LabelFor(m => m.MusteriId, "Müşteri")
+                                    @Html.DropDownListFor(m => m.MusteriId,
                                     ViewBag.MusteriList as IEnumerable<SelectListItem>,
                                     "Müşteri Seç",
                                     new { @class = "form-select" })
                             </div>
                             <div class="col-md-4">
-                                @Html.LabelFor(m => m.UrunId, "Ürün")
-                                @Html.DropDownListFor(m => m.UrunId,
-                                ViewBag.UrunList as IEnumerable<SelectListItem>,
-                                "Ürün Seç",
-                                new { @class = "form-select" })
+                                    @Html.LabelFor(m => m.UrunId, "Ürün")
+                                    @Html.DropDownListFor(m => m.UrunId,
+                                    ViewBag.UrunList as IEnumerable<SelectListItem>,
+                                    "Ürün Seç",
+                                    new { @class = "form-select" })
 
                             </div>
                             <div class="col-md-4">
-                                @Html.LabelFor(m => m.BorcTutar, "Borç Tutarı")
-                                @Html.TextBoxFor(m => m.BorcTutar,
-                                    new { @class = "form-control", type = "number", step = "0.01" })
+                                    @Html.LabelFor(m => m.BorcTutar, "Borç Tutarı")
+                                    @Html.TextBoxFor(m => m.BorcTutar,
+                                    new { @class = "form-control", type = "number", step = "1.00" })
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @Html.LabelFor(m => m.IhtarTarih, "İhtar Tarihi")
-                                @Html.TextBoxFor(m => m.IhtarTarih,
+                                    @Html.LabelFor(m => m.IhtarTarih, "İhtar Tarihi")
+                                    @Html.TextBoxFor(m => m.IhtarTarih,
                                     new { @class = "form-control", type = "date" })
                             </div>
                             <div class="col-md-4">
-                                @Html.LabelFor(m => m.SubeId, "Şube")
-                                @Html.DropDownListFor(m => m.SubeId,
+                                    @Html.LabelFor(m => m.SubeId, "Şube")
+                                    @Html.DropDownListFor(m => m.SubeId,
                                     ViewBag.SubeList as IEnumerable<SelectListItem>,
                                     "Şube Seç",
                                     new { @class = "form-select" })
                             </div>
                             <div class="col-md-4">
-                                @Html.LabelFor(m => m.AvukatId, "Avukat")
-                                @Html.DropDownListFor(m => m.AvukatId,
+                                    @Html.LabelFor(m => m.AvukatId, "Avukat")
+                                    @Html.DropDownListFor(m => m.AvukatId,
                                     ViewBag.AvukatList as IEnumerable<SelectListItem>,
                                     "Avukat Seç",
                                     new { @class = "form-select" })

@@ -10,7 +10,5 @@ namespace DataAccess.Abstract
     {
         List<IhtarDto> GetIhtarDto();
         IhtarDto GetByIdIhtarDto(Guid id);
-        void UpdateIhtarWithUrunler(IhtarDto model);
-
     }
 }

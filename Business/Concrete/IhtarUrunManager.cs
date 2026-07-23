@@ -1,7 +1,6 @@
 ﻿using Business.Abstract;
 using DataAccess.Abstract;
 using Entity.Concrete;
-using Entity.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +33,10 @@ namespace Business.Concrete
         public void Delete(IhtarUrun ihtarUrun)
         {
             _ihtarUrunDal.Delete(ihtarUrun);
+        }
+        public void Delete(Guid id)
+        {
+            _ihtarUrunDal.Delete(id);
         }
 
         public IhtarUrun GetById(Guid id)

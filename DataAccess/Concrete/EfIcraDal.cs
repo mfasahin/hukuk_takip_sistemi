@@ -31,11 +31,11 @@ namespace DataAccess.Concrete
                        MahkemeId = ic.MAHKEME_ID,
                        MahkemeAd = mahkeme.MAHKEME_AD,
                        IcraDosyaNo = ic.ICRA_DOSYA_NO,
-                       IcraTakipTar = ic.ICRA_TAKIP_TAR,     
+                       IcraTakipTar = ic.ICRA_TAKIP_TAR,
 
                        UrunId = urun.URUN_ID,
                        UrunAd = urun.URUN_AD,
-                       
+
                        IhtarTarih = ihtar.IHTAR_TAR_ZMN,
                        BorcTutar = ihtar.BORC_TUTAR,
 

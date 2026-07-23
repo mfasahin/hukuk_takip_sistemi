@@ -1,5 +1,4 @@
 ﻿using Entity.Concrete;
-using Entity.Dto;
 using System;
 using System.Collections.Generic;
 
@@ -11,6 +10,7 @@ namespace Business.Abstract
         void Add(IhtarUrun ihtarUrun);
         void Update(IhtarUrun ihtarUrun);
         void Delete(IhtarUrun ihtarUrun);
+        void Delete(Guid id);
         IhtarUrun GetById(Guid id);
 
         List<IhtarUrun> GetByIhtarId(Guid ihtarId);

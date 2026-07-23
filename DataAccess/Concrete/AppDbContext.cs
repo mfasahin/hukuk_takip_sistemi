@@ -3,7 +3,6 @@ using Entity.Abstract;
 using Entity.Concrete;
 using System;
 using System.Data.Entity;
-using System.Runtime.InteropServices;
 
 namespace DataAccess.Concrete
 {

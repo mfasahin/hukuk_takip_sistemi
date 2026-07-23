@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using DataAccess.Concrete;
 using Entity.Concrete;
 using Entity.Dto;
 using Presentation.Filters;
@@ -36,7 +37,6 @@ namespace Presentation.Controllers
 
         public ActionResult Index()
         {
-            //var ihtarListesi = _ihtarService.GetIhtarDto();
             var ihtarListesi = _ihtarService.GetIhtarDto();
 
             ViewBag.MusteriList = _musteriService.GetAll()
@@ -99,7 +99,6 @@ namespace Presentation.Controllers
                     MUSTERI_ID = model.MusteriId,
                     AVUKAT_ID = model.AvukatId,
                     SUBE_ID = model.SubeId,
-                    GRS_TAR_ZMN = DateTime.Now
                 };
 
                 _ihtarService.Add(ihtar);
@@ -112,7 +111,6 @@ namespace Presentation.Controllers
                         IHTAR_URUN_ID = Guid.NewGuid(),
                         IHTAR_ID = ihtar.IHTAR_ID,
                         URUN_ID = model.UrunId,
-                        GRS_TAR_ZMN = DateTime.Now
                     };
 
                     _ihtarUrunService.Add(ihtarUrun);
@@ -144,7 +142,7 @@ namespace Presentation.Controllers
 
         // GÜNCELLEME
         [HttpPost]
-        public ActionResult Update(IhtarDto model)
+        public ActionResult Update(IhtarDto ihtarDto, IhtarUrunDto ihtarUrunDto)
         {
             if (!ModelState.IsValid)
             {
@@ -162,8 +160,51 @@ namespace Presentation.Controllers
 
             try
             {
+                var IHTAR = _ihtarService.GetById(ihtarDto.IhtarId);
+                
 
-                _ihtarService.UpdateIhtarWithUrunler(model);
+                if (IHTAR == null)
+                    return Json(new { success = false, error = "İhtar kaydı bulunamadı" });
+
+                // İhtar alanlarını güncelle
+                IHTAR.BORC_TUTAR = ihtarDto.BorcTutar;
+                IHTAR.IHTAR_TAR_ZMN = ihtarDto.IhtarTarih;
+                IHTAR.MUSTERI_ID = ihtarDto.MusteriId;
+                IHTAR.AVUKAT_ID = ihtarDto.AvukatId;
+                IHTAR.SUBE_ID = ihtarDto.SubeId;
+
+                _ihtarService.Update(IHTAR);
+
+                //var ihtarUrun = _ihtarUrunService.GetById(model.IhtarId);
+
+                var ihtarUrun = _ihtarUrunService.GetById(ihtarUrunDto.IhtarUrunId);
+
+                if (ihtarUrunDto.UrunId != Guid.Empty)
+                {
+                    if (ihtarUrun != null)
+                    {
+                        // Güncelle
+                        ihtarUrun.URUN_ID = ihtarUrunDto.UrunId;
+                        _ihtarUrunService.Update(ihtarUrun);
+                    }
+                    else
+                    {
+                        // Yeni ekle
+                        _ihtarUrunService.Add(new IhtarUrun
+                        {
+                            IHTAR_URUN_ID = Guid.NewGuid(),
+                            IHTAR_ID = IHTAR.IHTAR_ID,
+                            URUN_ID = ihtarUrunDto.UrunId
+                        });
+                    }
+                }
+                else
+                {
+                    // Ürün seçilmemişse mevcut ilişkiyi kaldır
+                    if (ihtarUrun != null)
+                    _ihtarUrunService.Delete(ihtarUrunDto.IhtarUrunId);
+                }
+
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -182,8 +223,7 @@ namespace Presentation.Controllers
                 if (ihtar == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
 
-                ihtar.SIL_TAR_ZMN = DateTime.Now;
-                _ihtarService.Update(ihtar);
+                _ihtarService.Delete(ihtar);
 
                 return Json(new { success = true });
             }

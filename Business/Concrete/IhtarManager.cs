@@ -50,9 +50,5 @@ namespace Business.Concrete
             return _ihtarDal.GetByIdIhtarDto(id);
         }
 
-        public void UpdateIhtarWithUrunler(IhtarDto model)
-        {
-            _ihtarDal.UpdateIhtarWithUrunler(model);
-        }  
     }
 }

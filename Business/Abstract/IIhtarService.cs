@@ -12,9 +12,7 @@ namespace Business.Abstract
         void Update(Ihtar ihtar);
         void Delete(Ihtar ihtar);
         Ihtar GetById(Guid id);
-
         List<IhtarDto> GetIhtarDto();
         IhtarDto GetByIdIhtarDto(Guid id);
-        void UpdateIhtarWithUrunler(IhtarDto model);
     }
 }
