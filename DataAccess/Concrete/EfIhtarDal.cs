@@ -44,7 +44,6 @@ namespace DataAccess.Concrete
                    };
         }
 
-
         // silinmemiş ihtar bilgileri DTO listesi olarak döner
         public List<IhtarDto> GetIhtarDto()
         {
@@ -76,6 +75,23 @@ namespace DataAccess.Concrete
                 }
 
                 return dto;
+            }
+        }
+
+        public List<IhtarDto> GetByMusteriId(Guid musteriId)
+        {
+            using (var context = new AppDbContext())
+            {
+                return context.IHTAR
+                    .Where(x => x.MUSTERI_ID == musteriId)
+                    .Select(x => new IhtarDto
+                    {
+                        MusteriId = musteriId,
+                        MusteriNo = x.Musteri.MUST_AD,
+                        MusteriAd = x.Musteri.MUST_AD,
+                        MusteriSoyad = x.Musteri.MUST_SOYAD,
+                        
+                    }).ToList();
             }
         }
 

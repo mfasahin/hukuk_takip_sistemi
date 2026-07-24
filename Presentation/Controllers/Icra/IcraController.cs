@@ -118,9 +118,12 @@ namespace Presentation.Controllers
                     GRS_TAR_ZMN = DateTime.Now
                 };
 
-                _icraService.Add(entity);
+                var result = _icraService.AddIcra(entity, model.MusteriId, model.UrunId);
 
-                return Json(new { success = true });
+                if (result.Contains("başarıyla"))
+                    return Json(new { success = true, message = result });
+
+                return Json(new { success = false, error = result });
             }
             catch (Exception ex)
             {

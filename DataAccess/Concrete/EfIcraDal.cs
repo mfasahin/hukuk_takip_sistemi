@@ -72,7 +72,17 @@ namespace DataAccess.Concrete
                 var raw = (from iu in context.IHTAR_URUN
                            join ihtar in context.IHTAR on iu.IHTAR_ID equals ihtar.IHTAR_ID
                            join urun in context.URUN on iu.URUN_ID equals urun.URUN_ID
-                           where ihtar.SIL_TAR_ZMN == null && ihtar.MUSTERI_ID == musteriId
+                           where ihtar.SIL_TAR_ZMN == null
+                                 && ihtar.MUSTERI_ID == musteriId
+                                 // Bu müşteri–ürün için aktif icra yoksa
+                                 && !(from icra in context.ICRA
+                                      join iu2 in context.IHTAR_URUN on icra.IHTAR_URUN_ID equals iu2.IHTAR_URUN_ID
+                                      join ihtar2 in context.IHTAR on iu2.IHTAR_ID equals ihtar2.IHTAR_ID
+                                      where icra.SIL_TAR_ZMN == null
+                                            && ihtar2.SIL_TAR_ZMN == null
+                                            && ihtar2.MUSTERI_ID == musteriId
+                                            && iu2.URUN_ID == urun.URUN_ID
+                                      select icra).Any()
                            select new { urun.URUN_ID, urun.URUN_AD })
                           .Distinct()
                           .ToList();

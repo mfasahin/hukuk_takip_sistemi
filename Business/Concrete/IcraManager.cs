@@ -23,6 +23,7 @@ namespace Business.Concrete
 
         public void Add(Icra icra)
         {
+
             _icraDal.Add(icra);
         }
 
@@ -51,6 +52,13 @@ namespace Business.Concrete
         public List<IhtarUrunDto> GetIhtarlarByMusteriVeUrun(Guid musteriId, Guid urunId)
         {
             return _icraDal.GetIhtarlarByMusteriVeUrun(musteriId, urunId);
+        }
+
+        public string AddIcra(Icra icra, Guid musteriId, Guid urunId)
+        {
+
+            _icraDal.Add(icra);
+            return "İcra başarıyla eklendi.";
         }
     }
 }

@@ -119,3 +119,4 @@ function initCrud(entityName, fields, options) {
                 .fail(function (xhr) { showError("Silme sırasında hata", xhr); });
         });
 }
+

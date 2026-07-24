@@ -5,16 +5,26 @@
 
 <h2>Müşteriler</h2>
 
-<!-- Müşteri Ekle Butonu -->
 <tr>
     <td colspan="6">
-        <div style="display:flex; justify-content:flex-end;">
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-bottom:10px;">
+            <button type="button" class="btn btn-danger" id="deleteSelectedBtn">
+                Seçilenleri Sil
+            </button>
             <button type="button" class="btn btn-success"
                     data-bs-toggle="modal"
                     data-bs-target="#createModal">
                 Müşteri Ekle
             </button>
         </div>
+
+        @*<div style="display:flex; justify-content:flex-end;">
+            <button type="button" class="btn btn-success"
+                    data-bs-toggle="modal"
+                    data-bs-target="#createModal">
+                Müşteri Ekle
+            </button>
+        </div>*@
     </td>
 </tr>
 
@@ -22,7 +32,7 @@
     <thead>
         <tr>
             <th>
-                <!-- Tümünü seç/deselect için -->
+
                 <input type="checkbox" id="selectAll" />
             </th>
             <th>Müşteri Numarası</th>
@@ -52,7 +62,6 @@
                 <td>
                     <div class="dropdown">
                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            
                         </button>
                         <ul class="dropdown-menu">
                             <li>
@@ -64,10 +73,6 @@
                         </ul>
                     </div>
                 </td>
-                @*<td>
-            <button class="btn btn-sm btn-warning updateBtn" data-id="@musteri.MusteriId">Güncelle</button>
-            <button class="btn btn-sm btn-danger deleteBtn" data-id="@musteri.MusteriId">Sil</button>
-        </td>*@
             </tr>
         }
     </tbody>
@@ -79,5 +84,46 @@
     <script src="~/Scripts/crud.js"></script>
     <script>
         initCrud("Musteri", ["MusteriId", "MustNo", "MustAd", "MustSoyad", "MustKimlikNo", "MustVknNo", "MustEposta", "MustTelNo"]);
+
+        // Tümünü seç/deselect
+        $("#selectAll").on("change", function () {
+            $(".rowCheckbox").prop("checked", $(this).prop("checked"));
+        });
+
+        // Seçilenleri Sil butonu
+        $("#deleteSelectedBtn").on("click", function () {
+            var selectedIds = $(".rowCheckbox:checked").map(function () {
+                return $(this).val();
+            }).get();
+
+            if (selectedIds.length === 0) {
+                alert("Lütfen silmek için en az bir müşteri seçin.");
+                return;
+            }
+
+            if (!confirm(selectedIds.length + " kaydı silmek istediğinize emin misiniz?")) {
+                return;
+            }
+
+            // AJAX ile backend'e gönder
+            $.ajax({
+                url: "/Musteri/DeleteSelected",
+                type: "POST",
+                traditional: true, // array gönderimi için
+                data: {
+                    ids: selectedIds,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (result) {
+                    if (result.success) {
+                        alert("Seçilen kayıtlar silindi.");
+                        location.reload();
+                    } else {
+                        alert("Silme işlemi başarısız.");
+                    }
+                }
+            });
+        });
+
     </script>
 }

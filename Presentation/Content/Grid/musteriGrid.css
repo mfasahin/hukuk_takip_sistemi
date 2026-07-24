@@ -1,0 +1,5 @@
+﻿#gridContainer .dropdown-menu {
+    z-index: 1050; /* Bootstrap modal z-index seviyesine uygun */
+    position: absolute; /* grid hücresinden bağımsız */
+}
+

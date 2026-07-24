@@ -7,7 +7,7 @@ namespace Business.Abstract
 {
     public interface IIcraService
     {
-        
+
         Icra GetById(Guid id);
         void Add(Icra icra);
         void Update(Icra icra);
@@ -15,6 +15,6 @@ namespace Business.Abstract
         IcraDto GetByIdIcra(Guid id);
         List<UrunDto> GetUrunlerByMusteri(Guid musteriId);
         List<IhtarUrunDto> GetIhtarlarByMusteriVeUrun(Guid musteriId, Guid urunId);
-
+        string AddIcra(Icra icra, Guid musteriId, Guid urunId);
     }
 }

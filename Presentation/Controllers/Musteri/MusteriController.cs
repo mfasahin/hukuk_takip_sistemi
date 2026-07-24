@@ -140,5 +140,31 @@ namespace Presentation.Controllers
                 return Json(new { success = false, error = ex.Message });
             }
         }
+
+        [HttpPost]
+        public ActionResult DeleteSelected(Guid[] ids)
+        {
+            if (ids == null || ids.Length == 0)
+                return Json(new { success = false, error = "Seçim yapılmadı" });
+
+            try
+            {
+                foreach (var id in ids)
+                {
+                    var musteri = _musteriService.GetById(id);
+                    if (musteri != null)
+                    {
+                        _musteriService.Delete(musteri);
+                    }
+                }
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
     }
 }

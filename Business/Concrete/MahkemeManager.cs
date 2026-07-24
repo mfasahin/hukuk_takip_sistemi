@@ -15,9 +15,21 @@ namespace Business.Concrete
             _mahkemeDal = mahkemeDal;
         }
 
-        public List<IcraMahkeme> GetAll() => _mahkemeDal.GetAll();
-        public IcraMahkeme GetById(Guid id) => _mahkemeDal.Get(m => m.MAHKEME_ID == id);
-        public void Add(IcraMahkeme mahkeme) => _mahkemeDal.Add(mahkeme);
-        public void Update(IcraMahkeme mahkeme) => _mahkemeDal.Update(mahkeme);
+        public List<IcraMahkeme> GetAll()
+        {
+            return _mahkemeDal.GetAll();
+        }
+        public IcraMahkeme GetById(Guid id)
+        {
+            return _mahkemeDal.Get(m => m.MAHKEME_ID == id);
+        }
+        public void Add(IcraMahkeme mahkeme)
+        {
+            _mahkemeDal.Add(mahkeme);
+        }
+        public void Update(IcraMahkeme mahkeme)
+        {
+            _mahkemeDal.Update(mahkeme);
+        }
     }
 }
