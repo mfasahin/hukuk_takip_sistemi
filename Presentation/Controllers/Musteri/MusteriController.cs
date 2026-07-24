@@ -12,10 +12,12 @@ namespace Presentation.Controllers
     public class MusteriController : Controller
     {
         private readonly IMusteriService _musteriService;
+        private readonly IIhtarService _ihtarService;
 
-        public MusteriController(IMusteriService musteriService)
+        public MusteriController(IMusteriService musteriService, IIhtarService ihtarService)
         {
             _musteriService = musteriService;
+            _ihtarService = ihtarService;
         }
 
         // LİSTELEME
@@ -131,6 +133,15 @@ namespace Presentation.Controllers
                 if (musteri == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
 
+                if (_ihtarService.MusteriyeBagliIhtarVarMi(id))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        error = "Bu müşteriye bağlı ihtar kaydı bulunduğu için silinemez."
+                    });
+                }
+
                 _musteriService.Delete(musteri);
 
                 return Json(new { success = true });
@@ -140,7 +151,8 @@ namespace Presentation.Controllers
                 return Json(new { success = false, error = ex.Message });
             }
         }
-
+        
+        // ÇOKLU SİL
         [HttpPost]
         public ActionResult DeleteSelected(Guid[] ids)
         {

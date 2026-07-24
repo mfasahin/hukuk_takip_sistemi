@@ -14,5 +14,6 @@ namespace Business.Abstract
         Ihtar GetById(Guid id);
         List<IhtarDto> GetIhtarDto();
         IhtarDto GetByIdIhtarDto(Guid id);
+        bool MusteriyeBagliIhtarVarMi(Guid musteriId);
     }
 }

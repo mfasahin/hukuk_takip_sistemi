@@ -49,6 +49,9 @@ namespace Business.Concrete
         {
             return _ihtarDal.GetByIdIhtarDto(id);
         }
-
+        public bool MusteriyeBagliIhtarVarMi(Guid musteriId)
+        {
+            return _ihtarDal.MusteriyeBagliIhtarVarMi(musteriId);
+        }
     }
 }

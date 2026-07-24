@@ -94,6 +94,13 @@ namespace DataAccess.Concrete
                     }).ToList();
             }
         }
+        public bool MusteriyeBagliIhtarVarMi(Guid musteriId)
+        {
+            using (var context = new AppDbContext())
+            {
+                return context.IHTAR.Any(i => i.MUSTERI_ID == musteriId && i.SIL_TAR_ZMN == null);
+            }
+        }
 
     }
 

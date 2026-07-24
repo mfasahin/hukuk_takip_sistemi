@@ -10,7 +10,7 @@ namespace DataAccess.Abstract
     {
         List<IhtarDto> GetIhtarDto();
         IhtarDto GetByIdIhtarDto(Guid id);
-
         List<IhtarDto> GetByMusteriId(Guid musteriId);
+        bool MusteriyeBagliIhtarVarMi(Guid musteriId);
     }
 }
