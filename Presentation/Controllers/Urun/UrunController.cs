@@ -13,10 +13,12 @@ namespace Presentation.Controllers
     public class UrunController : Controller
     {
         private readonly IUrunService _urunService;
+        private readonly IIhtarUrunService _ihtarUrunService;
 
-        public UrunController(IUrunService urunService)
+        public UrunController(IUrunService urunService, IIhtarUrunService ihtarUrunService)
         {
             _urunService = urunService;
+            _ihtarUrunService = ihtarUrunService;
         }
 
         // LİSTELEME
@@ -108,7 +110,7 @@ namespace Presentation.Controllers
             }
         }
 
-        // SİLME
+        // SİLME 
         [HttpPost]
         public ActionResult Delete(Guid id)
         {
@@ -118,7 +120,19 @@ namespace Presentation.Controllers
                 if (urun == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
 
-                _urunService.Delete(urun);
+                // Bağımlılık kontrolü - bu ürüne bağlı (silinmemiş) ihtar/ihtarUrun kaydı var mı
+                if (_ihtarUrunService.UruneBagliIhtarVarMi(id))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        error = "Bu ürüne bağlı ihtar kaydı bulunduğu için silinemez."
+                    });
+                }
+
+                // Ürünün kendisi soft delete edilir - IhtarUrun DEĞİL
+                urun.SIL_TAR_ZMN = DateTime.Now;
+                _urunService.Update(urun);
 
                 return Json(new { success = true });
             }

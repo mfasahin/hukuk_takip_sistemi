@@ -209,7 +209,7 @@ namespace Presentation.Controllers
             }
         }
 
-        // SİLME (soft delete)
+        // SİLME (soft delete) 
         [HttpPost]
         public ActionResult Delete(Guid id)
         {
@@ -219,6 +219,16 @@ namespace Presentation.Controllers
                 if (ihtar == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
 
+                // Önce bu ihtara bağlı tüm IhtarUrun kayıtlarını soft delete yap
+                var bagliUrunler = _ihtarUrunService.GetByIhtarId(id);
+                foreach (var ihtarUrun in bagliUrunler)
+                {
+                    //ihtarUrun.SIL_TAR_ZMN = DateTime.Now;
+                    _ihtarUrunService.Delete(ihtarUrun);
+                }
+
+                // Sonra ihtarın kendisini soft delete yap
+                //ihtar.SIL_TAR_ZMN = DateTime.Now;
                 _ihtarService.Delete(ihtar);
 
                 return Json(new { success = true });

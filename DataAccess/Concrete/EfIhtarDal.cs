@@ -101,6 +101,13 @@ namespace DataAccess.Concrete
                 return context.IHTAR.Any(i => i.MUSTERI_ID == musteriId && i.SIL_TAR_ZMN == null);
             }
         }
+        public bool AvukataBagliIhtarVarMi(Guid avukatId)
+        {
+            using (var context = new AppDbContext())
+            {
+                return context.IHTAR.Any(i => i.AVUKAT_ID == avukatId && i.SIL_TAR_ZMN == null);
+            }
+        }
 
     }
 

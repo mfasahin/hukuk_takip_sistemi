@@ -7,5 +7,6 @@ namespace DataAccess.Abstract
     public interface IIhtarUrunDal : IEntityRepository<IhtarUrun>
     {
         void Delete(Guid id);
+        bool UruneBagliIhtarVarMi(Guid urunId);
     }
 }

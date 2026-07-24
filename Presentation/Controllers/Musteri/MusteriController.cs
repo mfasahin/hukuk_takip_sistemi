@@ -3,6 +3,7 @@ using Entity.Concrete;
 using Presentation.Filters;
 using Presentation.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -151,8 +152,7 @@ namespace Presentation.Controllers
                 return Json(new { success = false, error = ex.Message });
             }
         }
-        
-        // ÇOKLU SİL
+
         [HttpPost]
         public ActionResult DeleteSelected(Guid[] ids)
         {
@@ -161,16 +161,39 @@ namespace Presentation.Controllers
 
             try
             {
+                var silinenler = new List<Guid>();
+                var engellenenler = new List<string>();
+
                 foreach (var id in ids)
                 {
                     var musteri = _musteriService.GetById(id);
-                    if (musteri != null)
+                    if (musteri == null)
+                        continue;
+
+                    // Bağımlılık kontrolü - ihtara bağlıysa silme
+                    if (_ihtarService.MusteriyeBagliIhtarVarMi(id))
                     {
-                        _musteriService.Delete(musteri);
+                        engellenenler.Add(musteri.MUST_AD + " " + musteri.MUST_SOYAD);
+                        continue;
                     }
+
+                    musteri.SIL_TAR_ZMN = DateTime.Now;
+                    _musteriService.Update(musteri);   // Delete DEĞİL - soft delete
+                    silinenler.Add(id);
                 }
 
-                return Json(new { success = true });
+                if (engellenenler.Count > 0)
+                {
+                    return Json(new
+                    {
+                        success = silinenler.Count > 0,   // en az biri silindiyse kısmi başarı
+                        error = engellenenler.Count + " müşteri, bağlı ihtar kaydı bulunduğu için silinemedi: "
+                                + string.Join(", ", engellenenler),
+                        deletedCount = silinenler.Count
+                    });
+                }
+
+                return Json(new { success = true, deletedCount = silinenler.Count });
             }
             catch (Exception ex)
             {

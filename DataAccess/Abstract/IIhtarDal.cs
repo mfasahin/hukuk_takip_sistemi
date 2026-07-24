@@ -12,5 +12,6 @@ namespace DataAccess.Abstract
         IhtarDto GetByIdIhtarDto(Guid id);
         List<IhtarDto> GetByMusteriId(Guid musteriId);
         bool MusteriyeBagliIhtarVarMi(Guid musteriId);
+        bool AvukataBagliIhtarVarMi(Guid avukatId);
     }
 }

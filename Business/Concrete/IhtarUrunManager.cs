@@ -10,10 +10,12 @@ namespace Business.Concrete
     public class IhtarUrunManager : IIhtarUrunService
     {
         private readonly IIhtarUrunDal _ihtarUrunDal;
+        private readonly IUrunService _urunDal;
 
-        public IhtarUrunManager(IIhtarUrunDal ihtarUrunDal)
+        public IhtarUrunManager(IIhtarUrunDal ihtarUrunDal, IUrunService urunDal)
         {
             _ihtarUrunDal = ihtarUrunDal;
+            _urunDal = urunDal;
         }
 
         public List<IhtarUrun> GetAll()
@@ -49,6 +51,9 @@ namespace Business.Concrete
             return _ihtarUrunDal.GetAll(x => x.IHTAR_ID == ihtarId).ToList();
         }
 
-
+        public bool UruneBagliIhtarVarMi(Guid urunId)
+        {
+            return _ihtarUrunDal.UruneBagliIhtarVarMi(urunId);
+        }
     }
 }

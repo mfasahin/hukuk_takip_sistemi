@@ -12,10 +12,12 @@ namespace Presentation.Controllers
     public class AvukatController : Controller
     {
         private readonly IAvukatService _avukatService;
+        private readonly IIhtarService _ihtarService;
 
-        public AvukatController(IAvukatService avukatService)
+        public AvukatController(IAvukatService avukatService, IIhtarService ihtarService)
         {
             _avukatService = avukatService;
+            _ihtarService = ihtarService;
         }
 
         //LİSTELEME
@@ -134,6 +136,15 @@ namespace Presentation.Controllers
                 var avukat = _avukatService.GetById(id);
                 if (avukat == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
+                
+                if (_ihtarService.AvukataBagliIhtarVarMi(id))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        error = "Bu avukata bağlı ihtar kaydı bulunduğu için silinemez."
+                    });
+                }
 
                 _avukatService.Delete(avukat);
 
