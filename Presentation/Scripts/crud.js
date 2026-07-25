@@ -88,6 +88,25 @@ function showSuccessModal(message, onClose) {
     modal.show();
 }
 
+// Kullanıcıdan onay ister. Onaylarsa onConfirm callback'i çalışır.
+// confirm() yerine Bootstrap modalı kullanır, böylece tüm modallar tutarlı görünür.
+function showConfirmModal(message, onConfirm) {
+    $("#confirmModalMessage").text(message);
+    var modalEl = document.getElementById("confirmModal");
+    var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+    var $okBtn = $("#confirmModalOkBtn");
+
+    // Önceki tıklama handler'ını temizle (aksi halde birden fazla eklenip
+    // her tıklamada callback birden fazla kez tetiklenir)
+    $okBtn.off("click.confirm").on("click.confirm", function () {
+        modal.hide();
+        if (typeof onConfirm === "function") onConfirm();
+    });
+
+    modal.show();
+}
+
 function initCrud(entityName, fields, options) {
     options = options || {};
     var getUrl = options.getUrl || ('/' + entityName + '/Get' + entityName);
@@ -211,28 +230,30 @@ function initCrud(entityName, fields, options) {
         });
 
     // DELETE
+    // DELETE
     $(document).off("click" + ns, ".deleteBtn")
         .on("click" + ns, ".deleteBtn", function () {
             var id = $(this).data("id");
-            if (!confirm("Bu kaydı silmek istediğine emin misin?")) return;
 
-            $.ajax({
-                url: deleteUrl,
-                type: 'POST',
-                data: {
-                    id: id,
-                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                }
-            })
-                .done(function (result) {
-                    if (result.success) {
-                        showSuccessModal(entityName + " başarıyla silindi.", function () {
-                            location.reload();
-                        });
-                    } else {
-                        alert("Silme başarısız: " + (result.error || ""));
+            showConfirmModal("Bu " + entityName + " kaydını silmek istediğinize emin misiniz?", function () {
+                $.ajax({
+                    url: deleteUrl,
+                    type: 'POST',
+                    data: {
+                        id: id,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
                     }
                 })
-                .fail(function (xhr) { showError("Silme sırasında hata", xhr); });
+                    .done(function (result) {
+                        if (result.success) {
+                            showSuccessModal(entityName + " başarıyla silindi.", function () {
+                                location.reload();
+                            });
+                        } else {
+                            alert("Silme başarısız: " + (result.error || ""));
+                        }
+                    })
+                    .fail(function (xhr) { showError("Silme sırasında hata", xhr); });
+            });
         });
 }
