@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using DataAccess.Abstract;
+using DataAccess.Concrete;
 using Entity.Concrete;
 using System;
 using System.Collections.Generic;
@@ -49,6 +50,10 @@ namespace Business.Concrete
         public List<IhtarUrun> GetByIhtarId(Guid ihtarId)
         {
             return _ihtarUrunDal.GetAll(x => x.IHTAR_ID == ihtarId).ToList();
+        }
+        public IhtarUrun GetByIhtarIdTekli(Guid id)
+        {
+            return _ihtarUrunDal.Get(Ihtar => Ihtar.IHTAR_ID == id);
         }
 
         public bool UruneBagliIhtarVarMi(Guid urunId)

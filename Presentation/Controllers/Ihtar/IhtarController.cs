@@ -17,6 +17,7 @@ namespace Presentation.Controllers
         private readonly IAvukatService _avukatService;
         private readonly IUrunService _urunService;
         private readonly IIhtarUrunService _ihtarUrunService;
+        private readonly IIcraService _icraService;
 
         public IhtarController(
             IIhtarService ihtarService,
@@ -24,7 +25,8 @@ namespace Presentation.Controllers
             ISubeService subeService,
             IAvukatService avukatService,
             IIhtarUrunService ihtarUrunService,
-            IUrunService urunService)
+            IUrunService urunService,
+            IIcraService icraService)
         {
             _ihtarService = ihtarService;
             _musteriService = musteriService;
@@ -32,6 +34,7 @@ namespace Presentation.Controllers
             _avukatService = avukatService;
             _urunService = urunService;
             _ihtarUrunService = ihtarUrunService;
+            _icraService = icraService;
         }
 
         public ActionResult Index()
@@ -215,21 +218,30 @@ namespace Presentation.Controllers
         {
             try
             {
-                var ihtar = _ihtarService.GetById(id);
-                if (ihtar == null)
+                //var ihtar = /*_ihtarService*/.GetById(id);
+                var ihtarurun = _ihtarUrunService.GetByIhtarIdTekli(id);
+                if (ihtarurun == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
+
+                if (_icraService.IhtaraBagliIcraVarMi(ihtarurun.IHTAR_URUN_ID))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        error = "Bu müşteriye bağlı ihtar kaydı bulunduğu için silinemez."
+                    });
+                }
 
                 // Önce bu ihtara bağlı tüm IhtarUrun kayıtlarını soft delete yap
                 var bagliUrunler = _ihtarUrunService.GetByIhtarId(id);
-                foreach (var ihtarUrun in bagliUrunler)
+                foreach (var ihtarUrun2 in bagliUrunler)
                 {
                     //ihtarUrun.SIL_TAR_ZMN = DateTime.Now;
-                    _ihtarUrunService.Delete(ihtarUrun);
+                    _ihtarUrunService.Delete(ihtarUrun2);
                 }
 
-                // Sonra ihtarın kendisini soft delete yap
                 //ihtar.SIL_TAR_ZMN = DateTime.Now;
-                _ihtarService.Delete(ihtar);
+                _ihtarUrunService.Delete(ihtarurun);
 
                 return Json(new { success = true });
             }

@@ -16,5 +16,6 @@ namespace Business.Abstract
         List<UrunDto> GetUrunlerByMusteri(Guid musteriId);
         List<IhtarUrunDto> GetIhtarlarByMusteriVeUrun(Guid musteriId, Guid urunId);
         string AddIcra(Icra icra, Guid musteriId, Guid urunId);
+        bool IhtaraBagliIcraVarMi(Guid ihtarId);
     }
 }

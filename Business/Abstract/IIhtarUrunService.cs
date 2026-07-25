@@ -15,6 +15,7 @@ namespace Business.Abstract
 
         List<IhtarUrun> GetByIhtarId(Guid ihtarId);
         bool UruneBagliIhtarVarMi(Guid urunId);
+        IhtarUrun GetByIhtarIdTekli(Guid id);
 
     }
 }

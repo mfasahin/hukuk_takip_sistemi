@@ -1,4 +1,31 @@
-﻿
+﻿function resetCreateForm(formId, extraCallback) {
+    var $form = $("#" + formId);
+    if ($form.length === 0) return;
+
+    // Native input/textarea/checkbox/radio - tarayıcının kendi reset() metodu
+    $form[0].reset();
+
+    // Select alanlarını placeholder'a (ilk <option>, genelde "Seçiniz") döndür
+    $form.find("select").each(function () {
+        this.selectedIndex = 0;
+    });
+
+    // Tarih input'larını garantiye almak için ayrıca boşalt
+    $form.find("input[type='date']").val("");
+
+    // Validasyon mesaj/stillerini temizle
+    $form.find(".text-danger").empty();
+    $form.find(".field-validation-error")
+        .removeClass("field-validation-error")
+        .addClass("field-validation-valid");
+    $form.find(".input-validation-error").removeClass("input-validation-error");
+
+    // Modüle özel ek temizlik (chip listeleri, kademeli dropdown'lar vb.)
+    if (typeof extraCallback === "function") {
+        extraCallback();
+    }
+}
+
 function initCrud(entityName, fields, options) {
     options = options || {};
     var getUrl = options.getUrl || ('/' + entityName + '/Get' + entityName);
@@ -15,6 +42,14 @@ function initCrud(entityName, fields, options) {
         alert(prefix + ": " + msg);
     }
 
+    // YENİ: Modal her açılmadan HEMEN ÖNCE formu sıfırla.
+    // "show.bs.modal" tercih edildi çünkü kapatma şekli (X, backdrop, Escape)
+    // ne olursa olsun, bir sonraki açılışta form garanti şekilde boş olur.
+    $("#createModal").off("show.bs.modal" + ns)
+        .on("show.bs.modal" + ns, function () {
+            resetCreateForm("createForm", options.onResetCreateForm);
+        });
+
     // CREATE
     $(document).off("click" + ns, "#createSaveBtn")
         .on("click" + ns, "#createSaveBtn", function () {
@@ -28,6 +63,10 @@ function initCrud(entityName, fields, options) {
                 .done(function (result) {
                     if (result.success) {
                         alert(entityName + " eklendi!");
+
+                        // YENİ: Kaydetme başarılıysa, kapatmadan önce formu sıfırla
+                        resetCreateForm("createForm", options.onResetCreateForm);
+
                         $("#createModal").modal("hide");
                         location.reload();
                     } else {
@@ -65,6 +104,10 @@ function initCrud(entityName, fields, options) {
                             $input.val(data[f]);
                         }
                     });
+
+                    if (typeof options.onGetSuccess === "function") {
+                        options.onGetSuccess(data);
+                    }
 
                     $("#updateModal").modal("show");
                 })
@@ -119,4 +162,3 @@ function initCrud(entityName, fields, options) {
                 .fail(function (xhr) { showError("Silme sırasında hata", xhr); });
         });
 }
-

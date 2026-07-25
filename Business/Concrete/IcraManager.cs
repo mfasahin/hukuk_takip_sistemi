@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using DataAccess.Abstract;
+using DataAccess.Concrete;
 using Entity.Concrete;
 using Entity.Dto;
 using System;
@@ -59,6 +60,10 @@ namespace Business.Concrete
 
             _icraDal.Add(icra);
             return "İcra başarıyla eklendi.";
+        }
+        public bool IhtaraBagliIcraVarMi(Guid ihtarId)
+        {
+            return _icraDal.IhtaraBagliIcraVarMi(ihtarId);
         }
     }
 }

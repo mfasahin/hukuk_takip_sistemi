@@ -125,6 +125,12 @@ namespace DataAccess.Concrete
                 }).ToList();
             }
         }
-        
+        public bool IhtaraBagliIcraVarMi(Guid ihtarUrunId)
+        {
+            using (var context = new AppDbContext())
+            {
+                return context.ICRA.Any(i => i.IHTAR_URUN_ID == ihtarUrunId && i.SIL_TAR_ZMN == null);
+            }
+        }
     }
 }

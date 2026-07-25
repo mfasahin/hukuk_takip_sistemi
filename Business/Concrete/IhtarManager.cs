@@ -40,6 +40,7 @@ namespace Business.Concrete
         {
             return _ihtarDal.Get(Ihtar => Ihtar.IHTAR_ID == id);
         }
+       
 
         public List<IhtarDto> GetIhtarDto()
         {

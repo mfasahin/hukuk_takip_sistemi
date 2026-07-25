@@ -12,5 +12,6 @@ namespace DataAccess.Abstract
         IcraDto GetByIdIcra(Guid id);
         List<UrunDto> GetUrunlerByMusteri(Guid musteriId);
         List<IhtarUrunDto> GetIhtarlarByMusteriVeUrun(Guid musteriId, Guid urunId);
+        bool IhtaraBagliIcraVarMi(Guid ihtarUrunId);
     }
 }

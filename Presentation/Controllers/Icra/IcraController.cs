@@ -177,7 +177,8 @@ namespace Presentation.Controllers
                 if (entity == null)
                     return Json(new { success = false, error = "Kayıt bulunamadı" });
 
-                entity.SIL_TAR_ZMN = DateTime.Now;
+                
+                //entity.SIL_TAR_ZMN = DateTime.Now;
                 _icraService.Update(entity);
 
                 return Json(new { success = true });
