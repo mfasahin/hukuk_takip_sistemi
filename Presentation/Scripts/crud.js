@@ -2,28 +2,90 @@
     var $form = $("#" + formId);
     if ($form.length === 0) return;
 
-    // Native input/textarea/checkbox/radio - tarayıcının kendi reset() metodu
     $form[0].reset();
 
-    // Select alanlarını placeholder'a (ilk <option>, genelde "Seçiniz") döndür
     $form.find("select").each(function () {
         this.selectedIndex = 0;
     });
 
-    // Tarih input'larını garantiye almak için ayrıca boşalt
     $form.find("input[type='date']").val("");
 
-    // Validasyon mesaj/stillerini temizle
     $form.find(".text-danger").empty();
     $form.find(".field-validation-error")
         .removeClass("field-validation-error")
         .addClass("field-validation-valid");
     $form.find(".input-validation-error").removeClass("input-validation-error");
 
-    // Modüle özel ek temizlik (chip listeleri, kademeli dropdown'lar vb.)
+    // Doğrulama hata işaretlerini de temizle
+    $form.find(".is-invalid").removeClass("is-invalid");
+    $form.find(".invalid-feedback").remove();
+
     if (typeof extraCallback === "function") {
         extraCallback();
     }
+}
+
+function validateForm(formId, options) {
+    options = options || {};
+    var skipFields = options.skipFields || [];
+    var customRules = options.customRules || {};
+    var $form = $("#" + formId);
+    var isValid = true;
+
+    $form.find(".is-invalid").removeClass("is-invalid");
+    $form.find(".invalid-feedback").remove();
+
+    $form.find("input, select, textarea").each(function () {
+        var $input = $(this);
+        var name = $input.attr("name");
+
+        if (!name || skipFields.indexOf(name) !== -1) return;
+        if ($input.prop("disabled")) return;
+        if ($input.attr("type") === "hidden") return;   // <-- eklendi: gizli alanlar kontrol dışı
+
+        var value = $input.val();
+        var errorMsg = null;
+
+        if (!value || value.toString().trim() === "") {
+            errorMsg = "Bu alan zorunludur.";
+        } else if (customRules[name]) {
+            errorMsg = customRules[name](value, $form);
+        }
+
+        if (errorMsg) {
+            isValid = false;
+            $input.addClass("is-invalid");
+            $input.after('<div class="invalid-feedback d-block">' + errorMsg + '</div>');
+        }
+    });
+
+    return isValid;
+}
+
+// Bir modalı kapatır, kapanış animasyonu TAMAMEN bittikten sonra
+// (hidden.bs.modal event'i ile) başarı modalını açar. Bu, iki modalın
+// backdrop/animasyonunun çakışmasını önler.
+function closeModalThenShowSuccess(modalId, message, onClose) {
+    var modalEl = document.getElementById(modalId);
+    var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+    $(modalEl).off("hidden.bs.modal.chain").on("hidden.bs.modal.chain", function () {
+        showSuccessModal(message, onClose);
+    });
+
+    modal.hide();
+}
+
+function showSuccessModal(message, onClose) {
+    $("#successModalMessage").text(message);
+    var modalEl = document.getElementById("successModal");
+    var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+    $(modalEl).off("hidden.bs.modal.success").on("hidden.bs.modal.success", function () {
+        if (typeof onClose === "function") onClose();
+    });
+
+    modal.show();
 }
 
 function initCrud(entityName, fields, options) {
@@ -42,9 +104,6 @@ function initCrud(entityName, fields, options) {
         alert(prefix + ": " + msg);
     }
 
-    // YENİ: Modal her açılmadan HEMEN ÖNCE formu sıfırla.
-    // "show.bs.modal" tercih edildi çünkü kapatma şekli (X, backdrop, Escape)
-    // ne olursa olsun, bir sonraki açılışta form garanti şekilde boş olur.
     $("#createModal").off("show.bs.modal" + ns)
         .on("show.bs.modal" + ns, function () {
             resetCreateForm("createForm", options.onResetCreateForm);
@@ -59,16 +118,22 @@ function initCrud(entityName, fields, options) {
     $("#createForm").off("submit" + ns)
         .on("submit" + ns, function (e) {
             e.preventDefault();
+
+            if (!validateForm("createForm", {
+                skipFields: options.validationSkipFields,
+                customRules: options.validationRules
+            })) {
+                return;
+            }
+
             $.ajax({ url: createUrl, type: 'POST', data: $(this).serialize() })
                 .done(function (result) {
                     if (result.success) {
-                        alert(entityName + " eklendi!");
-
-                        // YENİ: Kaydetme başarılıysa, kapatmadan önce formu sıfırla
                         resetCreateForm("createForm", options.onResetCreateForm);
 
-                        $("#createModal").modal("hide");
-                        location.reload();
+                        closeModalThenShowSuccess("createModal", entityName + " başarıyla eklendi.", function () {
+                            location.reload();
+                        });
                     } else {
                         alert("Ekleme başarısız: " + (result.error || ""));
                     }
@@ -76,7 +141,7 @@ function initCrud(entityName, fields, options) {
                 .fail(function (xhr) { showError("Ekleme sırasında hata", xhr); });
         });
 
-    // UPDATE - butona tıklanınca veri çekilir, form doldurulur, modal açılır
+    // UPDATE
     $(document).off("click" + ns, ".updateBtn")
         .on("click" + ns, ".updateBtn", function () {
             var id = $(this).data("id");
@@ -86,7 +151,7 @@ function initCrud(entityName, fields, options) {
                     fields.forEach(function (f) {
                         if (data[f] === undefined) return;
                         var $input = $("#updateForm #" + f);
-                        if ($input.length === 0) return; // alan formda yoksa sessizce geç
+                        if ($input.length === 0) return;
 
                         if ($input.attr("type") === "date" && data[f]) {
                             var dateVal;
@@ -124,12 +189,20 @@ function initCrud(entityName, fields, options) {
     $("#updateForm").off("submit" + ns)
         .on("submit" + ns, function (e) {
             e.preventDefault();
+
+            if (!validateForm("updateForm", {
+                skipFields: options.validationSkipFields,
+                customRules: options.validationRules
+            })) {
+                return;
+            }
+
             $.ajax({ url: updateUrl, type: 'POST', data: $(this).serialize() })
                 .done(function (result) {
                     if (result.success) {
-                        alert(entityName + " güncellendi!");
-                        $("#updateModal").modal("hide");
-                        location.reload();
+                        closeModalThenShowSuccess("updateModal", entityName + " başarıyla güncellendi.", function () {
+                            location.reload();
+                        });
                     } else {
                         alert("Kaydetme başarısız: " + (result.error || ""));
                     }
@@ -153,8 +226,9 @@ function initCrud(entityName, fields, options) {
             })
                 .done(function (result) {
                     if (result.success) {
-                        alert(entityName + " silindi!");
-                        location.reload();
+                        showSuccessModal(entityName + " başarıyla silindi.", function () {
+                            location.reload();
+                        });
                     } else {
                         alert("Silme başarısız: " + (result.error || ""));
                     }

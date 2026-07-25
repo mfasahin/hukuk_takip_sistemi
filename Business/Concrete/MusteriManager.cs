@@ -1,6 +1,9 @@
 ﻿using Business.Abstract;
+//using Business.Validation;
 using DataAccess.Abstract;
 using Entity.Concrete;
+using FluentValidation;
+using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
 
@@ -9,11 +12,16 @@ namespace Business.Concrete
     public class MusteriManager : IMusteriService
     {
         private readonly IMusteriDal _musteriDal;
+        //private readonly MusteriValidator _validator = new MusteriValidator();
 
         public MusteriManager(IMusteriDal musteriDal)
         {
             _musteriDal = musteriDal;
         }
+        //public ValidationResult Validate(Musteri musteri)
+        //{
+        //    return _validator.Validate(musteri);
+        //}
 
         public List<Musteri> GetAll()
         {

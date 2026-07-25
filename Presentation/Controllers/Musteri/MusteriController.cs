@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+//using Business.Validation;
 using Entity.Concrete;
 using Presentation.Filters;
 using Presentation.Models;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace Presentation.Controllers
 {
@@ -62,6 +64,19 @@ namespace Presentation.Controllers
                     MUST_EPOSTA = model.MustEposta,
                     MUST_TEL_NO = model.MustTelNo,
                 };
+
+                // FluentValidation çağrısı
+                //var validator = new MusteriValidator();
+                //var result = validator.Validate(musteri);
+
+                //if (!result.IsValid)
+                //{
+                //    return Json(new
+                //    {
+                //        success = false,
+                //        errors = result.Errors.Select(e => new { field = e.PropertyName, message = e.ErrorMessage })
+                //    });
+                //}
 
                 _musteriService.Add(musteri);
                 return Json(new { success = true });
