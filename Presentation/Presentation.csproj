@@ -209,6 +209,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\checkbox.js" />
+    <Content Include="Scripts\common.js" />
     <Content Include="Scripts\crud.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -219,7 +220,6 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
@@ -265,6 +265,7 @@
     <Content Include="Views\Icra\_IcraModals.cshtml" />
     <Content Include="Views\Kullanici\Login.cshtml" />
     <Content Include="Views\Kullanici\Register.cshtml" />
+    <Content Include="Views\Shared\ErrorModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Business\Business.csproj">

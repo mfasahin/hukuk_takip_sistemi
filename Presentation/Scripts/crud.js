@@ -278,10 +278,13 @@ function initCrud(entityName, fields, options) {
                                 location.reload();
                             });
                         } else {
-                            alert("Silme başarısız: " + (result.error || ""));
+                            // alert yerine modal
+                            showErrorModal("Silme başarısız: " + (result.error || ""));
                         }
                     })
-                    .fail(function (xhr) { showError("Silme sırasında hata", xhr); });
+                    .fail(function (xhr) {
+                        showErrorModal("Silme sırasında hata: " + xhr.statusText);
+                    });
             });
         });
 }

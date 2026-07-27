@@ -213,17 +213,17 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(Guid id)
+        public JsonResult Delete(Guid id)
         {
             try
             {
                 var ihtar = _ihtarService.GetById(id);
                 if (ihtar == null)
-                    return Json(new { success = false, error = "Kayıt bulunamadı" });
+                    return Json(new { success = false, error = "Kayıt bulunamadı." });
 
                 var ihtarurun = _ihtarUrunService.GetByIhtarIdTekli(id);
                 if (ihtarurun == null)
-                    return Json(new { success = false, error = "İhtar-Ürün kaydı bulunamadı" });
+                    return Json(new { success = false, error = "İhtar-Ürün kaydı bulunamadı." });
 
                 if (_icraService.IhtaraBagliIcraVarMi(ihtarurun.IHTAR_URUN_ID))
                 {
@@ -250,9 +250,11 @@ namespace Presentation.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, error = ex.Message });
+                // Hata mesajını modalda göstereceğiz
+                return Json(new { success = false, error = "Silme sırasında hata: " + ex.Message });
             }
         }
+
 
     }
 }

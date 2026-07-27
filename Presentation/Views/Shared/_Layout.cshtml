@@ -37,6 +37,9 @@
     @*checkbox kontrolü*@
     <script src="~/Scripts/checkbox.js"></script>
 
+    @Html.Partial("ErrorModal")
+
+
     @RenderSection("scripts", required: false)
 
     <div class="modal fade" id="successModal" tabindex="-1">
@@ -64,5 +67,7 @@
             </div>
         </div>
     </div>
+
+    <script src="~/Scripts/common.js"></script>
 </body>
 </html>
