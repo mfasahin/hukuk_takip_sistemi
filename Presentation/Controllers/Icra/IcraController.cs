@@ -179,7 +179,7 @@ namespace Presentation.Controllers
 
                 
                 //entity.SIL_TAR_ZMN = DateTime.Now;
-                _icraService.Update(entity);
+                _icraService.Delete(entity);
 
                 return Json(new { success = true });
             }

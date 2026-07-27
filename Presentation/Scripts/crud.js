@@ -35,7 +35,6 @@ function validateForm(formId, options) {
     $form.find(".is-invalid").removeClass("is-invalid");
     $form.find(".invalid-feedback").remove();
 
-    // tüm değerleri topla
     var allValues = {};
     $form.find("input, select, textarea").each(function () {
         var $input = $(this);
@@ -44,13 +43,12 @@ function validateForm(formId, options) {
         allValues[name] = $input.val();
     });
 
-    // bütün inputlar boş mu?
     var allEmpty = Object.keys(allValues).every(function (key) {
         return !allValues[key] || allValues[key].toString().trim() === "";
     });
+
     if (allEmpty) {
-        isValid = false;
-        $form.prepend('<div class="invalid-feedback d-block">Tüm alanlar boş bırakılamaz.</div>');
+        $form.prepend('<div class="invalid-feedback d-block alert alert-danger">Tüm alanlar boş bırakılamaz.</div>');
         return false;
     }
 
@@ -59,29 +57,17 @@ function validateForm(formId, options) {
         var name = $input.attr("name");
 
         if (!name || skipFields.indexOf(name) !== -1) return;
-        if ($input.prop("disabled")) return;
-        if ($input.attr("type") === "hidden") return;
+        if ($input.prop("disabled") || $input.attr("type") === "hidden") return;
 
         var value = $input.val();
         var errorMsg = null;
 
-        // alan bazlı zorunluluk
-        if (!value || value.toString().trim() === "") {
-            // özel iş kuralları
-            if (name === "MustSoyad" && (!allValues.MustVknNo || allValues.MustVknNo.trim() === "")) {
-                errorMsg = "Soyad boş olduğunda VKN No zorunludur.";
-            }
-            if (name === "MustVknNo" && (!allValues.MustSoyad || allValues.MustSoyad.trim() === "")) {
-                errorMsg = "Soyad boş olduğunda VKN No zorunludur.";
-            }
-            if (name === "MustKimlikNo" && allValues.MustSoyad && (!value || value.trim() === "")) {
-                errorMsg = "Soyad dolu olduğunda TC Kimlik No zorunludur.";
-            }
-            if (!errorMsg) {
-                errorMsg = "Bu alan zorunludur.";
-            }
-        } else if (customRules[name]) {
+        // Özel kural varsa tüm kontrol sorumluluğunu ona bırak
+        if (customRules[name] && typeof customRules[name] === "function") {
             errorMsg = customRules[name](value, allValues);
+        }
+        else if (!value || value.toString().trim() === "") {
+            errorMsg = "Bu alan zorunludur.";
         }
 
         if (errorMsg) {
@@ -93,6 +79,21 @@ function validateForm(formId, options) {
 
     return isValid;
 }
+
+// Otomatik Telefon Formatlama Maskesi (505 505 55 55)
+$(document).on('input', 'input[name="MustTelNo"], input[name="MUST_TEL_NO"]', function () {
+    let rawValue = $(this).val().replace(/\D/g, '');
+    if (rawValue.startsWith('0')) rawValue = rawValue.substring(1);
+    if (rawValue.length > 10) rawValue = rawValue.substring(0, 10);
+
+    let formatted = '';
+    if (rawValue.length > 0) formatted += rawValue.substring(0, 3);
+    if (rawValue.length > 3) formatted += ' ' + rawValue.substring(3, 6);
+    if (rawValue.length > 6) formatted += ' ' + rawValue.substring(6, 8);
+    if (rawValue.length > 8) formatted += ' ' + rawValue.substring(8, 10);
+
+    $(this).val(formatted);
+});
 
 function closeModalThenShowSuccess(modalId, message, onClose) {
     var modalEl = document.getElementById(modalId);

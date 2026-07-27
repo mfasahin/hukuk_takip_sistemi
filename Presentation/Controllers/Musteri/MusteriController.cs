@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
-//using Business.Validation;
+using Business.Validation;
 using Entity.Concrete;
+using FluentValidation;
 using Presentation.Filters;
 using Presentation.Models;
 using System;
@@ -44,15 +45,18 @@ namespace Presentation.Controllers
             return View(model);
         }
 
-        // EKLEME
         [HttpPost]
         public ActionResult Create(MusteriModel model)
         {
-            if (!ModelState.IsValid)
-                return Json(new { success = false, error = "ModelState geçersiz" });
+            // Model tamamen null geldiyse hemen hata dön
+            if (model == null)
+            {
+                return Json(new { success = false, message = "Gönderilen müşteri verisi boş olamaz." });
+            }
 
             try
             {
+                // 1. Müşteri Modelinden Entity Dönüşümü
                 var musteri = new Musteri
                 {
                     MUSTERI_ID = Guid.NewGuid(),
@@ -62,28 +66,43 @@ namespace Presentation.Controllers
                     MUST_KIMLIK_NO = model.MustKimlikNo,
                     MUST_VKN_NO = model.MustVknNo,
                     MUST_EPOSTA = model.MustEposta,
-                    MUST_TEL_NO = model.MustTelNo,
+                    MUST_TEL_NO = model.MustTelNo
                 };
 
-                // FluentValidation çağrısı
-                //var validator = new MusteriValidator();
-                //var result = validator.Validate(musteri);
+                // 2. Fluent Validation Çalıştırma
+                var validator = new MusteriValidator();
+                var result = validator.Validate(musteri);
 
-                //if (!result.IsValid)
-                //{
-                //    return Json(new
-                //    {
-                //        success = false,
-                //        errors = result.Errors.Select(e => new { field = e.PropertyName, message = e.ErrorMessage })
-                //    });
-                //}
+                if (!result.IsValid)
+                {
+                    // Hataları ön yüzde gösterilmek üzere HTML formatında birleştiriyoruz
+                    var errorList = result.Errors.Select(x => x.ErrorMessage).ToList();
+                    string errorMessage = string.Join("<br>", errorList);
 
+                    return Json(new { success = false, message = errorMessage });
+                }
+
+                // 3. Servis Katmanı Üzerinden Veritabanına Ekleme
                 _musteriService.Add(musteri);
-                return Json(new { success = true });
+
+                return Json(new { success = true, message = "Müşteri başarıyla eklendi." });
+            }
+            catch (ValidationException ex)
+            {
+                // FluentValidation Exception fırlatırsa yakala
+                var errorList = ex.Errors.Select(e => e.ErrorMessage).ToList();
+                string errorMessage = string.Join("<br>", errorList);
+
+                return Json(new { success = false, message = errorMessage });
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, error = ex.Message });
+                // Veritabanı veya sunucu taraflı genel hataları yakala
+                return Json(new
+                {
+                    success = false,
+                    message = "Veritabanına kayıtsı sırasında bir hata oluştu: " + (ex.InnerException?.Message ?? ex.Message)
+                });
             }
         }
 
@@ -160,54 +179,6 @@ namespace Presentation.Controllers
 
                 _musteriService.Delete(musteri);
                 return Json(new { success = true });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, error = ex.Message });
-            }
-        }
-
-        [HttpPost]
-        public ActionResult DeleteSelected(Guid[] ids)
-        {
-            if (ids == null || ids.Length == 0)
-                return Json(new { success = false, error = "Seçim yapılmadı" });
-
-            try
-            {
-                var silinenler = new List<Guid>();
-                var engellenenler = new List<string>();
-
-                foreach (var id in ids)
-                {
-                    var musteri = _musteriService.GetById(id);
-                    if (musteri == null)
-                        continue;
-
-                    // Bağımlılık kontrolü - ihtara bağlıysa silme
-                    if (_ihtarService.MusteriyeBagliIhtarVarMi(id))
-                    {
-                        engellenenler.Add(musteri.MUST_AD + " " + musteri.MUST_SOYAD);
-                        continue;
-                    }
-
-                    musteri.SIL_TAR_ZMN = DateTime.Now;
-                    _musteriService.Update(musteri);   // Delete DEĞİL - soft delete
-                    silinenler.Add(id);
-                }
-
-                if (engellenenler.Count > 0)
-                {
-                    return Json(new
-                    {
-                        success = silinenler.Count > 0,   // en az biri silindiyse kısmi başarı
-                        error = engellenenler.Count + " müşteri, bağlı ihtar kaydı bulunduğu için silinemedi: "
-                                + string.Join(", ", engellenenler),
-                        deletedCount = silinenler.Count
-                    });
-                }
-
-                return Json(new { success = true, deletedCount = silinenler.Count });
             }
             catch (Exception ex)
             {

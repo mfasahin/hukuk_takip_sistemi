@@ -68,89 +68,96 @@
 @Html.Partial("_MusteriModals", new Presentation.Models.MusteriModel())
 
 @section Scripts {
-    <script src="~/Scripts/crud.js"></script>
+    <script src="~/Scripts/crud.js?v=1.1"></script>
     <script>
-        initCrud("Musteri", ["MusteriId", "MustNo", "MustAd", "MustSoyad", "MustKimlikNo", "MustVknNo", "MustEposta", "MustTelNo"], {
-            validationRules: {
-                "MustNo": function (value) {
-                    if (!/^[0-9]+$/.test(value)) return "Müşteri numarası sadece rakamlardan oluşmalıdır.";
-                    if (parseInt(value) <= 0) return "Müşteri numarası 0'dan büyük olmalıdır.";
-                    return null;
-                },
-                "MustAd": function (value) {
-                    if (!/^[a-zA-ZğüşöçıİĞÜŞÖÇ]+$/.test(value)) return "Müşteri Adı sadece harflerden oluşmalıdır.";
-                    return null;
-                },
-                "MustSoyad": function (value, allValues) {
-                    if (value && !/^[a-zA-ZğüşöçıİĞÜŞÖÇ]+$/.test(value)) {
-                        return "Müşteri Soyadı sadece harflerden oluşmalıdır.";
+        $(document).ready(function () {
+
+            var musteriOptions = {
+                validationRules: {
+                    "MustNo": function (value) {
+                        if (!value || !/^[0-9]+$/.test(value)) return "Müşteri numarası sadece rakamlardan oluşmalıdır.";
+                        if (parseInt(value) <= 0) return "Müşteri numarası 0'dan büyük olmalıdır.";
+                        return null;
+                    },
+                    "MustAd": function (value) {
+                        if (!value || !/^[a-zA-ZğüşöçıİĞÜŞÖÇ\s]+$/.test(value)) return "Müşteri adı sadece harflerden oluşmalıdır.";
+                        return null;
+                    },
+                    "MustSoyad": function (value) {
+                        if (value && !/^[a-zA-ZğüşöçıİĞÜŞÖÇ\s]+$/.test(value)) {
+                            return "Müşteri soyadı sadece harflerden oluşmalıdır.";
+                        }
+                        return null;
+                    },
+                    "MustKimlikNo": function (value, allValues) {
+                        var soyadDolu = allValues.MustSoyad && allValues.MustSoyad.trim() !== "";
+                        var tcDolu = value && value.trim() !== "";
+
+                        if (soyadDolu && !tcDolu) return "Soyad girildiğinde TC Kimlik No zorunludur.";
+                        if (!soyadDolu && tcDolu) return "Soyad girilmediğinde TC Kimlik No boş bırakılmalıdır.";
+
+                        if (tcDolu) {
+                            if (!/^[0-9]+$/.test(value)) return "TC Kimlik No sadece rakamlardan oluşmalıdır.";
+                            if (value.length !== 11) return "TC Kimlik No 11 haneli olmalıdır.";
+                        }
+                        return null;
+                    },
+                    "MustVknNo": function (value, allValues) {
+                        var soyadDolu = allValues.MustSoyad && allValues.MustSoyad.trim() !== "";
+                        var vknDolu = value && value.trim() !== "";
+
+                        if (!soyadDolu && !vknDolu) return "Soyad girilmediğinde Vergi Kimlik No zorunludur.";
+                        if (soyadDolu && vknDolu) return "Soyad girildiğinde Vergi Kimlik No boş bırakılmalıdır.";
+
+                        if (vknDolu) {
+                            if (!/^[0-9]+$/.test(value)) return "Vergi Kimlik No sadece rakamlardan oluşmalıdır.";
+                            if (value.length !== 10) return "Vergi Kimlik No 10 haneli olmalıdır.";
+                        }
+                        return null;
+                    },
+                    "MustEposta": function (value) {
+                        if (!value || value.trim() === "") return "E-posta adresi boş geçilemez.";
+                        var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+                        if (!emailRegex.test(value)) return "Geçerli bir e-posta adresi giriniz.";
+                        return null;
+                    },
+                    "MustTelNo": function (value) {
+                        if (!value || value.trim() === "") return "Telefon numarası boş bırakılamaz.";
+                        if (value.length !== 13) return "Telefon numarası 5XX XXX XX XX formatında 10 haneli olmalıdır.";
+                        return null;
                     }
-                    // Soyad doluysa TC Kimlik zorunlu
-                    if (value && (!allValues.MustKimlikNo || allValues.MustKimlikNo.trim() === "")) {
-                        return "Soyad dolu olduğunda TC Kimlik No zorunludur.";
-                    }
-                    // Soyad boşsa VKN zorunlu
-                    if (!value && (!allValues.MustVknNo || allValues.MustVknNo.trim() === "")) {
-                        return "Soyad boş olduğunda VKN No zorunludur.";
-                    }
-                    return null;
-                },
-                "MustKimlikNo": function (value, allValues) {
-                    // Soyad doluysa TC Kimlik zorunlu
-                    if (allValues.MustSoyad && (!value || value.trim() === "")) {
-                        return "TC Kimlik Numarası zorunludur.";
-                    }
-                    return null;
-                },
-                "MustVknNo": function (value, allValues) {
-                    // Soyad boşsa VKN zorunlu
-                    if (!allValues.MustSoyad && (!value || value.trim() === "")) {
-                        return "Soyad boş olduğunda VKN No zorunludur.";
-                    }
-                    // Soyad ve TC dolu ise VKN opsiyonel → hata dönme
-                    return null;
                 }
-            }
+            };
+
+            window.crudOptions = musteriOptions;
+
+            initCrud("Musteri", ["MusteriId", "MustNo", "MustAd", "MustSoyad", "MustKimlikNo", "MustVknNo", "MustEposta", "MustTelNo"], musteriOptions);
+
+            // Form Submit (AJAX)
+            $('#musteriForm').on('submit', function (e) {
+                e.preventDefault();
+
+                if (typeof validateForm === "function" && !validateForm("musteriForm", window.crudOptions)) {
+                    return false;
+                }
+
+                $.ajax({
+                    url: '/Musteri/Ekle',
+                    type: 'POST',
+                    data: $('#musteriForm').serialize(),
+                    success: function (response) {
+                        if (response && response.success === true) {
+                            location.reload();
+                        } else {
+                            showErrorModal(response.message || "İşlem başarısız.");
+                        }
+                    },
+                    error: function () {
+                        showErrorModal("Sunucuyla bağlantı kurulurken beklenmeyen bir hata oluştu.");
+                    }
+                });
+            });
+
         });
-
-
-
-        // $("#selectAll").on("change", function () {
-        //     $(".rowCheckbox").prop("checked", $(this).prop("checked"));
-        // });
-
-        // $("#deleteSelectedBtn").on("click", function () {
-        //     var selectedIds = $(".rowCheckbox:checked").map(function () {
-        //         return $(this).val();
-        //     }).get();
-
-        //     if (selectedIds.length === 0) {
-        //         alert("Lütfen silmek için en az bir müşteri seçin.");
-        //         return;
-        //     }
-
-        //     if (!confirm(selectedIds.length + " kaydı silmek istediğinize emin misiniz?")) {
-        //         return;
-        //     }
-
-        //     $.ajax({
-        //         url: "/Musteri/DeleteSelected",
-        //         type: "POST",
-        //         traditional: true,
-        //         data: {
-        //             ids: selectedIds,
-        //             __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-        //         },
-        //         success: function (result) {
-        //             if (result.success) {
-        //                 showSuccessModal("Seçilen kayıtlar silindi.", function () {
-        //                     location.reload();
-        //                 });
-        //             } else {
-        //                 alert("Silme işlemi başarısız.");
-        //             }
-        //         }
-        //     });
-        // });
     </script>
 }

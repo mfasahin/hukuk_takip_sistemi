@@ -1,5 +1,7 @@
 ﻿function showErrorModal(message) {
-    document.getElementById("errorMessage").textContent = message;
+    // textContent yerine innerHTML kullanarak gelen <br> etiketlerini çalıştırıyoruz
+    document.getElementById("errorMessage").innerHTML = message;
+
     var modal = new bootstrap.Modal(document.getElementById("errorModal"));
     modal.show();
 }

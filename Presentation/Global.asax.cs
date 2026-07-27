@@ -1,3 +1,4 @@
+using FluentValidation;
 using Presentation.App_Start;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -17,6 +18,9 @@ namespace Presentation
             // IoC Container başlat
             DependencyResolverConfig.RegisterDependencies();
             UnityConfig.RegisterComponents();
+
+            // FluentValidation entegrasyonu
+            FluentValidation.Mvc.FluentValidationModelValidatorProvider.Configure();
 
         }
     }

@@ -12,6 +12,6 @@ namespace Business.Abstract
         void Update(Musteri musteri);
         void Delete(Musteri musteri);
         Musteri GetById(Guid id);
-        //ValidationResult Validate(Musteri musteri);
+        ValidationResult Validate(Musteri musteri);
     }
 }

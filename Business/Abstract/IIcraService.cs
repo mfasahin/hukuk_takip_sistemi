@@ -11,6 +11,7 @@ namespace Business.Abstract
         Icra GetById(Guid id);
         void Add(Icra icra);
         void Update(Icra icra);
+        void Delete(Icra icra);
         List<IcraDto> GetIcraDto();
         IcraDto GetByIdIcra(Guid id);
         List<UrunDto> GetUrunlerByMusteri(Guid musteriId);
