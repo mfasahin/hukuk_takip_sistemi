@@ -212,36 +212,39 @@ namespace Presentation.Controllers
             }
         }
 
-        // SİLME (soft delete) 
         [HttpPost]
         public ActionResult Delete(Guid id)
         {
             try
             {
-                //var ihtar = /*_ihtarService*/.GetById(id);
+                var ihtar = _ihtarService.GetById(id);
+                if (ihtar == null)
+                    return Json(new { success = false, error = "Kayıt bulunamadı" });
+
                 var ihtarurun = _ihtarUrunService.GetByIhtarIdTekli(id);
                 if (ihtarurun == null)
-                    return Json(new { success = false, error = "Kayıt bulunamadı" });
+                    return Json(new { success = false, error = "İhtar-Ürün kaydı bulunamadı" });
 
                 if (_icraService.IhtaraBagliIcraVarMi(ihtarurun.IHTAR_URUN_ID))
                 {
                     return Json(new
                     {
                         success = false,
-                        error = "Bu müşteriye bağlı ihtar kaydı bulunduğu için silinemez."
+                        error = "Bu ihtara bağlı icra kaydı bulunduğu için silinemez."
                     });
                 }
 
-                // Önce bu ihtara bağlı tüm IhtarUrun kayıtlarını soft delete yap
+                // Önce ihtara bağlı tüm IhtarUrun kayıtlarını soft delete yap
                 var bagliUrunler = _ihtarUrunService.GetByIhtarId(id);
-                foreach (var ihtarUrun2 in bagliUrunler)
+                foreach (var iu in bagliUrunler)
                 {
-                    //ihtarUrun.SIL_TAR_ZMN = DateTime.Now;
-                    _ihtarUrunService.Delete(ihtarUrun2);
+                    iu.SIL_TAR_ZMN = DateTime.Now;
+                    _ihtarUrunService.Delete(iu);
                 }
 
-                //ihtar.SIL_TAR_ZMN = DateTime.Now;
-                _ihtarUrunService.Delete(ihtarurun);
+                // İhtar kaydını soft delete yap
+                ihtar.SIL_TAR_ZMN = DateTime.Now;
+                _ihtarService.Delete(ihtar);
 
                 return Json(new { success = true });
             }
@@ -250,5 +253,6 @@ namespace Presentation.Controllers
                 return Json(new { success = false, error = ex.Message });
             }
         }
+
     }
 }
