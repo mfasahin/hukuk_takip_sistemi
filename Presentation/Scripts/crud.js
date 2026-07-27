@@ -35,21 +35,53 @@ function validateForm(formId, options) {
     $form.find(".is-invalid").removeClass("is-invalid");
     $form.find(".invalid-feedback").remove();
 
+    // tüm değerleri topla
+    var allValues = {};
+    $form.find("input, select, textarea").each(function () {
+        var $input = $(this);
+        var name = $input.attr("name");
+        if (!name) return;
+        allValues[name] = $input.val();
+    });
+
+    // bütün inputlar boş mu?
+    var allEmpty = Object.keys(allValues).every(function (key) {
+        return !allValues[key] || allValues[key].toString().trim() === "";
+    });
+    if (allEmpty) {
+        isValid = false;
+        $form.prepend('<div class="invalid-feedback d-block">Tüm alanlar boş bırakılamaz.</div>');
+        return false;
+    }
+
     $form.find("input, select, textarea").each(function () {
         var $input = $(this);
         var name = $input.attr("name");
 
         if (!name || skipFields.indexOf(name) !== -1) return;
         if ($input.prop("disabled")) return;
-        if ($input.attr("type") === "hidden") return;   // <-- eklendi: gizli alanlar kontrol dışı
+        if ($input.attr("type") === "hidden") return;
 
         var value = $input.val();
         var errorMsg = null;
 
+        // alan bazlı zorunluluk
         if (!value || value.toString().trim() === "") {
-            errorMsg = "Bu alan zorunludur.";
+            // özel iş kuralları
+            if (name === "MustSoyad" && (!allValues.MustVknNo || allValues.MustVknNo.trim() === "")) {
+                errorMsg = "Soyad boş olduğunda VKN No zorunludur.";
+            }
+            if (name === "MustVknNo" && (!allValues.MustSoyad || allValues.MustSoyad.trim() === "")) {
+                errorMsg = "Soyad boş olduğunda VKN No zorunludur.";
+            }
+            if (name === "MustKimlikNo" && allValues.MustSoyad && (!value || value.trim() === "")) {
+                errorMsg = "Soyad dolu olduğunda TC Kimlik No zorunludur.";
+            }
+            if (!errorMsg) {
+                errorMsg = "Bu alan zorunludur.";
+            }
         } else if (customRules[name]) {
-            errorMsg = customRules[name](value, $form);
+            errorMsg = customRules[name](value, allValues);
         }
 
         if (errorMsg) {
@@ -62,9 +94,6 @@ function validateForm(formId, options) {
     return isValid;
 }
 
-// Bir modalı kapatır, kapanış animasyonu TAMAMEN bittikten sonra
-// (hidden.bs.modal event'i ile) başarı modalını açar. Bu, iki modalın
-// backdrop/animasyonunun çakışmasını önler.
 function closeModalThenShowSuccess(modalId, message, onClose) {
     var modalEl = document.getElementById(modalId);
     var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
@@ -229,7 +258,6 @@ function initCrud(entityName, fields, options) {
                 .fail(function (xhr) { showError("Güncelleme sırasında hata", xhr); });
         });
 
-    // DELETE
     // DELETE
     $(document).off("click" + ns, ".deleteBtn")
         .on("click" + ns, ".deleteBtn", function () {

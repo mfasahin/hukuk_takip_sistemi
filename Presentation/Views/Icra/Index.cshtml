@@ -24,7 +24,6 @@
             <th>Mahkeme</th>
             <th>İcra Dosya Numarası</th>
             <th>Avukat</th>
-            <th>İşlem</th>
         </tr>
     </thead>
     <tbody>
@@ -40,8 +39,18 @@
                 <td>@icra.IcraDosyaNo</td>
                 <td>@icra.AvukatAd @icra.AvukatSoyad</td>
                 <td>
-                    <button class="btn btn-sm btn-warning updateBtn" data-id="@icra.IcraId">Güncelle</button>
-                    <button class="btn btn-sm btn-danger deleteBtn" data-id="@icra.IcraId">Sil</button>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item text-danger updateBtn" data-id="@icra.IcraId">Güncelle</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item text-danger deleteBtn" data-id="@icra.IcraId">Sil</a>
+                            </li>
+                        </ul>
+                    </div>
                 </td>
             </tr>
         }
@@ -54,7 +63,7 @@
     <script src="~/Scripts/crud.js"></script>
     <script>
         // Ürün dropdown'ını doldurur (1. kademe sonucu)
-        function loadUrunOptions(musteriId, prefix, callback) {
+        function loadUrunOptions(musteriId, prefix, url, callback) {
             var $urunSelect = $("#" + prefix + "UrunSelect");
             var $ihtarSelect = $("#" + prefix + "IhtarUrunSelect");
 
@@ -67,7 +76,7 @@
                 return;
             }
 
-            $.get('/Icra/GetUrunlerByMusteri', { musteriId: musteriId })
+            $.get(url, { musteriId: musteriId })
                 .done(function (list) {
                     $urunSelect.append('<option value="">Seçiniz</option>');
                     list.forEach(function (item) {
@@ -79,7 +88,7 @@
         }
 
         // İhtar dropdown'ını doldurur (2. kademe sonucu)
-        function loadIhtarOptions(musteriId, urunId, prefix, callback) {
+        function loadIhtarOptions(musteriId, urunId, prefix, url, callback) {
             var $ihtarSelect = $("#" + prefix + "IhtarUrunSelect");
             $ihtarSelect.empty();
 
@@ -89,7 +98,7 @@
                 return;
             }
 
-            $.get('/Icra/GetIhtarlarByMusteriVeUrun', { musteriId: musteriId, urunId: urunId })
+            $.get(url, { musteriId: musteriId, urunId: urunId })
                 .done(function (list) {
                     $ihtarSelect.append('<option value="">Seçiniz</option>');
                     list.forEach(function (item) {
@@ -102,20 +111,20 @@
 
         // CREATE MODAL kademeleri
         $(document).on("change", "#createMusteriSelect", function () {
-            loadUrunOptions($(this).val(), "create");
+            loadUrunOptions($(this).val(), "create", "/Icra/GetUrunlerByMusteri");
         });
         $(document).on("change", "#createUrunSelect", function () {
             var musteriId = $("#createMusteriSelect").val();
-            loadIhtarOptions(musteriId, $(this).val(), "create");
+            loadIhtarOptions(musteriId, $(this).val(), "create", "/Icra/GetIhtarlarByMusteriVeUrun");
         });
 
         // UPDATE MODAL kademeleri
         $(document).on("change", "#updateMusteriSelect", function () {
-            loadUrunOptions($(this).val(), "update");
+            loadUrunOptions($(this).val(), "update", "/Icra/GetUrunlerByMusteri");
         });
         $(document).on("change", "#updateUrunSelect", function () {
             var musteriId = $("#updateMusteriSelect").val();
-            loadIhtarOptions(musteriId, $(this).val(), "update");
+            loadIhtarOptions(musteriId, $(this).val(), "update", "/Icra/GetIhtarlarByMusteriVeUrun");
         });
 
         // Create modal her açıldığında sıfırla
@@ -127,16 +136,24 @@
 
         initCrud("Icra", ["IcraId", "MahkemeId", "IcraDosyaNo", "IcraTakipTar"], {
             onGetSuccess: function (data) {
-                // 1. Kademe: Müşteriyi seç, ürün listesini yükle
+                // Zincire başlamadan önce, önceki güncellemeden kalan disabled durumunu aç
+                $("#updateMusteriSelect").prop("disabled", false);
+                $("#updateUrunSelect").prop("disabled", false);
+                $("#updateIhtarUrunSelect").prop("disabled", false);
+
                 $("#updateMusteriSelect").val(data.MusteriId);
 
-                loadUrunOptions(data.MusteriId, "update", function () {
-                    // 2. Kademe: Ürünü seç, ihtar listesini yükle
+                loadUrunOptions(data.MusteriId, "update", "/Icra/GetUrunlerByMusteri", function () {
                     $("#updateUrunSelect").val(data.UrunId);
 
-                    loadIhtarOptions(data.MusteriId, data.UrunId, "update", function () {
-                        // 3. Kademe: Doğru ihtar kaydını seç
+                    loadIhtarOptions(data.MusteriId, data.UrunId, "update", "/Icra/GetIhtarlarByMusteriVeUrun", function () {
                         $("#updateIhtarUrunSelect").val(data.IhtarUrunId);
+                        $("#updateIhtarUrunIdHidden").val(data.IhtarUrunId);
+
+                        // Zincir tamamlandı, artık üçünü de disable et
+                        $("#updateMusteriSelect").prop("disabled", true);
+                        $("#updateUrunSelect").prop("disabled", true);
+                        $("#updateIhtarUrunSelect").prop("disabled", true);
                     });
                 });
             }

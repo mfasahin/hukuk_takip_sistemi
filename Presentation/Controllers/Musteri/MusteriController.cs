@@ -159,7 +159,6 @@ namespace Presentation.Controllers
                 }
 
                 _musteriService.Delete(musteri);
-
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -215,6 +214,5 @@ namespace Presentation.Controllers
                 return Json(new { success = false, error = ex.Message });
             }
         }
-
     }
 }

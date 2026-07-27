@@ -6,17 +6,16 @@
 <h2>Ürünler</h2>
 
 <!-- Ürün Ekle Butonu -->
-<tr>
-    <td colspan="6">
-        <div style="display:flex; justify-content:flex-end;">
-            <button type="button" class="btn btn-success"
-                    data-bs-toggle="modal"
-                    data-bs-target="#createModal">
-                Ürün Ekle
-            </button>
-        </div>
-    </td>
-</tr>
+<div style="display:flex; justify-content:flex-end; gap:10px; margin-bottom:10px;">
+    <button type="button" class="btn btn-danger" id="deleteSelectedBtn">
+        Seçilenleri Sil
+    </button>
+    <button type="button" class="btn btn-success"
+            data-bs-toggle="modal"
+            data-bs-target="#createModal">
+        Ürün Ekle
+    </button>
+</div>
 
 <table class="table">
     <thead>
@@ -28,7 +27,6 @@
             <th>Ürün Adı</th>
             <th>Ürün Kodu</th>
             <th>Ürün Son Geçerlilik Tarihi</th>
-            <th>İşlem</th>
         </tr>
     </thead>
     <tbody>
@@ -64,11 +62,42 @@
     </tbody>
 </table>
 
-@Html.Partial("_urunModals")
+@Html.Partial("_UrunModals", new Presentation.Models.UrunModel())
 
 @section Scripts {
     <script src="~/Scripts/crud.js"></script>
     <script>
-        initCrud("Urun", ["UrunId", "UrunAd", "UrunKod", "SonGecerlilikTar"]);
+        initCrud("Urun", ["UrunId", "UrunAd", "UrunKod", "SonGecerlilikTar"], {
+            validationRules: {
+                "UrunAd": function (value) {
+                    if (!/^[a-zA-ZğüşöçıİĞÜŞÖÇ]+$/.test(value)) return "Ürün Adı sadece harflerden oluşmalıdır.";
+                    return null;
+                },
+                "UrunKod": function (value) {
+                    if (!/^[a-zA-ZğüşöçıİĞÜŞÖÇ]+$/.test(value)) return "Ürün Kodu sadece harflerden oluşmalıdır.";
+                    return null;
+                },
+                "SonGecerlilikTar": function (value, allValues) {
+                    if (!value || value.trim() === "") {
+                        return "Son geçerlilik tarihi zorunludur.";
+                    }
+
+                    // Geçerli tarih formatı mu?
+                    var date = new Date(value);
+                    if (isNaN(date.getTime())) {
+                        return "Geçerli bir tarih giriniz.";
+                    }
+
+                    // Geçerlilik tarihi geçmiş olamaz (bugünden küçükse hata)
+                    var today = new Date();
+                    today.setHours(0, 0, 0, 0); // sadece gün karşılaştırması için
+                    if (date < today) {
+                        return "Son geçerlilik tarihi geçmiş olamaz.";
+                    }
+
+                    return null;
+                }
+            }
+        });
     </script>
 }
