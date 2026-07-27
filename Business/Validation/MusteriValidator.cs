@@ -1,5 +1,6 @@
 ﻿using Entity.Concrete;
 using FluentValidation;
+using System.Linq;
 
 namespace Business.Validation
 {
@@ -44,12 +45,34 @@ namespace Business.Validation
                 RuleFor(m => m.MUST_VKN_NO)
                     .NotEmpty().WithMessage("Soyad girilmediğinde Vergi Kimlik Numarası zorunludur.")
                     .Length(10).WithMessage("Vergi Kimlik Numarası 10 haneli olmalıdır.")
-                    .Matches(@"^[0-9]+$").WithMessage("Vergi Kimlik Numarası sadece rakamlardan oluşmalıdır.");
+                    .Matches(@"^[0-9]+$").WithMessage("Vergi Kimlik Numarası sadece rakamlardan oluşmalıdır.")
+                // YENİ KURAL: İlk 10 rakamın toplamının birler basamağı 11. rakama eşit olmalı
+                    .Must(GecerliTcKimlikAlgoritmasi).WithMessage("Girdiğiniz TC Kimlik Numarası geçersizdir.");
 
                 // TC Kimlik No boş kalmalı
                 RuleFor(m => m.MUST_KIMLIK_NO)
                     .Empty().WithMessage("Soyad girilmediğinde TC Kimlik No boş bırakılmalıdır.");
             });
+        }
+
+        // TC Kimlik Algoritması Kontrolü
+        private bool GecerliTcKimlikAlgoritmasi(string tcNo)
+        {
+            if (string.IsNullOrWhiteSpace(tcNo) || tcNo.Length != 11 || !tcNo.All(char.IsDigit))
+                return false;
+
+            // İlk 10 rakamın toplamını hesapla
+            int toplam = 0;
+            for (int i = 0; i < 10; i++)
+            {
+                toplam += int.Parse(tcNo[i].ToString());
+            }
+
+            // 11. rakam
+            int sonRakam = int.Parse(tcNo[10].ToString());
+
+            // Toplamın birler basamağı (toplam % 10) 11. rakama eşit mi?
+            return (toplam % 10) == sonRakam;
         }
     }
 }

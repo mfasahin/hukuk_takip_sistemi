@@ -99,6 +99,17 @@
                         if (tcDolu) {
                             if (!/^[0-9]+$/.test(value)) return "TC Kimlik No sadece rakamlardan oluşmalıdır.";
                             if (value.length !== 11) return "TC Kimlik No 11 haneli olmalıdır.";
+
+                            // YENİ KURAL: İlk 10 rakamın toplamının birler basamağı kontrolü
+                            var toplam = 0;
+                            for (var i = 0; i < 10; i++) {
+                                toplam += parseInt(value[i]);
+                            }
+                            var sonRakam = parseInt(value[10]);
+
+                            if ((toplam % 10) !== sonRakam) {
+                                return "Girdiğiniz TC Kimlik Numarası geçersizdir.";
+                            }
                         }
                         return null;
                     },
