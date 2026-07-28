@@ -12,7 +12,7 @@ namespace Business.Abstract
         Icra GetById(Guid id);
         IcraDto GetByIdIcra(Guid id);
         List<IcraDto> GetIcraDto();
-
+        List<MusteriDto> GetIhtariOlanMusteriler();
         void Add(IcraDto icraDto);
         void Update(IcraDto icraDto);
         void Delete(Guid id);

@@ -98,6 +98,7 @@
     <Compile Include="Dto\Icra\IcraDto.cs" />
     <Compile Include="Dto\Ihtar\IhtarDto.cs" />
     <Compile Include="Dto\IhtarUrun\IhtarUrunDto.cs" />
+    <Compile Include="Dto\Musteri\MusteriDto.cs" />
     <Compile Include="Dto\Urun\UrunDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

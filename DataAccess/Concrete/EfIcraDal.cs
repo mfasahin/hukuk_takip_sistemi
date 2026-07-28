@@ -57,6 +57,24 @@ namespace DataAccess.Concrete
             }
         }
 
+        public List<MusteriDto> GetIhtariOlanMusteriler()
+        {
+            using (var context = new AppDbContext())
+            {
+                return (from musteri in context.MUSTERI
+                        join ihtar in context.IHTAR on musteri.MUSTERI_ID equals ihtar.MUSTERI_ID
+                        where musteri.SIL_TAR_ZMN == null && ihtar.SIL_TAR_ZMN == null
+                        select new MusteriDto
+                        {
+                            MusteriId = musteri.MUSTERI_ID,
+                            MustAd = musteri.MUST_AD,
+                            MustSoyad = musteri.MUST_SOYAD
+                        })
+                        .Distinct()
+                        .ToList();
+            }
+        }
+
         // isForUpdate = false eklendi
         // 1. Kademe: Seçilen Müşteriye ait İhtar çekilmiş Ürünlerin getirilmesi
         // 1. Kademe: Seçilen Müşteriye ait İhtar çekilmiş Ürünlerin getirilmesi

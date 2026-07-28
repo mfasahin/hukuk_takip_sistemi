@@ -35,12 +35,11 @@ namespace Presentation.Controllers
         {
             var model = _icraService.GetIcraDto();
 
-            ViewBag.MusteriList = _musteriService.GetAll()
-                .Where(m => m.SIL_TAR_ZMN == null)
+            ViewBag.MusteriList = _icraService.GetIhtariOlanMusteriler()
                 .Select(m => new SelectListItem
                 {
-                    Value = m.MUSTERI_ID.ToString(),
-                    Text = m.MUST_AD + " " + m.MUST_SOYAD
+                    Value = m.MusteriId.ToString(),
+                    Text = m.MustAd + " " + m.MustSoyad
                 }).ToList();
 
             ViewBag.AvukatList = _avukatService.GetAll()

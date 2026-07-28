@@ -18,7 +18,7 @@ namespace Presentation.Controllers
         public ActionResult Login()
         {
             if (Session["KullaniciId"] != null)
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Musteri");
 
             return View();
         }
@@ -44,14 +44,14 @@ namespace Presentation.Controllers
             Session["KullaniciId"] = kullanici.KULLANICI_ID;
             Session["KullaniciAd"] = kullanici.KULLANICI_AD;
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Musteri");
         }
 
         [HttpGet]
         public ActionResult Register()
         {
             if (Session["KullaniciId"] != null)
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Musteri");
 
             return View();
         }

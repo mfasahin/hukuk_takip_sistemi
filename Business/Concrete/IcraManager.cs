@@ -40,6 +40,11 @@ namespace Business.Concrete
             return _icraDal.GetIcraDto();
         }
 
+        public List<MusteriDto> GetIhtariOlanMusteriler()
+        {
+            return _icraDal.GetIhtariOlanMusteriler();
+        }
+
         public void Add(IcraDto icraDto)
         {
             // 1. FluentValidation Doğrulaması
