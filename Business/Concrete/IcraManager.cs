@@ -111,9 +111,8 @@ namespace Business.Concrete
             var icra = _icraDal.Get(i => i.ICRA_ID == id);
             if (icra != null)
             {
-                // Soft Delete yapısı
-                icra.SIL_TAR_ZMN = DateTime.Now;
-                _icraDal.Update(icra);
+                
+                _icraDal.Delete(icra);
             }
         }
 

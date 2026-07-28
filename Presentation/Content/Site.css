@@ -182,3 +182,26 @@ input, select, textarea {
 .modal-body select.form-select:focus {
     max-height: 200px;
 }
+
+/* Tüm input type="date" alanlarında Türkçe placeholder gösterimi */
+input[type="date"] {
+    position: relative;
+}
+
+    /* Tarih boşken tarayıcının varsayılan 'mm/dd/yyyy' metnini gizle ve Türkçe bas */
+    input[type="date"]:invalid::-webkit-datetime-edit-text,
+    input[type="date"]:invalid::-webkit-datetime-edit-month-field,
+    input[type="date"]:invalid::-webkit-datetime-edit-day-field,
+    input[type="date"]:invalid::-webkit-datetime-edit-year-field {
+        color: transparent;
+    }
+
+    input[type="date"]:invalid::before {
+        content: "gg.aa.yyyy";
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        pointer-events: none;
+    }

@@ -96,6 +96,9 @@
 
     <script>
         $(document).ready(function () {
+            $(document).on("focus", 'input[type="date"]', function () {
+                $(this).attr("placeholder", "gg.aa.yyyy");
+            });
             // Ürün tablosu için özelleştirilmiş sayfalama ve arama fonksiyonu
             initTablePagination("urunTable", "urunPageSize", "urunPaginationNav", "urunTableInfo");
 

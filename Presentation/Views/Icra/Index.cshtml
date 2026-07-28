@@ -175,6 +175,11 @@
         }
 
         $(document).ready(function () {
+
+            $(document).on("focus", 'input[type="date"]', function () {
+                $(this).attr("placeholder", "gg.aa.yyyy");
+            });
+
             // İcra tablosu sayfalama ve arama filtreleme başlatma
             if (typeof initIcraTablePagination === "function") {
                 initIcraTablePagination("icraTable", "icraPageSize", "icraPaginationNav", "icraTableInfo");

@@ -68,9 +68,8 @@ namespace Business.Concrete
 
         public void Delete(Avukat avukat)
         {
-            // Fiziksel silme yerine Soft Delete (Silindi tarihi ekleyerek güncelleme)
-            avukat.SIL_TAR_ZMN = DateTime.Now;
-            _avukatDal.Update(avukat);
+            
+            _avukatDal.Delete(avukat);
         }
 
         public Avukat GetById(Guid id)

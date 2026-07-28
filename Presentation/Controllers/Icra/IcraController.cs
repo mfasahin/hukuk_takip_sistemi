@@ -56,8 +56,14 @@ namespace Presentation.Controllers
                 {
                     Value = m.MAHKEME_ID.ToString(),
                     Text = m.MAHKEME_AD
-                }).ToList();
 
+                }).ToList();
+            ViewBag.IhtarUrunList = _icraService.GetIcraDto()
+                .Select(x => new SelectListItem
+                {
+                    Value = x.IhtarUrunId.ToString(),
+                    Text = x.MusteriAd + " - " + x.UrunAd + " - " + x.IhtarTarih.ToString("dd.MM.yyyy")
+                }).ToList();
             return View(model);
         }
 
@@ -79,7 +85,8 @@ namespace Presentation.Controllers
                 .Select(x => new
                 {
                     value = x.IhtarUrunId,
-                    text = x.IhtarTarih.ToString("dd.MM.yyyy") + " - Borç: " + x.BorcTutar
+                    // Tarihi dd.MM.yyyy (Gün.Ay.Yıl) formatına zorluyoruz
+                    text = x.IhtarTarih.ToString("dd.MM.yyyy") + " - Borç: " + x.BorcTutar.ToString("N2") + " TL"
                 });
 
             return Json(list, JsonRequestBehavior.AllowGet);

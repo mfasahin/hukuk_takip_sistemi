@@ -105,6 +105,9 @@
 
     <script>
         $(document).ready(function () {
+            $(document).on("focus", 'input[type="date"]', function () {
+                $(this).attr("placeholder", "gg.aa.yyyy");
+            });
             // İhtar tablosu için özelleştirilmiş sayfalama ve filtreleme
             initIhtarTablePagination("ihtarTable", "ihtarPageSize", "ihtarPaginationNav", "ihtarTableInfo");
 
