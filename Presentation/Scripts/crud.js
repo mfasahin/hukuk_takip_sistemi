@@ -16,7 +16,7 @@
         .addClass("field-validation-valid");
     $form.find(".input-validation-error").removeClass("input-validation-error");
 
-    // Doğrulama hata işaretlerini de temizle
+    // Doğrulama hata işaretlerini temizle
     $form.find(".is-invalid").removeClass("is-invalid");
     $form.find(".invalid-feedback").remove();
 
@@ -32,44 +32,61 @@ function validateForm(formId, options) {
     var $form = $("#" + formId);
     var isValid = true;
 
+    // Önceki hata mesajlarını ve kırmızı kenarlıkları temizle
     $form.find(".is-invalid").removeClass("is-invalid");
     $form.find(".invalid-feedback").remove();
 
     var allValues = {};
     $form.find("input, select, textarea").each(function () {
         var $input = $(this);
-        var name = $input.attr("name");
+        var name = $input.attr("name") || $input.attr("id");
         if (!name) return;
         allValues[name] = $input.val();
     });
 
+    // Form tamamen boş mu kontrolü
     var allEmpty = Object.keys(allValues).every(function (key) {
         return !allValues[key] || allValues[key].toString().trim() === "";
     });
 
     if (allEmpty) {
-        $form.prepend('<div class="invalid-feedback d-block alert alert-danger">Tüm alanlar boş bırakılamaz.</div>');
+        $form.prepend('<div class="invalid-feedback d-block alert alert-danger mb-3">Tüm alanlar boş bırakılamaz.</div>');
         return false;
     }
 
+    // Elemanları tek tek doğrula
     $form.find("input, select, textarea").each(function () {
         var $input = $(this);
-        var name = $input.attr("name");
+        var name = $input.attr("name") || "";
+        var id = $input.attr("id") || "";
 
-        if (!name || skipFields.indexOf(name) !== -1) return;
+        if (skipFields.indexOf(name) !== -1 || skipFields.indexOf(id) !== -1) return;
         if ($input.prop("disabled") || $input.attr("type") === "hidden") return;
 
         var value = $input.val();
+        var valTrimmed = value ? value.toString().trim() : "";
         var errorMsg = null;
 
-        // Özel kural varsa tüm kontrol sorumluluğunu ona bırak
+        // 1. Özel kural tanımlanmışsa önceliği ona ver
         if (customRules[name] && typeof customRules[name] === "function") {
             errorMsg = customRules[name](value, allValues);
         }
-        else if (!value || value.toString().trim() === "") {
+        else if (customRules[id] && typeof customRules[id] === "function") {
+            errorMsg = customRules[id](value, allValues);
+        }
+        // 2. Boş değer kontrolü
+        else if (!valTrimmed) {
             errorMsg = "Bu alan zorunludur.";
         }
+        // 3. İcra Dosya No varsayılan Regex format doğrulaması (YYYY/SIRA E.)
+        else if (name.toLowerCase().indexOf("icradosyano") !== -1 || id.toLowerCase().indexOf("icradosyano") !== -1) {
+            var dosyaNoRegex = /^(19|20)\d{2}\/\d{1,7}\s?[eE]\.$/;
+            if (!dosyaNoRegex.test(valTrimmed)) {
+                errorMsg = "Format hatalı! Örn: 2026/1234 E.";
+            }
+        }
 
+        // Hata varsa ilgili input altına uyarı ekle
         if (errorMsg) {
             isValid = false;
             $input.addClass("is-invalid");
@@ -80,8 +97,8 @@ function validateForm(formId, options) {
     return isValid;
 }
 
-// Otomatik Telefon Formatlama Maskesi (505 505 55 55)
-$(document).on('input', 'input[name="MustTelNo"], input[name="MUST_TEL_NO"]', function () {
+// Otomatik Telefon Formatlama Maskeleri
+$(document).on('input', 'input[name="MustTelNo"], input[name="MUST_TEL_NO"], input[name="AvktTelNo"], input[name="AVKT_TEL_NO"], input[name="OfisTelNo"], input[name="OFIS_TEL-NO"]', function () {
     let rawValue = $(this).val().replace(/\D/g, '');
     if (rawValue.startsWith('0')) rawValue = rawValue.substring(1);
     if (rawValue.length > 10) rawValue = rawValue.substring(0, 10);
@@ -95,36 +112,10 @@ $(document).on('input', 'input[name="MustTelNo"], input[name="MUST_TEL_NO"]', fu
     $(this).val(formatted);
 });
 
-$(document).on('input', 'input[name="AvktTelNo"], input[name="AVKT_TEL_NO"]', function () {
-    let rawValue = $(this).val().replace(/\D/g, '');
-    if (rawValue.startsWith('0')) rawValue = rawValue.substring(1);
-    if (rawValue.length > 10) rawValue = rawValue.substring(0, 10);
-
-    let formatted = '';
-    if (rawValue.length > 0) formatted += rawValue.substring(0, 3);
-    if (rawValue.length > 3) formatted += ' ' + rawValue.substring(3, 6);
-    if (rawValue.length > 6) formatted += ' ' + rawValue.substring(6, 8);
-    if (rawValue.length > 8) formatted += ' ' + rawValue.substring(8, 10);
-
-    $(this).val(formatted);
-});
-
-$(document).on('input', 'input[name="OfisTelNo"], input[name="OFIS_TEL-NO"]', function () {
-    let rawValue = $(this).val().replace(/\D/g, '');
-    if (rawValue.startsWith('0')) rawValue = rawValue.substring(1);
-    if (rawValue.length > 10) rawValue = rawValue.substring(0, 10);
-
-    let formatted = '';
-    if (rawValue.length > 0) formatted += rawValue.substring(0, 3);
-    if (rawValue.length > 3) formatted += ' ' + rawValue.substring(3, 6);
-    if (rawValue.length > 6) formatted += ' ' + rawValue.substring(6, 8);
-    if (rawValue.length > 8) formatted += ' ' + rawValue.substring(8, 10);
-
-    $(this).val(formatted);
-});
-
+// Modal & Bildirim Yardımcıları
 function closeModalThenShowSuccess(modalId, message, onClose) {
     var modalEl = document.getElementById(modalId);
+    if (!modalEl) return;
     var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
 
     $(modalEl).off("hidden.bs.modal.chain").on("hidden.bs.modal.chain", function () {
@@ -135,8 +126,24 @@ function closeModalThenShowSuccess(modalId, message, onClose) {
 }
 
 function showSuccessModal(message, onClose) {
+    if (typeof Swal !== "undefined") {
+        Swal.fire({
+            icon: 'success',
+            title: 'Başarılı!',
+            text: message
+        }).then(function () {
+            if (typeof onClose === "function") onClose();
+        });
+        return;
+    }
+
     $("#successModalMessage").text(message);
     var modalEl = document.getElementById("successModal");
+    if (!modalEl) {
+        alert(message);
+        if (typeof onClose === "function") onClose();
+        return;
+    }
     var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
 
     $(modalEl).off("hidden.bs.modal.success").on("hidden.bs.modal.success", function () {
@@ -146,17 +153,34 @@ function showSuccessModal(message, onClose) {
     modal.show();
 }
 
-// Kullanıcıdan onay ister. Onaylarsa onConfirm callback'i çalışır.
-// confirm() yerine Bootstrap modalı kullanır, böylece tüm modallar tutarlı görünür.
 function showConfirmModal(message, onConfirm) {
+    if (typeof Swal !== "undefined") {
+        Swal.fire({
+            title: 'Emin misiniz?',
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet, Sil!',
+            cancelButtonText: 'İptal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (typeof onConfirm === "function") onConfirm();
+            }
+        });
+        return;
+    }
+
     $("#confirmModalMessage").text(message);
     var modalEl = document.getElementById("confirmModal");
+    if (!modalEl) {
+        if (confirm(message)) { if (typeof onConfirm === "function") onConfirm(); }
+        return;
+    }
     var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-
     var $okBtn = $("#confirmModalOkBtn");
 
-    // Önceki tıklama handler'ını temizle (aksi halde birden fazla eklenip
-    // her tıklamada callback birden fazla kez tetiklenir)
     $okBtn.off("click.confirm").on("click.confirm", function () {
         modal.hide();
         if (typeof onConfirm === "function") onConfirm();
@@ -165,6 +189,7 @@ function showConfirmModal(message, onConfirm) {
     modal.show();
 }
 
+// Ana CRUD Başlatıcı Fonksiyon
 function initCrud(entityName, fields, options) {
     options = options || {};
     var getUrl = options.getUrl || ('/' + entityName + '/Get' + entityName);
@@ -173,69 +198,56 @@ function initCrud(entityName, fields, options) {
     var deleteUrl = options.deleteUrl || ('/' + entityName + '/Delete');
     var ns = ".crud-" + entityName;
 
-    function showError(prefix, xhr) {
-        console.error(prefix, xhr);
-        var msg = (xhr && xhr.responseJSON && xhr.responseJSON.error)
-            ? xhr.responseJSON.error
-            : "Sunucu ile iletişimde hata oluştu (" + (xhr ? xhr.status : "?") + ")";
-        alert(prefix + ": " + msg);
-    }
-
     $("#createModal").off("show.bs.modal" + ns)
         .on("show.bs.modal" + ns, function () {
             resetCreateForm("createForm", options.onResetCreateForm);
         });
 
-    // CREATE
     $(document).off("click" + ns, "#createSaveBtn")
-        .on("click" + ns, "#createSaveBtn", function () {
+        .on("click" + ns, "#createSaveBtn", function (e) {
+            e.preventDefault();
             $("#createForm").submit();
         });
 
+    // CREATE SUBMIT
     $("#createForm").off("submit" + ns)
         .on("submit" + ns, function (e) {
             e.preventDefault();
             var $form = $(this);
 
-            // 1. Önyüz Form Doğrulaması (Statik kurallar)
+            var skip = options.validationSkipFields || ["MusteriId", "UrunId"];
+
+            // 1. Önyüz Form Doğrulaması
             if (!validateForm("createForm", {
-                skipFields: options.validationSkipFields,
+                skipFields: skip,
                 customRules: options.validationRules
             })) {
-                return;
+                return false;
             }
 
             var tcNo = $form.find("[name='MustKimlikNo']").val();
 
-            // 2. TC Girildiyse UI Üzerinden Var Mı Kontrolü Yap
             if (tcNo && tcNo.trim() !== "") {
                 $.ajax({
-                    url: '/Musteri/CheckTcExists', // Controller action yolu
+                    url: '/Musteri/CheckTcExists',
                     type: 'GET',
                     data: { tcNo: tcNo.trim() },
                     success: function (checkResult) {
                         if (checkResult.exists) {
-                            // Veritabanında TC bulunduysa UI modalında göster ve kaydı durdur
-                            $('#errorModal .modal-body').html("Bu TC kimlik numarasına ait müşteri var.");
-                            $('#errorModal').modal('show');
+                            showErrorModal("Bu TC kimlik numarasına ait müşteri zaten kayıtlı.");
                             return;
                         }
-
-                        // TC çakışmıyorsa kaydetme işlemini başlat
                         executeCreateRequest($form);
                     },
                     error: function () {
-                        // Kontrol servisinde beklenmeyen bir aksaklık olursa doğrudan kaydetmeyi dene
                         executeCreateRequest($form);
                     }
                 });
             } else {
-                // TC girilmemişse (Kurumsal vs. ise) doğrudan kaydet
                 executeCreateRequest($form);
             }
         });
 
-    // 3. Formu Sunucuya Gönderen Asıl AJAX Fonksiyonu
     function executeCreateRequest($form) {
         $.ajax({
             url: createUrl,
@@ -249,20 +261,18 @@ function initCrud(entityName, fields, options) {
                         location.reload();
                     });
                 } else {
-                    $('#errorModal .modal-body').html(result.message || "Ekleme başarısız.");
-                    $('#errorModal').modal('show');
+                    showErrorModal(result.message || result.error || "Ekleme işlemi başarısız.");
                 }
             })
             .fail(function (xhr) {
-                var msg = "Sunucu ile iletişimde hata oluştu (" + (xhr ? xhr.status : "?") + ")";
-                if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
-                    msg = xhr.responseJSON.message;
-                }
-                $('#errorModal .modal-body').html(msg);
-                $('#errorModal').modal('show');
+                var msg = (xhr && xhr.responseJSON && xhr.responseJSON.message)
+                    ? xhr.responseJSON.message
+                    : "Sunucu ile iletişimde hata oluştu (" + (xhr ? xhr.status : "?") + ")";
+                showErrorModal(msg);
             });
     }
-    // UPDATE
+
+    // UPDATE - Veri Getirme
     $(document).off("click" + ns, ".updateBtn")
         .on("click" + ns, ".updateBtn", function () {
             var id = $(this).data("id");
@@ -298,12 +308,14 @@ function initCrud(entityName, fields, options) {
                     $("#updateModal").modal("show");
                 })
                 .fail(function (xhr) {
-                    showError(entityName + " bilgisi alınamadı", xhr);
+                    showErrorModal(entityName + " bilgisi alınamadı (" + xhr.status + ")");
                 });
         });
 
+    // UPDATE - Güncelle Kaydet
     $(document).off("click" + ns, "#updateSaveBtn")
-        .on("click" + ns, "#updateSaveBtn", function () {
+        .on("click" + ns, "#updateSaveBtn", function (e) {
+            e.preventDefault();
             $("#updateForm").submit();
         });
 
@@ -311,11 +323,13 @@ function initCrud(entityName, fields, options) {
         .on("submit" + ns, function (e) {
             e.preventDefault();
 
+            var skip = options.validationSkipFields || ["MusteriId", "UrunId"];
+
             if (!validateForm("updateForm", {
-                skipFields: options.validationSkipFields,
+                skipFields: skip,
                 customRules: options.validationRules
             })) {
-                return;
+                return false;
             }
 
             $.ajax({ url: updateUrl, type: 'POST', data: $(this).serialize() })
@@ -325,10 +339,12 @@ function initCrud(entityName, fields, options) {
                             location.reload();
                         });
                     } else {
-                        alert("Kaydetme başarısız: " + (result.error || ""));
+                        showErrorModal(result.message || result.error || "Güncelleme başarısız.");
                     }
                 })
-                .fail(function (xhr) { showError("Güncelleme sırasında hata", xhr); });
+                .fail(function (xhr) {
+                    showErrorModal("Güncelleme sırasında sunucu hatası oluştu (" + xhr.status + ")");
+                });
         });
 
     // DELETE
@@ -351,22 +367,21 @@ function initCrud(entityName, fields, options) {
                                 location.reload();
                             });
                         } else {
-                            // alert yerine modal
-                            showErrorModal("Silme başarısız: " + (result.error || ""));
+                            showErrorModal(result.message || result.error || "Silme başarısız.");
                         }
                     })
                     .fail(function (xhr) {
-                        showErrorModal("Silme sırasında hata: " + xhr.statusText);
+                        showErrorModal("Silme işlemi sırasında hata oluştu: " + xhr.statusText);
                     });
             });
         });
 }
+
+// Select Açılır Liste Taşmasını Engelleme
 $(document).on('focus', '.modal-body select.form-select', function () {
-    // 5'ten fazla eleman varsa görünür yüksekliği 5 satıra sabitle
     if ($(this).find('option').length > 5) {
         $(this).attr('size', '5');
     }
 }).on('change blur', '.modal-body select.form-select', function () {
-// Seçim yapıldığında veya odaktan çıkıldığında eski haline döndür
     $(this).removeAttr('size');
 });

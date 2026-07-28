@@ -17,7 +17,6 @@
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label class="form-label">Müşteri</label>
-                                <!-- name="MusteriId" eklendi -->
                                 <select class="form-select" id="createMusteriSelect" name="MusteriId">
                                     <option value="">Seçiniz</option>
                                     @if (ViewBag.MusteriList != null)
@@ -31,7 +30,6 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Ürün</label>
-                                <!-- name="UrunId" eklendi -->
                                 <select class="form-select" id="createUrunSelect" name="UrunId" disabled>
                                     <option value="">Önce müşteri seçiniz</option>
                                 </select>
@@ -54,7 +52,7 @@
                             </div>
                             <div class="col-md-4">
                                 @Html.LabelFor(m => m.IcraDosyaNo, "İcra Dosya No", new { @class = "form-label" })
-                                @Html.TextBoxFor(m => m.IcraDosyaNo, new { @class = "form-control", id = "createIcraDosyaNo" })
+                                @Html.TextBoxFor(m => m.IcraDosyaNo, new { @class = "form-control", id = "createIcraDosyaNo", name = "IcraDosyaNo" })
                             </div>
                             <div class="col-md-4">
                                 @Html.LabelFor(m => m.IcraTakipTar, "İcra Takip Tarihi", new { @class = "form-label" })
@@ -64,7 +62,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="createSaveBtn" class="btn btn-primary">Kaydet</button>
+                    <button type="submit" id="createSaveBtn" class="btn btn-primary">Kaydet</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
                 </div>
             }
@@ -80,8 +78,6 @@
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(m => m.IcraId, new { id = "IcraId" })
-
-                <!-- Disabled olan dropdown'lar POST edilmediği için IhtarUrunId değerini taşıyan gizli alan -->
                 @Html.HiddenFor(m => m.IhtarUrunId, new { id = "updateIhtarUrunIdHidden" })
 
                 <div class="modal-header">
@@ -93,7 +89,6 @@
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label class="form-label">Müşteri</label>
-                                <!-- name="MusteriId" kaldırıldı, sadece görsel amaçlı kilitli kalacak -->
                                 <select class="form-select" id="updateMusteriSelect" disabled>
                                     <option value="">Seçiniz</option>
                                     @if (ViewBag.MusteriList != null)
@@ -107,14 +102,12 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Ürün</label>
-                                <!-- name="UrunId" kaldırıldı -->
                                 <select class="form-select" id="updateUrunSelect" disabled>
                                     <option value="">Seçiniz</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">İhtar</label>
-                                <!-- name kaldırıldı, esas değer hidden alandan gidecek -->
                                 <select class="form-select" id="updateIhtarUrunSelect" disabled>
                                     <option value="">Seçiniz</option>
                                 </select>
@@ -130,7 +123,7 @@
                             </div>
                             <div class="col-md-4">
                                 @Html.LabelFor(m => m.IcraDosyaNo, "İcra Dosya No", new { @class = "form-label" })
-                                @Html.TextBoxFor(m => m.IcraDosyaNo, new { @class = "form-control", id = "IcraDosyaNo" })
+                                @Html.TextBoxFor(m => m.IcraDosyaNo, new { @class = "form-control", id = "IcraDosyaNo", name = "IcraDosyaNo" })
                             </div>
                             <div class="col-md-4">
                                 @Html.LabelFor(m => m.IcraTakipTar, "İcra Takip Tarihi", new { @class = "form-label" })
@@ -140,7 +133,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="updateSaveBtn" class="btn btn-primary">Güncelle</button>
+                    <button type="submit" id="updateSaveBtn" class="btn btn-primary">Güncelle</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
                 </div>
             }

@@ -15,7 +15,7 @@
 <div class="table-responsive">
     <table class="table table-striped align-middle" id="icraTable">
         <thead>
-            <!-- 1. Satır: Kolon Başlıkları (Sadece Tıklayınca Arama Açılır) -->
+            <!-- 1. Satır: Kolon Başlıkları -->
             <tr>
                 <th style="cursor:pointer;">Müşteri</th>
                 <th style="cursor:pointer;">Ürün</th>
@@ -102,14 +102,13 @@
 @Html.Partial("_IcraModals", new Entity.Dto.IcraDto())
 
 @section Scripts {
-    <script src="~/Scripts/crud.js?v=1.1"></script>
-    <script src="~/Scripts/Icra/icraValidation.js"></script>
+    <script src="~/Scripts/crud.js?v=1.4"></script>
+    <script src="~/Scripts/Icra/icraValidation.js?v=1.1"></script>
     <script src="~/Scripts/Icra/tablePagination.js"></script>
 
     <script>
-        // 1. Ürün dropdown'ını doldurur (isForUpdate desteğiyle)
+        // 1. Ürün dropdown'ını doldurur
         function loadUrunOptions(musteriId, prefix, url, isForUpdate, callback) {
-            // isForUpdate opsiyonel parametre kontrolü (Eğer es geçildiyse callback yerine kaydır)
             if (typeof isForUpdate === "function") {
                 callback = isForUpdate;
                 isForUpdate = false;
@@ -176,16 +175,25 @@
 
         $(document).ready(function () {
 
+            // Tarih inputları yer tutucusu
             $(document).on("focus", 'input[type="date"]', function () {
                 $(this).attr("placeholder", "gg.aa.yyyy");
             });
 
-            // İcra tablosu sayfalama ve arama filtreleme başlatma
+            // Otomatik ' E.' tamamlama (2026/1234 girildiğinde blur anında tamamlar)
+            $(document).on("blur", "input[name='IcraDosyaNo'], #IcraDosyaNo, #createIcraDosyaNo", function () {
+                var val = $(this).val().trim();
+                if (/^(19|20)\d{2}\/\d{1,7}$/.test(val)) {
+                    $(this).val(val + " E.");
+                }
+            });
+
+            // İcra tablosu sayfalama
             if (typeof initIcraTablePagination === "function") {
                 initIcraTablePagination("icraTable", "icraPageSize", "icraPaginationNav", "icraTableInfo");
             }
 
-            // CREATE MODAL kademeli seçim dinleyicileri (isForUpdate = false)
+            // CREATE MODAL kademeli seçim dinleyicileri
             $(document).on("change", "#createMusteriSelect", function () {
                 loadUrunOptions($(this).val(), "create", "/Icra/GetUrunlerByMusteri", false);
             });
@@ -194,7 +202,7 @@
                 loadIhtarOptions(musteriId, $(this).val(), "create", "/Icra/GetIhtarlarByMusteriVeUrun");
             });
 
-            // UPDATE MODAL kademeli seçim dinleyicileri (isForUpdate = true)
+            // UPDATE MODAL kademeli seçim dinleyicileri
             $(document).on("change", "#updateMusteriSelect", function () {
                 loadUrunOptions($(this).val(), "update", "/Icra/GetUrunlerByMusteri", true);
             });
@@ -203,27 +211,27 @@
                 loadIhtarOptions(musteriId, $(this).val(), "update", "/Icra/GetIhtarlarByMusteriVeUrun");
             });
 
-            // Create Modal her açıldığında form temizleme
+            // Create Modal her açıldığında form sıfırlama
             $("#createModal").on("show.bs.modal", function () {
                 $("#createMusteriSelect").val("");
                 $("#createUrunSelect").empty().append('<option value="">Önce müşteri seçiniz</option>').prop("disabled", true);
                 $("#createIhtarUrunSelect").empty().append('<option value="">Önce ürün seçiniz</option>').prop("disabled", true);
             });
 
-            // CRUD Kurulumu ve Güncelleme Verisi Yükleme Operasyonu
-            var crudConfig = $.extend({}, window.icraOptions || {}, {
+            // Global nesneleri birleştir
+            var baseValidationOptions = window.crudOptions || window.icraOptions || {};
+
+            var crudConfig = $.extend(true, {}, baseValidationOptions, {
+                validationSkipFields: ["MusteriId", "UrunId"],
                 onGetSuccess: function (data) {
                     if (!data) return;
 
-                    // 1. Backend'den gelen verileri harf büyüklüğü (case) fark etmeksizin yakala
                     var mId = data.MusteriId || data.musteriId;
                     var uId = data.UrunId || data.urunId;
                     var iuId = data.IhtarUrunId || data.ihtarUrunId;
 
-                    // 2. İşlem yapılacağı için kilitleri kaldır
                     $("#updateMusteriSelect, #updateUrunSelect, #updateIhtarUrunSelect").prop("disabled", false);
 
-                    // 3. Müşteriyi seç
                     var targetMusteriId = (mId || "").toString().toLowerCase();
                     $("#updateMusteriSelect option").each(function () {
                         if ($(this).val().toLowerCase() === targetMusteriId) {
@@ -232,12 +240,10 @@
                         }
                     });
 
-                    // 4. Müşterinin ürünlerini GÜNCELLEME moduyla getir (isForUpdate = true)
                     loadUrunOptions(mId, "update", "/Icra/GetUrunlerByMusteri", true, function () {
                         var targetUrunId = (uId || "").toString().toLowerCase();
                         var selectedUrunValue = "";
 
-                        // Ürün seçeneğini bul ve işaretle
                         $("#updateUrunSelect option").each(function () {
                             if ($(this).val().toLowerCase() === targetUrunId) {
                                 selectedUrunValue = $(this).val();
@@ -246,7 +252,6 @@
                             }
                         });
 
-                        // 5. İhtarları seçilen Ürün ID'si üzerinden getir
                         var actualUrunId = selectedUrunValue || uId;
                         loadIhtarOptions(mId, actualUrunId, "update", "/Icra/GetIhtarlarByMusteriVeUrun", function () {
                             var targetIhtarUrunId = (iuId || "").toString().toLowerCase();
@@ -258,17 +263,16 @@
                                 }
                             });
 
-                            // Gizli alana IhtarUrunId basılıyor
                             $("#updateIhtarUrunIdHidden").val(iuId);
 
-                            // 6. Yükleme tamamen tamamlandıktan sonra 3 alanı da kilitliyoruz
+                            // Dolum bitince kilitleriz
                             $("#updateMusteriSelect, #updateUrunSelect, #updateIhtarUrunSelect").prop("disabled", true);
                         });
                     });
                 }
             });
 
-            // initCrud çağrısı
+            // initCrud Çağrısı
             initCrud("Icra", ["IcraId", "MahkemeId", "IcraDosyaNo", "IcraTakipTar"], crudConfig);
         });
     </script>

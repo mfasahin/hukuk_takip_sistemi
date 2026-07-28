@@ -111,7 +111,14 @@ namespace Presentation.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = ex.InnerException?.Message ?? ex.Message });
+                // FluentValidation dışındaki tüm Exception'ların da (IcraManager vs.) mesajını doğrudan iletiyoruz
+                string errorMessage = ex.Message;
+                if (ex.InnerException != null && !string.IsNullOrEmpty(ex.InnerException.Message))
+                {
+                    errorMessage += "<br>" + ex.InnerException.Message;
+                }
+
+                return Json(new { success = false, message = errorMessage });
             }
         }
 
@@ -146,9 +153,20 @@ namespace Presentation.Controllers
                 _icraService.Update(model);
                 return Json(new { success = true, message = "İcra kaydı başarıyla güncellendi." });
             }
+            catch (ValidationException ex)
+            {
+                var errorList = ex.Errors.Select(e => e.ErrorMessage).ToList();
+                return Json(new { success = false, message = string.Join("<br>", errorList) });
+            }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = ex.InnerException?.Message ?? ex.Message });
+                string errorMessage = ex.Message;
+                if (ex.InnerException != null && !string.IsNullOrEmpty(ex.InnerException.Message))
+                {
+                    errorMessage += "<br>" + ex.InnerException.Message;
+                }
+
+                return Json(new { success = false, message = errorMessage });
             }
         }
 

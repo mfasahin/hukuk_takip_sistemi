@@ -77,7 +77,6 @@ namespace DataAccess.Concrete
 
         // isForUpdate = false eklendi
         // 1. Kademe: Seçilen Müşteriye ait İhtar çekilmiş Ürünlerin getirilmesi
-        // 1. Kademe: Seçilen Müşteriye ait İhtar çekilmiş Ürünlerin getirilmesi
         public List<UrunDto> GetUrunlerByMusteri(Guid musteriId, bool isForUpdate = false)
         {
             using (var context = new AppDbContext())

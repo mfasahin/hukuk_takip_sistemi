@@ -34,6 +34,11 @@ namespace Business.Validation
 
             RuleFor(x => x.IcraTakipTar)
                 .NotEmpty().WithMessage("İcra takip tarihi boş geçilemez.");
+            // İcra Dosya No Format Doğrulaması
+            RuleFor(x => x.IcraDosyaNo)
+                .NotEmpty().WithMessage("İcra dosya numarası boş geçilemez.")
+                .Matches(@"^(19|20)\d{2}\/\d{1,7}\s?[eE]\.$")
+                .WithMessage("İcra dosya numarası formatı hatalı! (Örn: 2026/1234 E.)");
         }
     }
 }

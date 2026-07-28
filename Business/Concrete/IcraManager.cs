@@ -3,6 +3,7 @@ using Business.Validation;
 using DataAccess.Abstract;
 using Entity.Concrete;
 using Entity.Dto;
+using FluentValidation;
 using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
@@ -52,8 +53,8 @@ namespace Business.Concrete
 
             if (!result.IsValid)
             {
-                string errorMessages = string.Join("\n", result.Errors);
-                throw new Exception($"Doğrulama Hataları:\n{errorMessages}");
+                // Controller'ın catch (ValidationException) bloğunda yakalayabilmesi için resmi FluentValidation hatası fırlatıyoruz
+                throw new ValidationException(result.Errors);
             }
 
             // 2. DTO -> Entity Dönüşümü
@@ -74,13 +75,11 @@ namespace Business.Concrete
         public void Update(IcraDto icraDto)
         {
             // 1. FluentValidation Doğrulaması
-            // Not: IcraValidator'da MusteriId/UrunId kuralları varsa sadece IhtarUrunId, Mahkeme, DosyaNo ve Tarih için validation çalıştırmak gerekebilir.
             ValidationResult result = _validator.Validate(icraDto);
 
             if (!result.IsValid)
             {
-                string errorMessages = string.Join("\n", result.Errors.Select(e => e.ErrorMessage));
-                throw new Exception($"Doğrulama Hataları:\n{errorMessages}");
+                throw new ValidationException(result.Errors);
             }
 
             // 2. Mevcut Entity'yi veritabanından çek
@@ -108,10 +107,9 @@ namespace Business.Concrete
 
         public void Delete(Guid id)
         {
-            var icra = _icraDal.Get(i => i.ICRA_ID == id);
+            var icra = _icraDal.Get(i => i.ICRA_ID == id && i.SIL_TAR_ZMN == null);
             if (icra != null)
             {
-                
                 _icraDal.Delete(icra);
             }
         }
