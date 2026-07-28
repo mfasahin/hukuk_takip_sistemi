@@ -10,7 +10,6 @@ namespace DataAccess.Concrete
 {
     public class EfIcraDal : EfEntityRepositoryBase<Icra, AppDbContext>, IIcraDal
     {
-        // Ortak DTO sorgusu - hem liste hem tekil kayıt için kullanılır.
         private IQueryable<IcraDto> BuildIcraDtoQuery(AppDbContext context)
         {
             return from ic in context.ICRA
@@ -23,24 +22,18 @@ namespace DataAccess.Concrete
                    select new IcraDto
                    {
                        IcraId = ic.ICRA_ID,
-
                        MusteriId = musteri.MUSTERI_ID,
                        MusteriAd = musteri.MUST_AD + " " + musteri.MUST_SOYAD,
-
                        IhtarUrunId = ic.IHTAR_URUN_ID,
                        MahkemeId = ic.MAHKEME_ID,
                        MahkemeAd = mahkeme.MAHKEME_AD,
                        IcraDosyaNo = ic.ICRA_DOSYA_NO,
                        IcraTakipTar = ic.ICRA_TAKIP_TAR,
-
                        UrunId = urun.URUN_ID,
                        UrunAd = urun.URUN_AD,
-
                        IhtarTarih = ihtar.IHTAR_TAR_ZMN,
                        BorcTutar = ihtar.BORC_TUTAR,
-
                        AvukatAd = avukat.AVKT_AD,
-
                        SilTarZmn = ic.SIL_TAR_ZMN
                    };
         }
@@ -64,30 +57,44 @@ namespace DataAccess.Concrete
             }
         }
 
-        // 1. Kademe: Seçilen müşteriye ait, tekrarsız ürün listesi
-        public List<UrunDto> GetUrunlerByMusteri(Guid musteriId)
+        // isForUpdate = false eklendi
+        // 1. Kademe: Seçilen Müşteriye ait İhtar çekilmiş Ürünlerin getirilmesi
+        // 1. Kademe: Seçilen Müşteriye ait İhtar çekilmiş Ürünlerin getirilmesi
+        public List<UrunDto> GetUrunlerByMusteri(Guid musteriId, bool isForUpdate = false)
         {
             using (var context = new AppDbContext())
             {
-                var raw = (from iu in context.IHTAR_URUN
-                           join ihtar in context.IHTAR on iu.IHTAR_ID equals ihtar.IHTAR_ID
-                           join urun in context.URUN on iu.URUN_ID equals urun.URUN_ID
-                           where ihtar.SIL_TAR_ZMN == null
-                                 && ihtar.MUSTERI_ID == musteriId
-                                 // Bu müşteri–ürün için aktif icra yoksa
-                                 && !(from icra in context.ICRA
-                                      join iu2 in context.IHTAR_URUN on icra.IHTAR_URUN_ID equals iu2.IHTAR_URUN_ID
-                                      join ihtar2 in context.IHTAR on iu2.IHTAR_ID equals ihtar2.IHTAR_ID
-                                      where icra.SIL_TAR_ZMN == null
-                                            && ihtar2.SIL_TAR_ZMN == null
-                                            && ihtar2.MUSTERI_ID == musteriId
-                                            && iu2.URUN_ID == urun.URUN_ID
-                                      select icra).Any()
-                           select new { urun.URUN_ID, urun.URUN_AD })
-                          .Distinct()
-                          .ToList();
+                var query = from iu in context.IHTAR_URUN
+                            join ihtar in context.IHTAR on iu.IHTAR_ID equals ihtar.IHTAR_ID
+                            join urun in context.URUN on iu.URUN_ID equals urun.URUN_ID
+                            where ihtar.MUSTERI_ID == musteriId
+                                  && ihtar.SIL_TAR_ZMN == null
+                                  && urun.SIL_TAR_ZMN == null
+                            select new { iu, ihtar, urun };
 
-                return raw.Select(x => new UrunDto
+                // CREATE MODALI İÇİN (!isForUpdate):
+                // Eğer müşterinin bu ÜRÜNÜNE ait açılmış herhangi bir aktif İCRA kaydı varsa, bu ürünü HİÇ getirme!
+                if (!isForUpdate)
+                {
+                    query = query.Where(x => !(from icra in context.ICRA
+                                               join iu2 in context.IHTAR_URUN on icra.IHTAR_URUN_ID equals iu2.IHTAR_URUN_ID
+                                               join ihtar2 in context.IHTAR on iu2.IHTAR_ID equals ihtar2.IHTAR_ID
+                                               where icra.SIL_TAR_ZMN == null
+                                                     && ihtar2.SIL_TAR_ZMN == null
+                                                     && ihtar2.MUSTERI_ID == musteriId
+                                                     && iu2.URUN_ID == x.urun.URUN_ID // Doğrudan URUN_ID seviyesinde engelleme
+                                               select icra).Any());
+                }
+
+                var rawList = query.Select(x => new
+                {
+                    x.urun.URUN_ID,
+                    x.urun.URUN_AD
+                })
+                .Distinct()
+                .ToList();
+
+                return rawList.Select(x => new UrunDto
                 {
                     UrunId = x.URUN_ID,
                     UrunAd = x.URUN_AD
@@ -95,27 +102,26 @@ namespace DataAccess.Concrete
             }
         }
 
-        // 2. Kademe: Seçilen müşteri + ürün kombinasyonuna ait ihtar kayıtları (IhtarUrunId hedefi)
+        // 2. Kademe: Müşteri + Ürün seçildiğinde, bunlara ait IHTAR_URUN kayıtlarını ve İhtar detayını getirir
         public List<IhtarUrunDto> GetIhtarlarByMusteriVeUrun(Guid musteriId, Guid urunId)
         {
             using (var context = new AppDbContext())
             {
-                var raw = (from iu in context.IHTAR_URUN
-                           join ihtar in context.IHTAR on iu.IHTAR_ID equals ihtar.IHTAR_ID
-                           where ihtar.SIL_TAR_ZMN == null
-                                 && ihtar.MUSTERI_ID == musteriId
-                                 && iu.URUN_ID == urunId
-                           select new
-                           {
-                               iu.IHTAR_URUN_ID,
-                               iu.IHTAR_ID,
-                               iu.URUN_ID,
-                               ihtar.IHTAR_TAR_ZMN,
-                               ihtar.BORC_TUTAR
-                           })
-                          .ToList();
+                var rawList = (from iu in context.IHTAR_URUN
+                               join ihtar in context.IHTAR on iu.IHTAR_ID equals ihtar.IHTAR_ID
+                               where ihtar.MUSTERI_ID == musteriId
+                                     && iu.URUN_ID == urunId
+                                     && ihtar.SIL_TAR_ZMN == null
+                               select new
+                               {
+                                   iu.IHTAR_URUN_ID,
+                                   iu.IHTAR_ID,
+                                   iu.URUN_ID,
+                                   ihtar.IHTAR_TAR_ZMN,
+                                   ihtar.BORC_TUTAR
+                               }).ToList();
 
-                return raw.Select(x => new IhtarUrunDto
+                return rawList.Select(x => new IhtarUrunDto
                 {
                     IhtarUrunId = x.IHTAR_URUN_ID,
                     IhtarId = x.IHTAR_ID,
@@ -125,6 +131,7 @@ namespace DataAccess.Concrete
                 }).ToList();
             }
         }
+
         public bool IhtaraBagliIcraVarMi(Guid ihtarUrunId)
         {
             using (var context = new AppDbContext())

@@ -1,10 +1,10 @@
 ﻿using Business.Abstract;
 using Entity.Dto;
-using FluentValidation;
 using Presentation.Filters;
 using System;
-using System.Linq;
 using System.Web.Mvc;
+using FluentValidation;
+using System.Linq;
 
 namespace Presentation.Controllers
 {
@@ -59,22 +59,14 @@ namespace Presentation.Controllers
                     Text = m.MAHKEME_AD
                 }).ToList();
 
-            // İcra bir IhtarUrun'a bağlanıyor - dropdown'da hangi ihtar/ürün olduğu görünmeli
-            ViewBag.IhtarUrunList = _icraService.GetIcraDto()
-                .Select(x => new SelectListItem
-                {
-                    Value = x.IhtarUrunId.ToString(),
-                    Text = x.MusteriAd + " - " + x.UrunAd + " - " + x.IhtarTarih.ToString("dd.MM.yyyy")
-                }).ToList();
-
             return View(model);
         }
 
         // 1. Kademe: Müşteri seçilince ürün listesini döndürür
         [HttpGet]
-        public JsonResult GetUrunlerByMusteri(Guid musteriId)
+        public JsonResult GetUrunlerByMusteri(Guid musteriId, bool isForUpdate = false)
         {
-            var list = _icraService.GetUrunlerByMusteri(musteriId)
+            var list = _icraService.GetUrunlerByMusteri(musteriId, isForUpdate)
                 .Select(x => new { value = x.UrunId, text = x.UrunAd });
 
             return Json(list, JsonRequestBehavior.AllowGet);
@@ -99,15 +91,11 @@ namespace Presentation.Controllers
         public ActionResult Create(IcraDto model)
         {
             if (model == null)
-            {
                 return Json(new { success = false, message = "Gönderilen icra verisi boş olamaz." });
-            }
 
             try
             {
-                // Validation, Entity dönüşümü ve Veritabanı ekleme servis katmanında yapılır
                 _icraService.Add(model);
-
                 return Json(new { success = true, message = "İcra takibi başarıyla başlatıldı." });
             }
             catch (ValidationException ex)
@@ -117,14 +105,11 @@ namespace Presentation.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new
-                {
-                    success = false,
-                    message = ex.InnerException != null ? ex.InnerException.Message : ex.Message
-                });
+                return Json(new { success = false, message = ex.InnerException?.Message ?? ex.Message });
             }
         }
 
+        // TEKİL GETİRME
         [HttpGet]
         public ActionResult GetIcra(Guid id)
         {
@@ -135,61 +120,44 @@ namespace Presentation.Controllers
             {
                 IcraId = dto.IcraId,
                 MusteriId = dto.MusteriId,
-                UrunId = dto.UrunId,               // Ürün ID'sinin JavaScript'e açıkça aktarılmasını sağlar
+                UrunId = dto.UrunId,
                 IhtarUrunId = dto.IhtarUrunId,
                 MahkemeId = dto.MahkemeId,
                 IcraDosyaNo = dto.IcraDosyaNo,
-                // Tarihi HTML5 date input'un anlayacağı yyyy-MM-dd formatına dönüştürüyoruz
                 IcraTakipTar = dto.IcraTakipTar.ToString("yyyy-MM-dd")
             }, JsonRequestBehavior.AllowGet);
         }
 
+        // GÜNCELLEME
         [HttpPost]
         public ActionResult Update(IcraDto model)
         {
-            if (!ModelState.IsValid)
-                return Json(new { success = false, error = "ModelState geçersiz" });
+            if (model == null)
+                return Json(new { success = false, message = "Gönderilen veri boş olamaz." });
 
             try
             {
-                var entity = _icraService.GetById(model.IcraId);
-                if (entity == null)
-                    return Json(new { success = false, error = "Kayıt bulunamadı" });
-
-                entity.IHTAR_URUN_ID = model.IhtarUrunId;
-                entity.MAHKEME_ID = model.MahkemeId;
-                entity.ICRA_DOSYA_NO = model.IcraDosyaNo;
-                entity.ICRA_TAKIP_TAR = model.IcraTakipTar;
-                entity.GNC_TAR_ZMN = DateTime.Now;
-
-                _icraService.Update(entity);
-
-                return Json(new { success = true });
+                _icraService.Update(model);
+                return Json(new { success = true, message = "İcra kaydı başarıyla güncellendi." });
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, error = ex.Message });
+                return Json(new { success = false, message = ex.InnerException?.Message ?? ex.Message });
             }
         }
 
+        // SİLME
         [HttpPost]
         public ActionResult Delete(Guid id)
         {
             try
             {
-                var entity = _icraService.GetById(id);
-                if (entity == null)
-                    return Json(new { success = false, error = "Kayıt bulunamadı" });
-
-                
-                //entity.SIL_TAR_ZMN = DateTime.Now;
-                _icraService.Delete(entity);
-
-                return Json(new { success = true });
+                _icraService.Delete(id);
+                return Json(new { success = true, message = "İcra kaydı başarıyla silindi." });
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, error = ex.Message });
+                return Json(new { success = false, message = ex.InnerException?.Message ?? ex.Message });
             }
         }
     }

@@ -81,7 +81,7 @@
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(m => m.IcraId, new { id = "IcraId" })
 
-                <!-- Disabled olan IhtarUrunId değerini sunucuya göndermek için gizli alan -->
+                <!-- Disabled olan dropdown'lar POST edilmediği için IhtarUrunId değerini taşıyan gizli alan -->
                 @Html.HiddenFor(m => m.IhtarUrunId, new { id = "updateIhtarUrunIdHidden" })
 
                 <div class="modal-header">
@@ -93,7 +93,8 @@
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label class="form-label">Müşteri</label>
-                                <select class="form-select" id="updateMusteriSelect" name="MusteriId" disabled>
+                                <!-- name="MusteriId" kaldırıldı, sadece görsel amaçlı kilitli kalacak -->
+                                <select class="form-select" id="updateMusteriSelect" disabled>
                                     <option value="">Seçiniz</option>
                                     @if (ViewBag.MusteriList != null)
                                     {
@@ -106,14 +107,16 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Ürün</label>
-                                <select class="form-select" id="updateUrunSelect" name="UrunId" disabled>
-                                    <option value="">Önce müşteri seçiniz</option>
+                                <!-- name="UrunId" kaldırıldı -->
+                                <select class="form-select" id="updateUrunSelect" disabled>
+                                    <option value="">Seçiniz</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">İhtar</label>
+                                <!-- name kaldırıldı, esas değer hidden alandan gidecek -->
                                 <select class="form-select" id="updateIhtarUrunSelect" disabled>
-                                    <option value="">Önce ürün seçiniz</option>
+                                    <option value="">Seçiniz</option>
                                 </select>
                             </div>
                         </div>

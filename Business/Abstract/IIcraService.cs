@@ -1,5 +1,6 @@
 ﻿using Entity.Concrete;
 using Entity.Dto;
+using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
 
@@ -7,16 +8,19 @@ namespace Business.Abstract
 {
     public interface IIcraService
     {
-
+        ValidationResult Validate(IcraDto icraDto);
         Icra GetById(Guid id);
-        void Add(IcraDto icra);
-        void Update(Icra icra);
-        void Delete(Icra icra);
-        List<IcraDto> GetIcraDto();
         IcraDto GetByIdIcra(Guid id);
-        List<UrunDto> GetUrunlerByMusteri(Guid musteriId);
+        List<IcraDto> GetIcraDto();
+
+        void Add(IcraDto icraDto);
+        void Update(IcraDto icraDto);
+        void Delete(Guid id);
+
+        // Kademeli seçim metotları (isForUpdate = false varsayılan parametreli)
+        List<UrunDto> GetUrunlerByMusteri(Guid musteriId, bool isForUpdate = false);
         List<IhtarUrunDto> GetIhtarlarByMusteriVeUrun(Guid musteriId, Guid urunId);
-        string AddIcra(Icra icra, Guid musteriId, Guid urunId);
+
         bool IhtaraBagliIcraVarMi(Guid ihtarId);
     }
 }

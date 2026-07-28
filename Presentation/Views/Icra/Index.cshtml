@@ -104,11 +104,17 @@
 @section Scripts {
     <script src="~/Scripts/crud.js?v=1.1"></script>
     <script src="~/Scripts/Icra/icraValidation.js"></script>
-    <script src="~/Scripts/Icra/TablePagination.js"></script>
+    <script src="~/Scripts/Icra/tablePagination.js"></script>
 
     <script>
-        // 1. Ürün dropdown'ını doldurur
-        function loadUrunOptions(musteriId, prefix, url, callback) {
+        // 1. Ürün dropdown'ını doldurur (isForUpdate desteğiyle)
+        function loadUrunOptions(musteriId, prefix, url, isForUpdate, callback) {
+            // isForUpdate opsiyonel parametre kontrolü (Eğer es geçildiyse callback yerine kaydır)
+            if (typeof isForUpdate === "function") {
+                callback = isForUpdate;
+                isForUpdate = false;
+            }
+
             var $urunSelect = $("#" + prefix + "UrunSelect");
             var $ihtarSelect = $("#" + prefix + "IhtarUrunSelect");
 
@@ -121,7 +127,7 @@
                 return;
             }
 
-            $.get(url, { musteriId: musteriId })
+            $.get(url, { musteriId: musteriId, isForUpdate: !!isForUpdate })
                 .done(function (list) {
                     $urunSelect.append('<option value="">Seçiniz</option>');
                     if (list && list.length > 0) {
@@ -174,18 +180,18 @@
                 initIcraTablePagination("icraTable", "icraPageSize", "icraPaginationNav", "icraTableInfo");
             }
 
-            // CREATE MODAL kademeli seçim dinleyicileri
+            // CREATE MODAL kademeli seçim dinleyicileri (isForUpdate = false)
             $(document).on("change", "#createMusteriSelect", function () {
-                loadUrunOptions($(this).val(), "create", "/Icra/GetUrunlerByMusteri");
+                loadUrunOptions($(this).val(), "create", "/Icra/GetUrunlerByMusteri", false);
             });
             $(document).on("change", "#createUrunSelect", function () {
                 var musteriId = $("#createMusteriSelect").val();
                 loadIhtarOptions(musteriId, $(this).val(), "create", "/Icra/GetIhtarlarByMusteriVeUrun");
             });
 
-            // UPDATE MODAL kademeli seçim dinleyicileri
+            // UPDATE MODAL kademeli seçim dinleyicileri (isForUpdate = true)
             $(document).on("change", "#updateMusteriSelect", function () {
-                loadUrunOptions($(this).val(), "update", "/Icra/GetUrunlerByMusteri");
+                loadUrunOptions($(this).val(), "update", "/Icra/GetUrunlerByMusteri", true);
             });
             $(document).on("change", "#updateUrunSelect", function () {
                 var musteriId = $("#updateMusteriSelect").val();
@@ -221,8 +227,8 @@
                         }
                     });
 
-                    // 4. Müşterinin ürünlerini getir
-                    loadUrunOptions(mId, "update", "/Icra/GetUrunlerByMusteri", function () {
+                    // 4. Müşterinin ürünlerini GÜNCELLEME moduyla getir (isForUpdate = true)
+                    loadUrunOptions(mId, "update", "/Icra/GetUrunlerByMusteri", true, function () {
                         var targetUrunId = (uId || "").toString().toLowerCase();
                         var selectedUrunValue = "";
 
@@ -250,7 +256,7 @@
                             // Gizli alana IhtarUrunId basılıyor
                             $("#updateIhtarUrunIdHidden").val(iuId);
 
-                            // 6. Yükleme tamamen tamamlandıktan sonra 3 alanı da tekrar kilitle
+                            // 6. Yükleme tamamen tamamlandıktan sonra 3 alanı da kilitliyoruz
                             $("#updateMusteriSelect, #updateUrunSelect, #updateIhtarUrunSelect").prop("disabled", true);
                         });
                     });
