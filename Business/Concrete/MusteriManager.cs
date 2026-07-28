@@ -2,7 +2,6 @@
 using Business.Validation;
 using DataAccess.Abstract;
 using Entity.Concrete;
-using FluentValidation;
 using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
@@ -30,6 +29,7 @@ namespace Business.Concrete
 
         public void Add(Musteri musteri)
         {
+            
             MusteriValidator validator = new MusteriValidator();
             ValidationResult result = validator.Validate(musteri);
 
@@ -40,6 +40,12 @@ namespace Business.Concrete
                 throw new Exception($"Doğrulama Hataları:\n{errorMessages}");
             }
 
+            // TC Kimlik No zaten var mı?
+            var existing = _musteriDal.Get(m => m.MUST_KIMLIK_NO == musteri.MUST_KIMLIK_NO);
+            if (existing != null)
+            {
+                throw new Exception("Bu TC Kimlik No ile kayıtlı müşteri zaten mevcut.");
+            }
             //Doğrulama başarılıysa veritabanı kayıt kodları çalışır
 
             _musteriDal.Add(musteri);

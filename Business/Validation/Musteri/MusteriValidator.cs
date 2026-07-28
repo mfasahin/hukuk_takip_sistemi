@@ -1,4 +1,5 @@
-﻿using Entity.Concrete;
+﻿using DataAccess.Abstract;
+using Entity.Concrete;
 using FluentValidation;
 using System.Linq;
 
@@ -31,7 +32,9 @@ namespace Business.Validation
                 RuleFor(m => m.MUST_KIMLIK_NO)
                     .NotEmpty().WithMessage("Soyad girildiğinde TC Kimlik No girilmesi zorunludur.")
                     .Length(11).WithMessage("TC Kimlik No 11 haneli olmalıdır.")
-                    .Matches(@"^[0-9]+$").WithMessage("TC Kimlik No sadece rakamlardan oluşmalıdır.");
+                    .Matches(@"^[0-9]+$")
+
+                    .WithMessage("TC Kimlik No sadece rakamlardan oluşmalıdır.");
 
                 // VKN boş kalmalı
                 RuleFor(m => m.MUST_VKN_NO)
@@ -43,7 +46,7 @@ namespace Business.Validation
             {
                 // VKN zorunlu, 10 hane ve sadece rakam
                 RuleFor(m => m.MUST_VKN_NO)
-                    .NotEmpty().WithMessage("Soyad girilmediğinde Vergi Kimlik Numarası zorunludur.")
+                    .NotEmpty().WithMessage("Vergi Kimlik Numarası zorunludur.")
                     .Length(10).WithMessage("Vergi Kimlik Numarası 10 haneli olmalıdır.")
                     .Matches(@"^[0-9]+$").WithMessage("Vergi Kimlik Numarası sadece rakamlardan oluşmalıdır.")
                 // YENİ KURAL: İlk 10 rakamın toplamının birler basamağı 11. rakama eşit olmalı
@@ -51,7 +54,7 @@ namespace Business.Validation
 
                 // TC Kimlik No boş kalmalı
                 RuleFor(m => m.MUST_KIMLIK_NO)
-                    .Empty().WithMessage("Soyad girilmediğinde TC Kimlik No boş bırakılmalıdır.");
+                    .Empty().WithMessage("TC Kimlik No boş bırakılmalıdır.");
             });
         }
 

@@ -1,7 +1,10 @@
 using Business.Abstract;
 using Business.Concrete;
+using Business.Validation;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
+using Entity.Concrete;
+using FluentValidation;
 using System.Web.Mvc;
 using Unity;
 using Unity.Mvc5;
@@ -40,6 +43,11 @@ namespace Presentation
 
             container.RegisterType<IKullaniciService, KullaniciManager>();
             container.RegisterType<IKullaniciDal, EfKullaniciDal>();
+
+            container.RegisterType<IMusteriService, MusteriManager>();
+
+            container.RegisterType<IValidator<Musteri>, MusteriValidator>();
+
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }

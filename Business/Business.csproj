@@ -95,7 +95,8 @@
     <Compile Include="Concrete\SubeManager.cs" />
     <Compile Include="Concrete\UrunManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Validation\MusteriValidator.cs" />
+    <Compile Include="Validation\Musteri\MusteriValidator.cs" />
+    <Compile Include="Validation\Urun\UrunValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
@@ -113,6 +114,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Validation\Avukat\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

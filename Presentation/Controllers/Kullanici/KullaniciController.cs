@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Presentation.Models;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace Presentation.Controllers
 {
@@ -74,11 +75,15 @@ namespace Presentation.Controllers
             return RedirectToAction("Login");
         }
 
+        [HttpGet]
         public ActionResult Logout()
         {
             Session.Clear();
             Session.Abandon();
-            return RedirectToAction("Login");
+            FormsAuthentication.SignOut();
+
+            // Giriş yapacağın ekrana yönlendirir
+            return RedirectToAction("Login", "Kullanici");
         }
     }
 }

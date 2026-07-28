@@ -19,8 +19,8 @@
             var soyadDolu = allValues.MustSoyad && allValues.MustSoyad.trim() !== "";
             var tcDolu = value && value.trim() !== "";
 
-            if (soyadDolu && !tcDolu) return "Soyad girildiğinde TC Kimlik No zorunludur.";
-            if (!soyadDolu && tcDolu) return "Soyad girilmediğinde TC Kimlik No boş bırakılmalıdır.";
+            if (soyadDolu && !tcDolu) return "TC Kimlik No zorunludur.";
+            if (!soyadDolu && tcDolu) return "TC Kimlik No boş bırakılmalıdır.";
 
             if (tcDolu) {
                 if (!/^[0-9]+$/.test(value)) return "TC Kimlik No sadece rakamlardan oluşmalıdır.";
@@ -42,8 +42,8 @@
             var soyadDolu = allValues.MustSoyad && allValues.MustSoyad.trim() !== "";
             var vknDolu = value && value.trim() !== "";
 
-            if (!soyadDolu && !vknDolu) return "Soyad girilmediğinde Vergi Kimlik No zorunludur.";
-            if (soyadDolu && vknDolu) return "Soyad girildiğinde Vergi Kimlik No boş bırakılmalıdır.";
+            if (!soyadDolu && !vknDolu) return "Vergi Kimlik No zorunludur.";
+            if (soyadDolu && vknDolu) return "Vergi Kimlik No boş bırakılmalıdır.";
 
             if (vknDolu) {
                 if (!/^[0-9]+$/.test(value)) return "Vergi Kimlik No sadece rakamlardan oluşmalıdır.";

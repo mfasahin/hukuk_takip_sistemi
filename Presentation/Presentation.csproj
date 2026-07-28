@@ -217,11 +217,12 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\checkbox.js" />
     <Content Include="Scripts\common.js" />
     <Content Include="Scripts\crud.js" />
     <Content Include="Scripts\Musteri\musteriValidation.js" />
     <Content Include="Scripts\Musteri\tablePagination.js" />
+    <Content Include="Scripts\Urun\tablePagination.js" />
+    <Content Include="Scripts\Urun\urunValidation.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

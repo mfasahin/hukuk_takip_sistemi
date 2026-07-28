@@ -5,7 +5,6 @@ using FluentValidation;
 using Presentation.Filters;
 using Presentation.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
@@ -44,11 +43,20 @@ namespace Presentation.Controllers
 
             return View(model);
         }
+        [HttpGet]
+        public ActionResult CheckTcExists(string tcNo)
+        {
+            if (string.IsNullOrWhiteSpace(tcNo))
+            {
+                return Json(new { exists = false }, JsonRequestBehavior.AllowGet);
+            }
 
+            bool isExists = _musteriService.GetAll().Any(x => x.MUST_KIMLIK_NO == tcNo);
+            return Json(new { exists = isExists }, JsonRequestBehavior.AllowGet);
+        }
         [HttpPost]
         public ActionResult Create(MusteriModel model)
         {
-            // Model tamamen null geldiyse hemen hata dön
             if (model == null)
             {
                 return Json(new { success = false, message = "Gönderilen müşteri verisi boş olamaz." });
@@ -69,27 +77,30 @@ namespace Presentation.Controllers
                     MUST_TEL_NO = model.MustTelNo
                 };
 
-                // 2. Fluent Validation Çalıştırma
+                // 2. Fluent Validation Çalıştırma (Önce Validation Yapılmalı)
                 var validator = new MusteriValidator();
                 var result = validator.Validate(musteri);
 
                 if (!result.IsValid)
                 {
-                    // Hataları ön yüzde gösterilmek üzere HTML formatında birleştiriyoruz
-                    var errorList = result.Errors.Select(x => x.ErrorMessage).ToList();
-                    string errorMessage = string.Join("<br>", errorList);
-
+                    var errorMessage = string.Join("<br>", result.Errors.Select(x => x.ErrorMessage));
                     return Json(new { success = false, message = errorMessage });
                 }
 
-                // 3. Servis Katmanı Üzerinden Veritabanına Ekleme
+                // 3. Duplicate TC Kontrolü (Validation geçtikten ve Kimlik No boş değilse yap)
+                if (!string.IsNullOrWhiteSpace(musteri.MUST_KIMLIK_NO) &&
+                    _musteriService.GetAll().Any(x => x.MUST_KIMLIK_NO == musteri.MUST_KIMLIK_NO))
+                {
+                    return Json(new { success = false, message = "Bu kimlik numarası ile kayıtlı müşteri mevcut." });
+                }
+
+                // 4. Servis Katmanı Üzerinden Ekleme
                 _musteriService.Add(musteri);
 
                 return Json(new { success = true, message = "Müşteri başarıyla eklendi." });
             }
             catch (ValidationException ex)
             {
-                // FluentValidation Exception fırlatırsa yakala
                 var errorList = ex.Errors.Select(e => e.ErrorMessage).ToList();
                 string errorMessage = string.Join("<br>", errorList);
 
@@ -97,15 +108,16 @@ namespace Presentation.Controllers
             }
             catch (Exception ex)
             {
-                // Veritabanı veya sunucu taraflı genel hataları yakala
+                // Hatanın tam detayını görebilmek için ex.ToString() veya ex.StackTrace alıyoruz
+                var fullError = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+
                 return Json(new
                 {
                     success = false,
-                    message = "Veritabanına kayıtsı sırasında bir hata oluştu: " + (ex.InnerException?.Message ?? ex.Message)
+                    message = "Sistemsel Hata: " + fullError
                 });
             }
         }
-
         // TEKİL KAYIT (modal doldurma için)
         [HttpGet]
         public ActionResult GetMusteri(Guid id)

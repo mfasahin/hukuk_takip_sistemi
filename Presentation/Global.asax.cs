@@ -21,7 +21,6 @@ namespace Presentation
 
             // FluentValidation entegrasyonu
             FluentValidation.Mvc.FluentValidationModelValidatorProvider.Configure();
-
         }
     }
 }

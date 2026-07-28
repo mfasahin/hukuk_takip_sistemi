@@ -12,31 +12,68 @@
 }
 
 /* Form elemanları */
-input,
-select,
-textarea {
+input, select, textarea {
     max-width: 280px;
 }
 
-/* Sidebar genel görünüm */
+/* Sidebar Genel Görünüm (Flexbox yapısı eklendi) */
 .sidebar {
-    background-color: #01538b; /* ana mavi */
-    color: #fff; /* yazılar beyaz */
-    padding: 20px;
+    background-color: #01538b;
+    color: #fff;
+    padding: 0 0 20px 0;
     min-height: 100vh;
     width: 220px;
-    position: fixed; /* sola sabitle */
+    position: fixed;
     top: 0;
     left: 0;
     box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+    /* İçerikleri ve çıkış butonunu en alta itebilmek için Flexbox */
+    display: flex;
+    flex-direction: column;
 }
 
-/* Logo veya başlık */
+    /* Nav menüsünün kalan tüm boşluğu kaplamasını sağlar */
+    .sidebar .nav {
+        flex-grow: 1;
+    }
+
+/* Logo (Sağdan ve soldan tam dayalı) */
+.sidebar-logo {
+    width: 100%;
+    margin-bottom: 20px;
+}
+/* Çıkış Yap Buton Alanı (En Alta Yapışık) */
+.sidebar-logout {
+    margin-top: auto; /* Otomatik olarak en alta iter */
+    padding: 10px 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15); /* Üstüne hafif bir çizgi */
+}
+
+    /* Çıkış Buton Stili */
+    .sidebar-logout .btn-logout {
+        color: #fff; /* Dikkat çeken kırmızı/mercan tonu */
+        font-size: 18px;
+        font-weight: 600;
+        padding: 10px 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: all 0.2s ease-in-out;
+    }
+
+        .sidebar-logout .btn-logout:hover {
+            background-color: rgba(220, 53, 69, 0.2); /* Hafif kırmızı arka plan vurgusu */
+            color: #ff4d4d;
+            transform: translateX(4px);
+        }
+
 .sidebar-logo img {
-    max-width: 100%;
+    width: 100%;
+    display: block;
     height: auto;
-    display:block;
-    margin: 0 auto;
 }
 
 /* Menü başlığı */
@@ -44,6 +81,7 @@ textarea {
     font-size: 22px;
     font-weight: bold;
     margin-bottom: 25px;
+    padding: 0 15px;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: #f1c40f; /* altın sarısı */
@@ -52,28 +90,85 @@ textarea {
 /* Menü linkleri */
 .sidebar .nav-link {
     color: #fff;
-    font-size: 18px;
-    padding: 10px 15px;
-    border-radius: 4px;
-    transition: all 0.3s ease;
+    font-size: 19px; /* Buton yazıları büyütüldü */
+    font-weight: 500;
+    padding: 12px 18px; /* Buton iç boşlukları genişletildi */
+    display: flex;
+    align-items: center;
+    border-radius: 0;
+    transition: all 0.2s ease-in-out;
 }
 
     /* Hover efekti */
     .sidebar .nav-link:hover {
-        background-color: #0275d8; /* aynı paletin daha açık tonu */
+        background-color: rgba(255, 255, 255, 0.18); /* Yarı saydam şık açık vurgu */
         color: #fff;
-        transform: translateX(5px);
+        transform: translateX(4px); /* Hafif sağa kayma efekti */
     }
 
 /* Aktif menü */
 .nav-link.active {
-    background-color: #01395f; /* aynı paletin daha koyu tonu */
+    background-color: #01395f; /* Koyu mavi aktif tonu */
     color: #fff !important;
     font-weight: bold;
-    border-radius: 4px;
 }
 
 .nav-link i {
-    margin-right: 8px; /* ikon ile yazı arasında boşluk */
-    font-size: 18px; /* ikon boyutu */
+    margin-right: 10px; /* İkon ile yazı arası boşluk */
+    font-size: 20px; /* İkon boyutu yazıya oranla büyütüldü */
+}
+
+/* Tablo Kartı Контейнери */
+.table-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+/* Sütun Başlıkları Clean Look */
+#musteriTable thead th {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #6b7280;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 12px 16px;
+}
+
+/* Arama Kutuları Minimalist */
+.column-search {
+    border: 1px solid #d1d5db !important;
+    border-radius: 6px !important;
+    font-size: 12px !important;
+    padding: 4px 8px !important;
+    box-shadow: none !important;
+}
+
+    .column-search:focus {
+        border-color: #01538b !important;
+    }
+
+/* İşlemler Dropdown Butonunu İnceltme */
+.btn-action-trigger {
+    background: transparent !important;
+    border: none !important;
+    color: #9ca3af !important;
+    font-size: 18px;
+    padding: 4px 8px;
+    border-radius: 50%;
+}
+
+    .btn-action-trigger:hover {
+        background-color: #f3f4f6 !important;
+        color: #111827 !important;
+    }
+
+/* Tablo Alt Sayfalama Alanı */
+.table-footer-card {
+    background-color: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    padding: 12px 20px;
 }

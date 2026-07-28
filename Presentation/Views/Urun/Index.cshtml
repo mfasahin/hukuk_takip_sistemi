@@ -3,13 +3,8 @@
     ViewBag.Title = "Ürün Listesi";
 }
 
-<h2>Ürünler</h2>
-
-<!-- Ürün Ekle Butonu -->
-<div style="display:flex; justify-content:flex-end; gap:10px; margin-bottom:10px;">
-    <button type="button" class="btn btn-danger" id="deleteSelectedBtn">
-        Seçilenleri Sil
-    </button>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Ürünler</h2>
     <button type="button" class="btn btn-success"
             data-bs-toggle="modal"
             data-bs-target="#createModal">
@@ -17,87 +12,95 @@
     </button>
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                <!-- Tümünü seç/deselect için -->
-                <input type="checkbox" id="selectAll" />
-            </th>
-            <th>Ürün Adı</th>
-            <th>Ürün Kodu</th>
-            <th>Ürün Son Geçerlilik Tarihi</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var urun in Model)
-        {
+<div class="table-responsive">
+    <table class="table table-striped align-middle" id="urunTable">
+        <thead>
+            <!-- 1. Satır: Kolon Başlıkları (Sadece Tıklayınca Arama Açılır) -->
             <tr>
-                <td>
-                    <input type="checkbox" class="rowCheckbox" value="@urun.UrunId" />
-                </td>
-                <td>@urun.UrunAd</td>
-                <td>@urun.UrunKod</td>
-                <td>
-                    @(urun.SonGecerlilikTar.HasValue
-                    ? urun.SonGecerlilikTar.Value.ToString("dd.MM.yyyy")
-                    : "")
-                </td>
-                <td>
-                    <div class="dropdown">
-                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item text-danger updateBtn" data-id="@urun.UrunId">Güncelle</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item text-danger deleteBtn" data-id="@urun.UrunId">Sil</a>
-                            </li>
-                        </ul>
-                    </div>
-                </td>
+                <th style="cursor:pointer;">Ürün Adı</th>
+                <th style="cursor:pointer;">Ürün Kodu</th>
+                <th style="cursor:pointer;">Son Geçerlilik Tarihi</th>
+                <th></th> <!-- İşlemler Kolonu -->
             </tr>
-        }
-    </tbody>
-</table>
+            <!-- 2. Satır: Gizli Arama Kutuları -->
+            <tr class="bg-light search-row" style="display: none;">
+                <td><input type="text" class="form-control form-control-sm urun-column-search" placeholder="Ara..." data-col="0"></td>
+                <td><input type="text" class="form-control form-control-sm urun-column-search" placeholder="Ara..." data-col="1"></td>
+                <td><input type="text" class="form-control form-control-sm urun-column-search" placeholder="Ara..." data-col="2"></td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var urun in Model)
+            {
+                <tr>
+                    <td>@urun.UrunAd</td>
+                    <td>@urun.UrunKod</td>
+                    <td>@(urun.SonGecerlilikTar.HasValue ? urun.SonGecerlilikTar.Value.ToString("dd.MM.yyyy") : "")</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item text-danger updateBtn" data-id="@urun.UrunId">Güncelle</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger deleteBtn" data-id="@urun.UrunId">Sil</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Tablo Altındaki Kayıt Gösterim ve Sayfalama Kartı -->
+<div class="card p-3 my-3 border-0 shadow-sm bg-light">
+    <div class="row align-items-center g-3">
+        <div class="col-md-4 d-flex align-items-center gap-2">
+            <label for="urunPageSize" class="form-label mb-0 fw-medium">Sayfada</label>
+            <select id="urunPageSize" class="form-select form-select-sm" style="width: auto;">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+            <span class="fw-medium">kayıt göster</span>
+        </div>
+
+        <div class="col-md-4 text-center text-muted small">
+            <span id="urunTableInfo"></span>
+        </div>
+
+        <div class="col-md-4 d-flex justify-content-end align-items-center gap-3">
+            <div class="text-muted small">
+                Toplam: <strong id="urunTotalRecordCount">@Model.Count()</strong> |
+                Sayfa: <strong id="urunCurrentPageNum">1</strong> / <strong id="urunTotalPagesNum">1</strong>
+            </div>
+            <nav>
+                <ul class="pagination pagination-sm mb-0" id="urunPaginationNav"></ul>
+            </nav>
+        </div>
+    </div>
+</div>
 
 @Html.Partial("_UrunModals", new Presentation.Models.UrunModel())
 
 @section Scripts {
-    <script src="~/Scripts/crud.js"></script>
+    <script src="~/Scripts/crud.js?v=1.1"></script>
+    <script src="~/Scripts/Urun/urunValidation.js"></script>
+    <script src="~/Scripts/Urun/TablePagination.js"></script>
+
     <script>
-        initCrud("Urun", ["UrunId", "UrunAd", "UrunKod", "SonGecerlilikTar"], {
-            validationRules: {
-                "UrunAd": function (value) {
-                    if (!/^[a-zA-ZğüşöçıİĞÜŞÖÇ]+$/.test(value)) return "Ürün Adı sadece harflerden oluşmalıdır.";
-                    return null;
-                },
-                "UrunKod": function (value) {
-                    if (!/^[a-zA-ZğüşöçıİĞÜŞÖÇ]+$/.test(value)) return "Ürün Kodu sadece harflerden oluşmalıdır.";
-                    return null;
-                },
-                "SonGecerlilikTar": function (value, allValues) {
-                    if (!value || value.trim() === "") {
-                        return "Son geçerlilik tarihi zorunludur.";
-                    }
+        $(document).ready(function () {
+            // Ürün tablosu için özelleştirilmiş sayfalama ve arama fonksiyonu
+            initTablePagination("urunTable", "urunPageSize", "urunPaginationNav", "urunTableInfo");
 
-                    // Geçerli tarih formatı mu?
-                    var date = new Date(value);
-                    if (isNaN(date.getTime())) {
-                        return "Geçerli bir tarih giriniz.";
-                    }
-
-                    // Geçerlilik tarihi geçmiş olamaz (bugünden küçükse hata)
-                    var today = new Date();
-                    today.setHours(0, 0, 0, 0); // sadece gün karşılaştırması için
-                    if (date < today) {
-                        return "Son geçerlilik tarihi geçmiş olamaz.";
-                    }
-
-                    return null;
-                }
-            }
+            // Genel CRUD mimarinizle uyumlu initCrud çağrısı
+            initCrud("Urun", ["UrunId", "UrunAd", "UrunKod", "SonGecerlilikTar"], urunOptions);
         });
     </script>
 }

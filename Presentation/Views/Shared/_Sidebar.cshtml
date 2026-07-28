@@ -1,33 +1,43 @@
 ﻿<div class="sidebar vh-100">
-    <div class="sidebar-logo text-center mb-4">
-        <img src="~/Content/images/halkbank_logo_2.jpg" alt="Logo" class="img-fluid" />
+    <!-- Logo -->
+    <div class="sidebar-logo mb-4">
+        <img src="~/Content/images/halkbank_logo_2.jpg" alt="Logo" class="w-100" />
     </div>
+
+    <!-- Menü Linkleri -->
     <ul class="nav flex-column">
         <li class="nav-item">
             <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Musteri" ? "active" : "")" href="@Url.Action("Index","Musteri")">
-                <i class="bi bi-people"></i> Müşteriler
+                <i class="bi bi-people"></i> <span>Müşteriler</span>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Urun" ? "active" : "")" href="@Url.Action("Index","Urun")">
-                <i class="bi bi-box-seam"></i> Ürünler
+                <i class="bi bi-box-seam"></i> <span>Ürünler</span>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Avukat" ? "active" : "")" href="@Url.Action("Index","Avukat")">
-                <i class="bi bi-person-badge"></i> Avukatlar
+                <i class="bi bi-person-badge"></i> <span>Avukatlar</span>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Ihtar" ? "active" : "")" href="@Url.Action("Index","Ihtar")">
-                <i class="bi bi-bell"></i> İhtar Takip
+                <i class="bi bi-bell"></i> <span>İhtar Takip</span>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Icra" ? "active" : "")" href="@Url.Action("Index","Icra")">
-                <i class="bi bi-file-text"></i> İcra Takip
+                <i class="bi bi-file-text"></i> <span>İcra Takip</span>
             </a>
         </li>
     </ul>
-</div>
 
+    <div class="sidebar-logout">
+        <a href="@Url.Action("Logout", "Kullanici")"
+           class="btn-logout"
+           onclick="return confirm('Oturumu kapatıp çıkış yapmak istediğinize emin misiniz?');">
+            <i class="bi bi-box-arrow-right"></i> <span>Çıkış Yap</span>
+        </a>
+    </div>
+</div>

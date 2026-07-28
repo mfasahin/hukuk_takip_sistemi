@@ -167,7 +167,9 @@ function initCrud(entityName, fields, options) {
     $("#createForm").off("submit" + ns)
         .on("submit" + ns, function (e) {
             e.preventDefault();
+            var $form = $(this);
 
+            // 1. Önyüz Form Doğrulaması (Statik kurallar)
             if (!validateForm("createForm", {
                 skipFields: options.validationSkipFields,
                 customRules: options.validationRules
@@ -175,21 +177,63 @@ function initCrud(entityName, fields, options) {
                 return;
             }
 
-            $.ajax({ url: createUrl, type: 'POST', data: $(this).serialize() })
-                .done(function (result) {
-                    if (result.success) {
-                        resetCreateForm("createForm", options.onResetCreateForm);
+            var tcNo = $form.find("[name='MustKimlikNo']").val();
 
-                        closeModalThenShowSuccess("createModal", entityName + " başarıyla eklendi.", function () {
-                            location.reload();
-                        });
-                    } else {
-                        alert("Ekleme başarısız: " + (result.error || ""));
+            // 2. TC Girildiyse UI Üzerinden Var Mı Kontrolü Yap
+            if (tcNo && tcNo.trim() !== "") {
+                $.ajax({
+                    url: '/Musteri/CheckTcExists', // Controller action yoluna göre gerekirse güncelle
+                    type: 'GET',
+                    data: { tcNo: tcNo.trim() },
+                    success: function (checkResult) {
+                        if (checkResult.exists) {
+                            // Veritabanında TC bulunduysa UI modalında göster ve kaydı durdur
+                            $('#errorModal .modal-body').html("Bu TC kimlik numarasına ait müşteri var.");
+                            $('#errorModal').modal('show');
+                            return;
+                        }
+
+                        // TC çakışmıyorsa kaydetme işlemini başlat
+                        executeCreateRequest($form);
+                    },
+                    error: function () {
+                        // Kontrol servisinde beklenmeyen bir aksaklık olursa doğrudan kaydetmeyi dene
+                        executeCreateRequest($form);
                     }
-                })
-                .fail(function (xhr) { showError("Ekleme sırasında hata", xhr); });
+                });
+            } else {
+                // TC girilmemişse (Kurumsal vs. ise) doğrudan kaydet
+                executeCreateRequest($form);
+            }
         });
 
+    // 3. Formu Sunucuya Gönderen Asıl AJAX Fonksiyonu
+    function executeCreateRequest($form) {
+        $.ajax({
+            url: createUrl,
+            type: 'POST',
+            data: $form.serialize()
+        })
+            .done(function (result) {
+                if (result.success) {
+                    resetCreateForm("createForm", options.onResetCreateForm);
+                    closeModalThenShowSuccess("createModal", entityName + " başarıyla eklendi.", function () {
+                        location.reload();
+                    });
+                } else {
+                    $('#errorModal .modal-body').html(result.message || "Ekleme başarısız.");
+                    $('#errorModal').modal('show');
+                }
+            })
+            .fail(function (xhr) {
+                var msg = "Sunucu ile iletişimde hata oluştu (" + (xhr ? xhr.status : "?") + ")";
+                if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
+                    msg = xhr.responseJSON.message;
+                }
+                $('#errorModal .modal-body').html(msg);
+                $('#errorModal').modal('show');
+            });
+    }
     // UPDATE
     $(document).off("click" + ns, ".updateBtn")
         .on("click" + ns, ".updateBtn", function () {
