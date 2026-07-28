@@ -9,7 +9,7 @@ namespace Business.Abstract
     {
 
         Icra GetById(Guid id);
-        void Add(Icra icra);
+        void Add(IcraDto icra);
         void Update(Icra icra);
         void Delete(Icra icra);
         List<IcraDto> GetIcraDto();

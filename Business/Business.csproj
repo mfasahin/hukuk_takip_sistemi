@@ -96,6 +96,7 @@
     <Compile Include="Concrete\UrunManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validation\Avukat\AvukatValidator.cs" />
+    <Compile Include="Validation\Icra\IcraValidator.cs" />
     <Compile Include="Validation\Ihtar\IhtarValidator.cs" />
     <Compile Include="Validation\Musteri\MusteriValidator.cs" />
     <Compile Include="Validation\Urun\UrunValidator.cs" />
@@ -117,8 +118,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Validation\Icra\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

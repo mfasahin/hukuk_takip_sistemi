@@ -2,60 +2,66 @@
 @using System.Linq
 
 <!-- Create Modal -->
-<div class="modal fade" id="createModal" tabindex="-1">
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             @using (Html.BeginForm("Create", "Icra", FormMethod.Post, new { id = "createForm" }))
             {
                 @Html.AntiForgeryToken()
                 <div class="modal-header">
-                    <h5 class="modal-title">Yeni İcra</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title" id="createModalLabel">Yeni İcra</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label>Müşteri</label>
-                            <select class="form-select" id="createMusteriSelect">
-                                <option value="">Seçiniz</option>
-                                @foreach (var item in (ViewBag.MusteriList as IEnumerable<SelectListItem>))
-                                {
-                                    <option value="@item.Value">@item.Text</option>
-                                }
-                            </select>
+                    <div class="container-fluid">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Müşteri</label>
+                                <!-- name="MusteriId" eklendi -->
+                                <select class="form-select" id="createMusteriSelect" name="MusteriId">
+                                    <option value="">Seçiniz</option>
+                                    @if (ViewBag.MusteriList != null)
+                                    {
+                                        foreach (var item in (ViewBag.MusteriList as IEnumerable<SelectListItem>))
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Ürün</label>
+                                <!-- name="UrunId" eklendi -->
+                                <select class="form-select" id="createUrunSelect" name="UrunId" disabled>
+                                    <option value="">Önce müşteri seçiniz</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">İhtar</label>
+                                @Html.DropDownListFor(m => m.IhtarUrunId,
+                                    Enumerable.Empty<SelectListItem>(),
+                                    "Önce ürün seçiniz",
+                                    new { @class = "form-select", id = "createIhtarUrunSelect", disabled = "disabled" })
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <label>Ürün</label>
-                            <select class="form-select" id="createUrunSelect" disabled>
-                                <option value="">Önce müşteri seçiniz</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label>İhtar</label>
-                            @Html.DropDownListFor(m => m.IhtarUrunId,
-                                Enumerable.Empty<SelectListItem>(),
-                                "Önce ürün seçiniz",
-                                new { @class = "form-select", id = "createIhtarUrunSelect", disabled = "disabled" })
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                @Html.LabelFor(m => m.MahkemeId, "Mahkeme", new { @class = "form-label" })
+                                @Html.DropDownListFor(m => m.MahkemeId,
+                                    ViewBag.MahkemeList as IEnumerable<SelectListItem>,
+                                    "Seçiniz", new { @class = "form-select", id = "createMahkemeId" })
+                            </div>
+                            <div class="col-md-4">
+                                @Html.LabelFor(m => m.IcraDosyaNo, "İcra Dosya No", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.IcraDosyaNo, new { @class = "form-control", id = "createIcraDosyaNo" })
+                            </div>
+                            <div class="col-md-4">
+                                @Html.LabelFor(m => m.IcraTakipTar, "İcra Takip Tarihi", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.IcraTakipTar, new { @class = "form-control", type = "date", id = "createIcraTakipTar" })
+                            </div>
                         </div>
                     </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            @Html.LabelFor(m => m.MahkemeId, "Mahkeme")
-                            @Html.DropDownListFor(m => m.MahkemeId,
-                                ViewBag.MahkemeList as IEnumerable<SelectListItem>,
-                                "Seçiniz", new { @class = "form-select" })
-                        </div>
-                        <div class="col-md-4">
-                            @Html.LabelFor(m => m.IcraDosyaNo, "İcra Dosya No")
-                            @Html.TextBoxFor(m => m.IcraDosyaNo, new { @class = "form-control" })
-                        </div>
-                        <div class="col-md-4">
-                            @Html.LabelFor(m => m.IcraTakipTar, "İcra Takip Tarihi")
-                            @Html.TextBoxFor(m => m.IcraTakipTar, new { @class = "form-control", type = "date" })
-                        </div>
-                    </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="createSaveBtn" class="btn btn-primary">Kaydet</button>
@@ -67,59 +73,66 @@
 </div>
 
 <!-- Update Modal -->
-<div class="modal fade" id="updateModal" tabindex="-1">
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             @using (Html.BeginForm("Update", "Icra", FormMethod.Post, new { id = "updateForm" }))
             {
                 @Html.AntiForgeryToken()
-                @Html.HiddenFor(m => m.IcraId)
+                @Html.HiddenFor(m => m.IcraId, new { id = "IcraId" })
+
+                <!-- Disabled olan IhtarUrunId değerini sunucuya göndermek için gizli alan -->
+                @Html.HiddenFor(m => m.IhtarUrunId, new { id = "updateIhtarUrunIdHidden" })
 
                 <div class="modal-header">
-                    <h5 class="modal-title">İcra Güncelle</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title" id="updateModalLabel">İcra Güncelle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label>Müşteri</label>
-                            <select class="form-select" id="updateMusteriSelect">
-                                <option value="">Seçiniz</option>
-                                @foreach (var item in (ViewBag.MusteriList as IEnumerable<SelectListItem>))
-                                {
-                                    <option value="@item.Value">@item.Text</option>
-                                }
-                            </select>
+                    <div class="container-fluid">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Müşteri</label>
+                                <select class="form-select" id="updateMusteriSelect" name="MusteriId" disabled>
+                                    <option value="">Seçiniz</option>
+                                    @if (ViewBag.MusteriList != null)
+                                    {
+                                        foreach (var item in (ViewBag.MusteriList as IEnumerable<SelectListItem>))
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Ürün</label>
+                                <select class="form-select" id="updateUrunSelect" name="UrunId" disabled>
+                                    <option value="">Önce müşteri seçiniz</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">İhtar</label>
+                                <select class="form-select" id="updateIhtarUrunSelect" disabled>
+                                    <option value="">Önce ürün seçiniz</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <label>Ürün</label>
-                            <select class="form-select" id="updateUrunSelect">
-                                <option value="">Önce müşteri seçiniz</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label>İhtar</label>
-                            <select class="form-select" id="updateIhtarUrunSelect">
-                                <option value="">Önce ürün seçiniz</option>
-                            </select>
-                            @Html.HiddenFor(m => m.IhtarUrunId, new { id = "updateIhtarUrunIdHidden" })
-                        </div>
-                    </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            @Html.LabelFor(m => m.MahkemeId, "Mahkeme")
-                            @Html.DropDownListFor(m => m.MahkemeId,
-                                ViewBag.MahkemeList as IEnumerable<SelectListItem>,
-                                "Seçiniz", new { @class = "form-select" })
-                        </div>
-                        <div class="col-md-4">
-                            @Html.LabelFor(m => m.IcraDosyaNo, "İcra Dosya No")
-                            @Html.TextBoxFor(m => m.IcraDosyaNo, new { @class = "form-control" })
-                        </div>
-                        <div class="col-md-4">
-                            @Html.LabelFor(m => m.IcraTakipTar, "İcra Takip Tarihi")
-                            @Html.TextBoxFor(m => m.IcraTakipTar, new { @class = "form-control", type = "date" })
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                @Html.LabelFor(m => m.MahkemeId, "Mahkeme", new { @class = "form-label" })
+                                @Html.DropDownListFor(m => m.MahkemeId,
+                                    ViewBag.MahkemeList as IEnumerable<SelectListItem>,
+                                    "Seçiniz", new { @class = "form-select", id = "MahkemeId" })
+                            </div>
+                            <div class="col-md-4">
+                                @Html.LabelFor(m => m.IcraDosyaNo, "İcra Dosya No", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.IcraDosyaNo, new { @class = "form-control", id = "IcraDosyaNo" })
+                            </div>
+                            <div class="col-md-4">
+                                @Html.LabelFor(m => m.IcraTakipTar, "İcra Takip Tarihi", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.IcraTakipTar, new { @class = "form-control", type = "date", id = "IcraTakipTar" })
+                            </div>
                         </div>
                     </div>
                 </div>

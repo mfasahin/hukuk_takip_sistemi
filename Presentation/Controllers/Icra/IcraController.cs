@@ -1,6 +1,6 @@
 ﻿using Business.Abstract;
-using Entity.Concrete;
 using Entity.Dto;
+using FluentValidation;
 using Presentation.Filters;
 using System;
 using System.Linq;
@@ -94,40 +94,34 @@ namespace Presentation.Controllers
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 
+        // EKLEME
         [HttpPost]
         public ActionResult Create(IcraDto model)
         {
-            if (!ModelState.IsValid)
+            if (model == null)
             {
-                var errors = ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage)
-                    .ToList();
-                return Json(new { success = false, error = "ModelState geçersiz", details = errors });
+                return Json(new { success = false, message = "Gönderilen icra verisi boş olamaz." });
             }
 
             try
             {
-                var entity = new Icra
-                {
-                    ICRA_ID = Guid.NewGuid(),
-                    IHTAR_URUN_ID = model.IhtarUrunId,
-                    MAHKEME_ID = model.MahkemeId,
-                    ICRA_DOSYA_NO = model.IcraDosyaNo,
-                    ICRA_TAKIP_TAR = model.IcraTakipTar,
-                    GRS_TAR_ZMN = DateTime.Now
-                };
+                // Validation, Entity dönüşümü ve Veritabanı ekleme servis katmanında yapılır
+                _icraService.Add(model);
 
-                var result = _icraService.AddIcra(entity, model.MusteriId, model.UrunId);
-
-                if (result.Contains("başarıyla"))
-                    return Json(new { success = true, message = result });
-
-                return Json(new { success = false, error = result });
+                return Json(new { success = true, message = "İcra takibi başarıyla başlatıldı." });
+            }
+            catch (ValidationException ex)
+            {
+                var errorList = ex.Errors.Select(e => e.ErrorMessage).ToList();
+                return Json(new { success = false, message = string.Join("<br>", errorList) });
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, error = ex.Message });
+                return Json(new
+                {
+                    success = false,
+                    message = ex.InnerException != null ? ex.InnerException.Message : ex.Message
+                });
             }
         }
 
@@ -137,7 +131,17 @@ namespace Presentation.Controllers
             var dto = _icraService.GetByIdIcra(id);
             if (dto == null) return HttpNotFound();
 
-            return Json(dto, JsonRequestBehavior.AllowGet);
+            return Json(new
+            {
+                IcraId = dto.IcraId,
+                MusteriId = dto.MusteriId,
+                UrunId = dto.UrunId,               // Ürün ID'sinin JavaScript'e açıkça aktarılmasını sağlar
+                IhtarUrunId = dto.IhtarUrunId,
+                MahkemeId = dto.MahkemeId,
+                IcraDosyaNo = dto.IcraDosyaNo,
+                // Tarihi HTML5 date input'un anlayacağı yyyy-MM-dd formatına dönüştürüyoruz
+                IcraTakipTar = dto.IcraTakipTar.ToString("yyyy-MM-dd")
+            }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

@@ -221,6 +221,8 @@
     <Content Include="Scripts\Avukat\tablePagination.js" />
     <Content Include="Scripts\common.js" />
     <Content Include="Scripts\crud.js" />
+    <Content Include="Scripts\Icra\icraValidation.js" />
+    <Content Include="Scripts\Icra\tablePagination.js" />
     <Content Include="Scripts\Ihtar\ihtarValidation.js" />
     <Content Include="Scripts\Ihtar\tablePagination.js" />
     <Content Include="Scripts\Musteri\musteriValidation.js" />
@@ -245,7 +247,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Scripts\Icra\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap\css\bootstrap-grid.css.map" />

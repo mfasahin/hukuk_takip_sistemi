@@ -3,9 +3,8 @@
     ViewBag.Title = "İcra Takip";
 }
 
-<h2>İcra Takip</h2>
-
-<div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>İcra Takip</h2>
     <button type="button" class="btn btn-success"
             data-bs-toggle="modal"
             data-bs-target="#createModal">
@@ -13,56 +12,102 @@
     </button>
 </div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th><input type="checkbox" id="selectAll" /></th>
-            <th>Müşteri</th>
-            <th>Ürün</th>
-            <th>Borç Tutarı</th>
-            <th>İcra Takip Tarihi</th>
-            <th>Mahkeme</th>
-            <th>İcra Dosya Numarası</th>
-            <th>Avukat</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var icra in Model)
-        {
+<div class="table-responsive">
+    <table class="table table-striped align-middle" id="icraTable">
+        <thead>
+            <!-- 1. Satır: Kolon Başlıkları (Sadece Tıklayınca Arama Açılır) -->
             <tr>
-                <td><input type="checkbox" class="rowCheckbox" value="@icra.IcraId" /></td>
-                <td>@icra.MusteriAd @icra.MusteriSoyad</td>
-                <td>@icra.UrunAd</td>
-                <td>@icra.BorcTutar</td>
-                <td>@icra.IcraTakipTar.ToString("dd.MM.yyyy")</td>
-                <td>@icra.MahkemeAd</td>
-                <td>@icra.IcraDosyaNo</td>
-                <td>@icra.AvukatAd @icra.AvukatSoyad</td>
-                <td>
-                    <div class="dropdown">
-                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item text-danger updateBtn" data-id="@icra.IcraId">Güncelle</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item text-danger deleteBtn" data-id="@icra.IcraId">Sil</a>
-                            </li>
-                        </ul>
-                    </div>
-                </td>
+                <th style="cursor:pointer;">Müşteri</th>
+                <th style="cursor:pointer;">Ürün</th>
+                <th style="cursor:pointer;">Borç Tutarı</th>
+                <th style="cursor:pointer;">İcra Takip Tarihi</th>
+                <th style="cursor:pointer;">Mahkeme</th>
+                <th style="cursor:pointer;">İcra Dosya No</th>
+                <th style="cursor:pointer;">Avukat</th>
+                <th></th> <!-- İşlemler Kolonu -->
             </tr>
-        }
-    </tbody>
-</table>
+            <!-- 2. Satır: Gizli Arama Kutuları -->
+            <tr class="bg-light search-row" style="display: none;">
+                <td><input type="text" class="form-control form-control-sm icra-column-search" placeholder="Ara..." data-col="0"></td>
+                <td><input type="text" class="form-control form-control-sm icra-column-search" placeholder="Ara..." data-col="1"></td>
+                <td><input type="text" class="form-control form-control-sm icra-column-search" placeholder="Ara..." data-col="2"></td>
+                <td><input type="text" class="form-control form-control-sm icra-column-search" placeholder="Ara..." data-col="3"></td>
+                <td><input type="text" class="form-control form-control-sm icra-column-search" placeholder="Ara..." data-col="4"></td>
+                <td><input type="text" class="form-control form-control-sm icra-column-search" placeholder="Ara..." data-col="5"></td>
+                <td><input type="text" class="form-control form-control-sm icra-column-search" placeholder="Ara..." data-col="6"></td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var icra in Model)
+            {
+                <tr>
+                    <td>@((icra.MusteriAd + " " + icra.MusteriSoyad).Trim())</td>
+                    <td>@icra.UrunAd</td>
+                    <td>@icra.BorcTutar.ToString("N2") ₺</td>
+                    <td>@icra.IcraTakipTar.ToString("dd.MM.yyyy")</td>
+                    <td>@icra.MahkemeAd</td>
+                    <td>@icra.IcraDosyaNo</td>
+                    <td>@((icra.AvukatAd + " " + icra.AvukatSoyad).Trim())</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item text-danger updateBtn" data-id="@icra.IcraId">Güncelle</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger deleteBtn" data-id="@icra.IcraId">Sil</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Tablo Altındaki Kayıt Gösterim ve Sayfalama Kartı -->
+<div class="card p-3 my-3 border-0 shadow-sm bg-light">
+    <div class="row align-items-center g-3">
+        <div class="col-md-4 d-flex align-items-center gap-2">
+            <label for="icraPageSize" class="form-label mb-0 fw-medium">Sayfada</label>
+            <select id="icraPageSize" class="form-select form-select-sm" style="width: auto;">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+            <span class="fw-medium">kayıt göster</span>
+        </div>
+
+        <div class="col-md-4 text-center text-muted small">
+            <span id="icraTableInfo"></span>
+        </div>
+
+        <div class="col-md-4 d-flex justify-content-end align-items-center gap-3">
+            <div class="text-muted small">
+                Toplam: <strong id="icraTotalRecordCount">@Model.Count()</strong> |
+                Sayfa: <strong id="icraCurrentPageNum">1</strong> / <strong id="icraTotalPagesNum">1</strong>
+            </div>
+            <nav>
+                <ul class="pagination pagination-sm mb-0" id="icraPaginationNav"></ul>
+            </nav>
+        </div>
+    </div>
+</div>
 
 @Html.Partial("_IcraModals", new Entity.Dto.IcraDto())
 
 @section Scripts {
-    <script src="~/Scripts/crud.js"></script>
+    <script src="~/Scripts/crud.js?v=1.1"></script>
+    <script src="~/Scripts/Icra/icraValidation.js"></script>
+    <script src="~/Scripts/Icra/TablePagination.js"></script>
+
     <script>
-        // Ürün dropdown'ını doldurur (1. kademe sonucu)
+        // 1. Ürün dropdown'ını doldurur
         function loadUrunOptions(musteriId, prefix, url, callback) {
             var $urunSelect = $("#" + prefix + "UrunSelect");
             var $ihtarSelect = $("#" + prefix + "IhtarUrunSelect");
@@ -79,15 +124,22 @@
             $.get(url, { musteriId: musteriId })
                 .done(function (list) {
                     $urunSelect.append('<option value="">Seçiniz</option>');
-                    list.forEach(function (item) {
-                        $urunSelect.append('<option value="' + item.value + '">' + item.text + '</option>');
-                    });
+                    if (list && list.length > 0) {
+                        list.forEach(function (item) {
+                            var val = item.value || item.Value;
+                            var txt = item.text || item.Text;
+                            $urunSelect.append('<option value="' + val + '">' + txt + '</option>');
+                        });
+                    }
                     $urunSelect.prop("disabled", false);
+                    if (callback) callback();
+                })
+                .fail(function () {
                     if (callback) callback();
                 });
         }
 
-        // İhtar dropdown'ını doldurur (2. kademe sonucu)
+        // 2. İhtar dropdown'ını doldurur
         function loadIhtarOptions(musteriId, urunId, prefix, url, callback) {
             var $ihtarSelect = $("#" + prefix + "IhtarUrunSelect");
             $ihtarSelect.empty();
@@ -101,62 +153,112 @@
             $.get(url, { musteriId: musteriId, urunId: urunId })
                 .done(function (list) {
                     $ihtarSelect.append('<option value="">Seçiniz</option>');
-                    list.forEach(function (item) {
-                        $ihtarSelect.append('<option value="' + item.value + '">' + item.text + '</option>');
-                    });
+                    if (list && list.length > 0) {
+                        list.forEach(function (item) {
+                            var val = item.value || item.Value;
+                            var txt = item.text || item.Text;
+                            $ihtarSelect.append('<option value="' + val + '">' + txt + '</option>');
+                        });
+                    }
                     $ihtarSelect.prop("disabled", false);
+                    if (callback) callback();
+                })
+                .fail(function () {
                     if (callback) callback();
                 });
         }
 
-        // CREATE MODAL kademeleri
-        $(document).on("change", "#createMusteriSelect", function () {
-            loadUrunOptions($(this).val(), "create", "/Icra/GetUrunlerByMusteri");
-        });
-        $(document).on("change", "#createUrunSelect", function () {
-            var musteriId = $("#createMusteriSelect").val();
-            loadIhtarOptions(musteriId, $(this).val(), "create", "/Icra/GetIhtarlarByMusteriVeUrun");
-        });
-
-        // UPDATE MODAL kademeleri
-        $(document).on("change", "#updateMusteriSelect", function () {
-            loadUrunOptions($(this).val(), "update", "/Icra/GetUrunlerByMusteri");
-        });
-        $(document).on("change", "#updateUrunSelect", function () {
-            var musteriId = $("#updateMusteriSelect").val();
-            loadIhtarOptions(musteriId, $(this).val(), "update", "/Icra/GetIhtarlarByMusteriVeUrun");
-        });
-
-        // Create modal her açıldığında sıfırla
-        $("#createModal").on("show.bs.modal", function () {
-            $("#createMusteriSelect").val("");
-            $("#createUrunSelect").empty().append('<option value="">Önce müşteri seçiniz</option>').prop("disabled", true);
-            $("#createIhtarUrunSelect").empty().append('<option value="">Önce ürün seçiniz</option>').prop("disabled", true);
-        });
-
-        initCrud("Icra", ["IcraId", "MahkemeId", "IcraDosyaNo", "IcraTakipTar"], {
-            onGetSuccess: function (data) {
-                // Zincire başlamadan önce, önceki güncellemeden kalan disabled durumunu aç
-                $("#updateMusteriSelect").prop("disabled", false);
-                $("#updateUrunSelect").prop("disabled", false);
-                $("#updateIhtarUrunSelect").prop("disabled", false);
-
-                $("#updateMusteriSelect").val(data.MusteriId);
-
-                loadUrunOptions(data.MusteriId, "update", "/Icra/GetUrunlerByMusteri", function () {
-                    $("#updateUrunSelect").val(data.UrunId);
-
-                    loadIhtarOptions(data.MusteriId, data.UrunId, "update", "/Icra/GetIhtarlarByMusteriVeUrun", function () {
-                        $("#updateIhtarUrunSelect").val(data.IhtarUrunId);
-                        $("#updateIhtarUrunIdHidden").val(data.IhtarUrunId);
-
-                        // Zincir tamamlandı, artık üçünü de disable et
-                        $("#updateMusteriSelect").prop("disabled", true);
-                        $("#updateUrunSelect").prop("disabled", true);
-                        $("#updateIhtarUrunSelect").prop("disabled", true);
-                    });
-                });
+        $(document).ready(function () {
+            // İcra tablosu sayfalama ve arama filtreleme başlatma
+            if (typeof initIcraTablePagination === "function") {
+                initIcraTablePagination("icraTable", "icraPageSize", "icraPaginationNav", "icraTableInfo");
             }
+
+            // CREATE MODAL kademeli seçim dinleyicileri
+            $(document).on("change", "#createMusteriSelect", function () {
+                loadUrunOptions($(this).val(), "create", "/Icra/GetUrunlerByMusteri");
+            });
+            $(document).on("change", "#createUrunSelect", function () {
+                var musteriId = $("#createMusteriSelect").val();
+                loadIhtarOptions(musteriId, $(this).val(), "create", "/Icra/GetIhtarlarByMusteriVeUrun");
+            });
+
+            // UPDATE MODAL kademeli seçim dinleyicileri
+            $(document).on("change", "#updateMusteriSelect", function () {
+                loadUrunOptions($(this).val(), "update", "/Icra/GetUrunlerByMusteri");
+            });
+            $(document).on("change", "#updateUrunSelect", function () {
+                var musteriId = $("#updateMusteriSelect").val();
+                loadIhtarOptions(musteriId, $(this).val(), "update", "/Icra/GetIhtarlarByMusteriVeUrun");
+            });
+
+            // Create Modal her açıldığında form temizleme
+            $("#createModal").on("show.bs.modal", function () {
+                $("#createMusteriSelect").val("");
+                $("#createUrunSelect").empty().append('<option value="">Önce müşteri seçiniz</option>').prop("disabled", true);
+                $("#createIhtarUrunSelect").empty().append('<option value="">Önce ürün seçiniz</option>').prop("disabled", true);
+            });
+
+            // CRUD Kurulumu ve Güncelleme Verisi Yükleme Operasyonu
+            var crudConfig = $.extend({}, window.icraOptions || {}, {
+                onGetSuccess: function (data) {
+                    if (!data) return;
+
+                    // 1. Backend'den gelen verileri harf büyüklüğü (case) fark etmeksizin yakala
+                    var mId = data.MusteriId || data.musteriId;
+                    var uId = data.UrunId || data.urunId;
+                    var iuId = data.IhtarUrunId || data.ihtarUrunId;
+
+                    // 2. İşlem yapılacağı için kilitleri kaldır
+                    $("#updateMusteriSelect, #updateUrunSelect, #updateIhtarUrunSelect").prop("disabled", false);
+
+                    // 3. Müşteriyi seç
+                    var targetMusteriId = (mId || "").toString().toLowerCase();
+                    $("#updateMusteriSelect option").each(function () {
+                        if ($(this).val().toLowerCase() === targetMusteriId) {
+                            $("#updateMusteriSelect").val($(this).val());
+                            return false;
+                        }
+                    });
+
+                    // 4. Müşterinin ürünlerini getir
+                    loadUrunOptions(mId, "update", "/Icra/GetUrunlerByMusteri", function () {
+                        var targetUrunId = (uId || "").toString().toLowerCase();
+                        var selectedUrunValue = "";
+
+                        // Ürün seçeneğini bul ve işaretle
+                        $("#updateUrunSelect option").each(function () {
+                            if ($(this).val().toLowerCase() === targetUrunId) {
+                                selectedUrunValue = $(this).val();
+                                $("#updateUrunSelect").val(selectedUrunValue);
+                                return false;
+                            }
+                        });
+
+                        // 5. İhtarları seçilen Ürün ID'si üzerinden getir
+                        var actualUrunId = selectedUrunValue || uId;
+                        loadIhtarOptions(mId, actualUrunId, "update", "/Icra/GetIhtarlarByMusteriVeUrun", function () {
+                            var targetIhtarUrunId = (iuId || "").toString().toLowerCase();
+
+                            $("#updateIhtarUrunSelect option").each(function () {
+                                if ($(this).val().toLowerCase() === targetIhtarUrunId) {
+                                    $("#updateIhtarUrunSelect").val($(this).val());
+                                    return false;
+                                }
+                            });
+
+                            // Gizli alana IhtarUrunId basılıyor
+                            $("#updateIhtarUrunIdHidden").val(iuId);
+
+                            // 6. Yükleme tamamen tamamlandıktan sonra 3 alanı da tekrar kilitle
+                            $("#updateMusteriSelect, #updateUrunSelect, #updateIhtarUrunSelect").prop("disabled", true);
+                        });
+                    });
+                }
+            });
+
+            // initCrud çağrısı
+            initCrud("Icra", ["IcraId", "MahkemeId", "IcraDosyaNo", "IcraTakipTar"], crudConfig);
         });
     </script>
 }
