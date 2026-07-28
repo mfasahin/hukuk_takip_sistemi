@@ -1,6 +1,8 @@
 ﻿using Business.Abstract;
+using Business.Validation;
 using DataAccess.Abstract;
 using Entity.Concrete;
+using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
 
@@ -22,21 +24,53 @@ namespace Business.Concrete
 
         public void Add(Avukat avukat)
         {
+            // 1. FluentValidation Çalıştırma
+            AvukatValidator validator = new AvukatValidator();
+            ValidationResult result = validator.Validate(avukat);
+
+            if (!result.IsValid)
+            {
+                string errorMessages = string.Join("\n", result.Errors);
+                throw new Exception($"Doğrulama Hataları:\n{errorMessages}");
+            }
+
+            // 2. TBB Sicil No Mükerrer Kontrolü (Silinmemiş olanlar arasında)
+            var existing = _avukatDal.Get(a => a.TBB_SICIL_NO == avukat.TBB_SICIL_NO && a.SIL_TAR_ZMN == null);
+            if (existing != null)
+            {
+                throw new Exception("Bu TBB Sicil Numarası ile kayıtlı bir avukat zaten mevcut.");
+            }
+
+            // 3. Veritabanına Ekleme
             _avukatDal.Add(avukat);
         }
 
         public void Update(Avukat avukat)
         {
+            // 1. FluentValidation Çalıştırma
+            AvukatValidator validator = new AvukatValidator();
+            ValidationResult result = validator.Validate(avukat);
+
+            if (!result.IsValid)
+            {
+                string errorMessages = string.Join("\n", result.Errors);
+                throw new Exception($"Doğrulama Hataları:\n{errorMessages}");
+            }
+
+            // 2. Güncelleme
             _avukatDal.Update(avukat);
         }
+
         public void Delete(Avukat avukat)
         {
-            _avukatDal.Delete(avukat);
+            // Fiziksel silme yerine Soft Delete (Silindi tarihi ekleyerek güncelleme)
+            avukat.SIL_TAR_ZMN = DateTime.Now;
+            _avukatDal.Update(avukat);
         }
 
         public Avukat GetById(Guid id)
         {
-            return _avukatDal.Get(a => a.AVUKAT_ID == id);
+            return _avukatDal.Get(a => a.AVUKAT_ID == id && a.SIL_TAR_ZMN == null);
         }
     }
 }

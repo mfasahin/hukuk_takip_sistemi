@@ -1,5 +1,7 @@
 ﻿using Business.Abstract;
+using Business.Validation;
 using Entity.Concrete;
+using FluentValidation;
 using Presentation.Filters;
 using Presentation.Models;
 using System;
@@ -20,7 +22,7 @@ namespace Presentation.Controllers
             _ihtarService = ihtarService;
         }
 
-        //LİSTELEME
+        // LİSTELEME
         public ActionResult Index()
         {
             var avukatList = _avukatService.GetAll()
@@ -42,12 +44,29 @@ namespace Presentation.Controllers
             return View(model);
         }
 
+        // ASENKRON TBB SİCİL NO KONTROLÜ (UI / JS Tarafından Çağrılır)
+        [HttpGet]
+        public ActionResult CheckTbbSicilNoExists(string tbbSicilNo)
+        {
+            if (string.IsNullOrWhiteSpace(tbbSicilNo))
+            {
+                return Json(new { exists = false }, JsonRequestBehavior.AllowGet);
+            }
+
+            bool exists = _avukatService.GetAll()
+                .Any(a => a.SIL_TAR_ZMN == null && a.TBB_SICIL_NO == tbbSicilNo.Trim());
+
+            return Json(new { exists = exists }, JsonRequestBehavior.AllowGet);
+        }
+
         // EKLEME
         [HttpPost]
         public ActionResult Create(AvukatModel model)
         {
-            if (!ModelState.IsValid)
-                return Json(new { success = false, error = "ModelState geçersiz" });
+            if (model == null)
+            {
+                return Json(new { success = false, message = "Gönderilen avukat verisi boş olamaz." });
+            }
 
             try
             {
@@ -64,12 +83,41 @@ namespace Presentation.Controllers
                     OFIS_TEL_NO = model.OfisTelNo
                 };
 
+                // 1. FluentValidation Çalıştırma
+                var validator = new AvukatValidator();
+                var result = validator.Validate(avukat);
+
+                if (!result.IsValid)
+                {
+                    var errorMessage = string.Join("<br>", result.Errors.Select(x => x.ErrorMessage));
+                    return Json(new { success = false, message = errorMessage });
+                }
+
+                // 2. Duplicate TBB Sicil No Kontrolü
+                bool isSicilExists = _avukatService.GetAll()
+                    .Any(a => a.SIL_TAR_ZMN == null && a.TBB_SICIL_NO == avukat.TBB_SICIL_NO);
+
+                if (isSicilExists)
+                {
+                    return Json(new { success = false, message = "Bu TBB Sicil Numarası ile kayıtlı bir avukat zaten mevcut." });
+                }
+
+                // 3. Ekleme İşlemi
                 _avukatService.Add(avukat);
-                return Json(new { success = true });
+                return Json(new { success = true, message = "Avukat başarıyla eklendi." });
+            }
+            catch (ValidationException ex)
+            {
+                var errorList = ex.Errors.Select(e => e.ErrorMessage).ToList();
+                return Json(new { success = false, message = string.Join("<br>", errorList) });
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, error = ex.Message });
+                return Json(new
+                {
+                    success = false,
+                    message = "Veritabanı kaydı sırasında bir hata oluştu: " + (ex.InnerException?.Message ?? ex.Message)
+                });
             }
         }
 
@@ -78,7 +126,7 @@ namespace Presentation.Controllers
         public ActionResult GetAvukat(Guid id)
         {
             var avukat = _avukatService.GetById(id);
-            if (avukat == null) return HttpNotFound();
+            if (avukat == null || avukat.SIL_TAR_ZMN != null) return HttpNotFound();
 
             var model = new AvukatModel
             {
@@ -96,18 +144,20 @@ namespace Presentation.Controllers
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
-        /// GÜNCELLEME
+        // GÜNCELLEME
         [HttpPost]
         public ActionResult Update(AvukatModel model)
         {
-            if (!ModelState.IsValid)
-                return Json(new { success = false, error = "ModelState geçersiz" });
+            if (model == null)
+            {
+                return Json(new { success = false, message = "Gönderilen avukat verisi boş olamaz." });
+            }
 
             try
             {
                 var avukat = _avukatService.GetById(model.AvukatId);
-                if (avukat == null)
-                    return Json(new { success = false, error = "Kayıt bulunamadı" });
+                if (avukat == null || avukat.SIL_TAR_ZMN != null)
+                    return Json(new { success = false, message = "Kayıt bulunamadı." });
 
                 avukat.AVKT_AD = model.AvktAd;
                 avukat.AVKT_SOYAD = model.AvktSoyad;
@@ -118,12 +168,31 @@ namespace Presentation.Controllers
                 avukat.HKK_BURO_ADRES = model.HkkBuroAdres;
                 avukat.OFIS_TEL_NO = model.OfisTelNo;
 
+                // FluentValidation Çalıştırma
+                var validator = new AvukatValidator();
+                var result = validator.Validate(avukat);
+
+                if (!result.IsValid)
+                {
+                    var errorMessage = string.Join("<br>", result.Errors.Select(x => x.ErrorMessage));
+                    return Json(new { success = false, message = errorMessage });
+                }
+
                 _avukatService.Update(avukat);
-                return Json(new { success = true });
+                return Json(new { success = true, message = "Avukat başarıyla güncellendi." });
+            }
+            catch (ValidationException ex)
+            {
+                var errorList = ex.Errors.Select(e => e.ErrorMessage).ToList();
+                return Json(new { success = false, message = string.Join("<br>", errorList) });
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, error = ex.Message });
+                return Json(new
+                {
+                    success = false,
+                    message = "Güncelleme sırasında bir hata oluştu: " + (ex.InnerException?.Message ?? ex.Message)
+                });
             }
         }
 
@@ -134,25 +203,32 @@ namespace Presentation.Controllers
             try
             {
                 var avukat = _avukatService.GetById(id);
-                if (avukat == null)
-                    return Json(new { success = false, error = "Kayıt bulunamadı" });
-                
+                if (avukat == null || avukat.SIL_TAR_ZMN != null)
+                    return Json(new { success = false, message = "Kayıt bulunamadı." });
+
+                // Bağımlılık kontrolü
                 if (_ihtarService.AvukataBagliIhtarVarMi(id))
                 {
                     return Json(new
                     {
                         success = false,
-                        error = "Bu avukata bağlı ihtar kaydı bulunduğu için silinemez."
+                        message = "Bu avukata bağlı ihtar kaydı bulunduğu için silinemez."
                     });
                 }
 
-                _avukatService.Delete(avukat);
+                // Soft Delete uygula
+                avukat.SIL_TAR_ZMN = DateTime.Now;
+                _avukatService.Update(avukat);
 
-                return Json(new { success = true });
+                return Json(new { success = true, message = "Avukat başarıyla silindi." });
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, error = ex.Message });
+                return Json(new
+                {
+                    success = false,
+                    message = "Silme işlemi sırasında bir hata oluştu: " + (ex.InnerException?.Message ?? ex.Message)
+                });
             }
         }
     }

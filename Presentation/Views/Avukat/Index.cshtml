@@ -3,13 +3,8 @@
     ViewBag.Title = "Avukat Listesi";
 }
 
-<h2>Avukatlar</h2>
-
-<!-- Avukat Ekle Butonu -->
-<div style="display:flex; justify-content:flex-end; gap:10px; margin-bottom:10px;">
-    <button type="button" class="btn btn-danger" id="deleteSelectedBtn">
-        Seçilenleri Sil
-    </button>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Avukatlar</h2>
     <button type="button" class="btn btn-success"
             data-bs-toggle="modal"
             data-bs-target="#createModal">
@@ -17,91 +12,110 @@
     </button>
 </div>
 
-<!-- Avukat Listesi -->
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                <!-- Tümünü seç/deselect için -->
-                <input type="checkbox" id="selectAll" />
-            </th>
-            <th>Avukat Adı</th>
-            <th>Avukat Soyadı</th>
-            <th>TBB Sicil Numarası</th>
-            <th>Avukat Telefon Numarası</th>
-            <th>Avukat E-Posta</th>
-            <th>Hukuk Büro Adı</th>
-            <th>Hukuk Büro Adresi</th>
-            <th>Ofis Telefon Numarası
-            <th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var avukat in Model)
-        {
+<div class="table-responsive">
+    <table class="table table-striped align-middle" id="avukatTable">
+        <thead>
+            <!-- 1. Satır: Kolon Başlıkları (Sadece Tıklayınca Arama Açılır) -->
             <tr>
-                <td>
-                    <input type="checkbox" class="rowCheckbox" value="@avukat.AvukatId" />
-                </td>
-                <td>@avukat.AvktAd</td>
-                <td>@avukat.AvktSoyad</td>
-                <td>@avukat.TbbSicilNo</td>
-                <td>@avukat.AvktTelNo</td>
-                <td>@avukat.AvktEposta</td>
-                <td>@avukat.HkkBuroAd</td>
-                <td>@avukat.HkkBuroAdres</td>
-                <td>@avukat.OfisTelNo</td>
-                <td>
-                    <div class="dropdown">
-                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item text-danger updateBtn" data-id="@avukat.AvukatId">Güncelle</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item text-danger deleteBtn" data-id="@avukat.AvukatId">Sil</a>
-                            </li>
-                        </ul>
-                    </div>
-                </td>
+                <th style="cursor:pointer;">Adı</th>
+                <th style="cursor:pointer;">Soyadı</th>
+                <th style="cursor:pointer;">TBB Sicil No</th>
+                <th style="cursor:pointer;">E-Posta</th>
+                <th style="cursor:pointer;">Telefon No</th>
+                <th style="cursor:pointer;">Büro Adı</th>
+                <th style="cursor:pointer;">Büro Adresi</th>
+                <th style="cursor:pointer;">Ofis Tel No</th>
+                <th></th> <!-- İşlemler Kolonu -->
             </tr>
-        }
-    </tbody>
-</table>
+            <!-- 2. Satır: Gizli Arama Kutuları -->
+            <tr class="bg-light search-row" style="display: none;">
+                <td><input type="text" class="form-control form-control-sm avukat-column-search" placeholder="Ara..." data-col="0"></td>
+                <td><input type="text" class="form-control form-control-sm avukat-column-search" placeholder="Ara..." data-col="1"></td>
+                <td><input type="text" class="form-control form-control-sm avukat-column-search" placeholder="Ara..." data-col="2"></td>
+                <td><input type="text" class="form-control form-control-sm avukat-column-search" placeholder="Ara..." data-col="3"></td>
+                <td><input type="text" class="form-control form-control-sm avukat-column-search" placeholder="Ara..." data-col="4"></td>
+                <td><input type="text" class="form-control form-control-sm avukat-column-search" placeholder="Ara..." data-col="5"></td>
+                <td><input type="text" class="form-control form-control-sm avukat-column-search" placeholder="Ara..." data-col="6"></td>
+                <td><input type="text" class="form-control form-control-sm avukat-column-search" placeholder="Ara..." data-col="7"></td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var avukat in Model)
+            {
+                <tr>
+                    <td>@avukat.AvktAd</td>
+                    <td>@avukat.AvktSoyad</td>
+                    <td>@avukat.TbbSicilNo</td>
+                    <td>@avukat.AvktEposta</td>
+                    <td>@avukat.AvktTelNo</td>
+                    <td>@avukat.HkkBuroAd</td>
+                    <td>@avukat.HkkBuroAdres</td>
+                    <td>@avukat.OfisTelNo</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item text-danger updateBtn" data-id="@avukat.AvukatId">Güncelle</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger deleteBtn" data-id="@avukat.AvukatId">Sil</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Tablo Altındaki Kayıt Gösterim ve Sayfalama Kartı -->
+<div class="card p-3 my-3 border-0 shadow-sm bg-light">
+    <div class="row align-items-center g-3">
+        <div class="col-md-4 d-flex align-items-center gap-2">
+            <label for="avukatPageSize" class="form-label mb-0 fw-medium">Sayfada</label>
+            <select id="avukatPageSize" class="form-select form-select-sm" style="width: auto;">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+            <span class="fw-medium">kayıt göster</span>
+        </div>
+
+        <div class="col-md-4 text-center text-muted small">
+            <span id="avukatTableInfo"></span>
+        </div>
+
+        <div class="col-md-4 d-flex justify-content-end align-items-center gap-3">
+            <div class="text-muted small">
+                Toplam: <strong id="avukatTotalRecordCount">@Model.Count()</strong> |
+                Sayfa: <strong id="avukatCurrentPageNum">1</strong> / <strong id="avukatTotalPagesNum">1</strong>
+            </div>
+            <nav>
+                <ul class="pagination pagination-sm mb-0" id="avukatPaginationNav"></ul>
+            </nav>
+        </div>
+    </div>
+</div>
 
 @Html.Partial("_AvukatModals", new Presentation.Models.AvukatModel())
 
 @section Scripts {
-    <script src="~/Scripts/crud.js"></script>
+    <script src="~/Scripts/crud.js?v=1.1"></script>
+    <script src="~/Scripts/Avukat/avukatValidation.js"></script>
+    <script src="~/Scripts/Avukat/TablePagination.js"></script>
+
     <script>
-        initCrud("Avukat", ["AvukatId", "AvktAd", "AvktSoyad", "TbbSicilNo", "AvktEposta", "AvktTelNo", "HkkBuroAd", "HkkBuroAdres", "OfisTelNo"], {
-            validationRules: {
-                "AvktAd": function (value) {
-                    if (!/^[a-zA-ZğüşöçıİĞÜŞÖÇ]+$/.test(value)) return "Avukat Adı sadece harflerden oluşmalıdır.";
-                    return null;
-                },
-                "AvktSoyad": function (value) {
-                    if (!/^[a-zA-ZğüşöçıİĞÜŞÖÇ]+$/.test(value)) return "Avukat Soyadı sadece harflerden oluşmalıdır.";
-                    return null;
-                },
-                "TbbSicilNo": function (value, allValues) {
-                    if (!/^[0-9]+$/.test(value)) return "TBB sicil numarası sadece rakamlardan oluşmalıdır.";
-                    if (parseInt(value) <= 0) return "TBB sicil numarası 0'dan büyük olmalıdır.";
-                    return null;
-                },
-                "AvktTelNo": function (value, allValues) {
-                    if (!/^[0-9]+$/.test(value)) return "Avukat telefon numarası sadece rakamlardan oluşmalıdır.";
-                    if (parseInt(value) <= 0) return "Avukat telefon numarası 0'dan büyük olmalıdır.";
-                    return null;
-                },
-                "OfisTelNo": function (value, allValues) {
-                    if (!/^[0-9]+$/.test(value)) return "Ofis telefon numarası sadece rakamlardan oluşmalıdır.";
-                    if (parseInt(value) <= 0) return "Ofis telefon numarası 0'dan büyük olmalıdır.";
-                    return null;
-                }
-            }
+        $(document).ready(function () {
+            // Avukat tablosu için özelleştirilmiş sayfalama ve filtreleme
+            initAvukatTablePagination("avukatTable", "avukatPageSize", "avukatPaginationNav", "avukatTableInfo");
+
+            // Genel CRUD mimarisi ile uyumlu initCrud çağrısı
+            initCrud("Avukat", ["AvukatId", "AvktAd", "AvktSoyad", "TbbSicilNo", "AvktEposta", "AvktTelNo", "HkkBuroAd", "HkkBuroAdres", "OfisTelNo"], avukatOptions);
         });
-            
     </script>
 }

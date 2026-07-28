@@ -95,6 +95,34 @@ $(document).on('input', 'input[name="MustTelNo"], input[name="MUST_TEL_NO"]', fu
     $(this).val(formatted);
 });
 
+$(document).on('input', 'input[name="AvktTelNo"], input[name="AVKT_TEL_NO"]', function () {
+    let rawValue = $(this).val().replace(/\D/g, '');
+    if (rawValue.startsWith('0')) rawValue = rawValue.substring(1);
+    if (rawValue.length > 10) rawValue = rawValue.substring(0, 10);
+
+    let formatted = '';
+    if (rawValue.length > 0) formatted += rawValue.substring(0, 3);
+    if (rawValue.length > 3) formatted += ' ' + rawValue.substring(3, 6);
+    if (rawValue.length > 6) formatted += ' ' + rawValue.substring(6, 8);
+    if (rawValue.length > 8) formatted += ' ' + rawValue.substring(8, 10);
+
+    $(this).val(formatted);
+});
+
+$(document).on('input', 'input[name="OfisTelNo"], input[name="OFIS_TEL-NO"]', function () {
+    let rawValue = $(this).val().replace(/\D/g, '');
+    if (rawValue.startsWith('0')) rawValue = rawValue.substring(1);
+    if (rawValue.length > 10) rawValue = rawValue.substring(0, 10);
+
+    let formatted = '';
+    if (rawValue.length > 0) formatted += rawValue.substring(0, 3);
+    if (rawValue.length > 3) formatted += ' ' + rawValue.substring(3, 6);
+    if (rawValue.length > 6) formatted += ' ' + rawValue.substring(6, 8);
+    if (rawValue.length > 8) formatted += ' ' + rawValue.substring(8, 10);
+
+    $(this).val(formatted);
+});
+
 function closeModalThenShowSuccess(modalId, message, onClose) {
     var modalEl = document.getElementById(modalId);
     var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
@@ -182,7 +210,7 @@ function initCrud(entityName, fields, options) {
             // 2. TC Girildiyse UI Üzerinden Var Mı Kontrolü Yap
             if (tcNo && tcNo.trim() !== "") {
                 $.ajax({
-                    url: '/Musteri/CheckTcExists', // Controller action yoluna göre gerekirse güncelle
+                    url: '/Musteri/CheckTcExists', // Controller action yolu
                     type: 'GET',
                     data: { tcNo: tcNo.trim() },
                     success: function (checkResult) {
