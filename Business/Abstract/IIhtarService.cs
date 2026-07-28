@@ -8,7 +8,7 @@ namespace Business.Abstract
     public interface IIhtarService
     {
         List<Ihtar> GetAll();
-        void Add(Ihtar ihtar);
+        void Add(IhtarDto ihtar);
         void Update(Ihtar ihtar);
         void Delete(Ihtar ihtar);
         Ihtar GetById(Guid id);

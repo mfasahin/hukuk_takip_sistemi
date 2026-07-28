@@ -361,3 +361,12 @@ function initCrud(entityName, fields, options) {
             });
         });
 }
+$(document).on('focus', '.modal-body select.form-select', function () {
+    // 5'ten fazla eleman varsa görünür yüksekliği 5 satıra sabitle
+    if ($(this).find('option').length > 5) {
+        $(this).attr('size', '5');
+    }
+}).on('change blur', '.modal-body select.form-select', function () {
+// Seçim yapıldığında veya odaktan çıkıldığında eski haline döndür
+    $(this).removeAttr('size');
+});

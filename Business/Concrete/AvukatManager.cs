@@ -2,6 +2,7 @@
 using Business.Validation;
 using DataAccess.Abstract;
 using Entity.Concrete;
+using FluentValidation;
 using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,16 @@ namespace Business.Concrete
     public class AvukatManager : IAvukatService
     {
         private readonly IAvukatDal _avukatDal;
+        private readonly AvukatValidator _validator = new AvukatValidator();
 
         public AvukatManager(IAvukatDal avukatDal)
         {
             _avukatDal = avukatDal;
         }
-
+        public ValidationResult Validate(Avukat avukat)
+        {
+            return _validator.Validate(avukat);
+        }
         public List<Avukat> GetAll()
         {
             return _avukatDal.GetAll();

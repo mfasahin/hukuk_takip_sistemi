@@ -172,3 +172,13 @@ input, select, textarea {
     border-top: 1px solid #e5e7eb;
     padding: 12px 20px;
 }
+
+/* Modal içindeki select elemanlarının boyutunu sınırlama */
+.modal-body select.form-select option {
+    padding: 6px 10px;
+}
+
+/* Chrome / Webkit tarayıcılarda seçenek menüsünü scroll'a zorlama */
+.modal-body select.form-select:focus {
+    max-height: 200px;
+}

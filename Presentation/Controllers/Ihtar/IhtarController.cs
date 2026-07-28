@@ -1,10 +1,12 @@
 ﻿using Business.Abstract;
+using Business.Validation;
 using Entity.Concrete;
 using Entity.Dto;
 using Presentation.Filters;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using FluentValidation;
 
 namespace Presentation.Controllers
 {
@@ -80,49 +82,31 @@ namespace Presentation.Controllers
         [HttpPost]
         public ActionResult Create(IhtarDto model)
         {
-            if (!ModelState.IsValid)
+            if (model == null)
             {
-                var errors = ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage)
-                    .ToList();
-
-                return Json(new { success = false, error = "ModelState geçersiz", details = errors });
+                return Json(new { success = false, message = "Gönderilen ihtar verisi boş olamaz." });
             }
 
             try
             {
-                // İhtar kaydı
-                var ihtar = new Ihtar
-                {
-                    IHTAR_ID = Guid.NewGuid(),
-                    BORC_TUTAR = model.BorcTutar,
-                    IHTAR_TAR_ZMN = model.IhtarTarih,
-                    MUSTERI_ID = model.MusteriId,
-                    AVUKAT_ID = model.AvukatId,
-                    SUBE_ID = model.SubeId,
-                };
+                // 1. İş Mantığı, Validation ve Ara Tablo (IhtarUrun) Kaydı Servis Katmanında Halledilir
+                _ihtarService.Add(model);
 
-                _ihtarService.Add(ihtar);
-
-                // Ürün seçilmişse ilişkiyi kaydet
-                if (model.UrunId != Guid.Empty)
-                {
-                    var ihtarUrun = new IhtarUrun
-                    {
-                        IHTAR_URUN_ID = Guid.NewGuid(),
-                        IHTAR_ID = ihtar.IHTAR_ID,
-                        URUN_ID = model.UrunId,
-                    };
-
-                    _ihtarUrunService.Add(ihtarUrun);
-                }
-
-                return Json(new { success = true });
+                return Json(new { success = true, message = "İhtar başarıyla eklendi." });
+            }
+            catch (ValidationException ex)
+            {
+                var errorList = ex.Errors.Select(e => e.ErrorMessage).ToList();
+                return Json(new { success = false, message = string.Join("<br>", errorList) });
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, error = ex.Message });
+                // Manager veya Veritabanı seviyesinde fırlatılan tüm özel mesajlar (Örn: "Borç tutarı negatif olamaz.") buraya düşer
+                return Json(new
+                {
+                    success = false,
+                    message = ex.InnerException != null ? ex.InnerException.Message : ex.Message
+                });
             }
         }
 

@@ -1,12 +1,10 @@
 ﻿@model IEnumerable<Entity.Dto.IhtarDto>
-
 @{
     ViewBag.Title = "İhtar Listesi";
 }
 
-<h2>İhtar Takip</h2>
-
-<div style="display:flex; justify-content:flex-end; gap:10px; margin-bottom:10px;">
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>İhtarlar</h2>
     <button type="button" class="btn btn-success"
             data-bs-toggle="modal"
             data-bs-target="#createModal">
@@ -14,87 +12,104 @@
     </button>
 </div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th><input type="checkbox" id="selectAll" /></th>
-            <th>Müşteri</th>
-            <th>Borç Tutarı</th>
-            <th>İhtar Tarihi</th>
-            <th>Şube</th>
-            <th>Avukat</th>
-            <th>Ürün</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var ihtar in Model)
-        {
+<div class="table-responsive">
+    <table class="table table-striped align-middle" id="ihtarTable">
+        <thead>
+            <!-- 1. Satır: Kolon Başlıkları (Sadece Tıklayınca Arama Açılır) -->
             <tr>
-                <td><input type="checkbox" class="rowCheckbox" value="@ihtar.IhtarId" /></td>
-                <td>@ihtar.MusteriAd  @ihtar.MusteriSoyad</td>
-                <td>@ihtar.BorcTutar</td>
-                <td>@ihtar.IhtarTarih.ToString("dd.MM.yyyy")</td>
-                <td>@ihtar.SubeAd</td>
-                <td>@ihtar.AvukatAd @ihtar.AvukatSoyad</td>
-                <td> @ihtar.UrunAd </td>
-
-                <td>
-                    <div class="dropdown">
-                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item text-danger updateBtn" data-id="@ihtar.IhtarId">Güncelle</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item text-danger deleteBtn" data-id="@ihtar.IhtarId">Sil</a>
-                            </li>
-                        </ul>
-                    </div>
-                </td>
+                <th style="cursor:pointer;">Müşteri</th>
+                <th style="cursor:pointer;">Ürün</th>
+                <th style="cursor:pointer;">Borç Tutarı</th>
+                <th style="cursor:pointer;">İhtar Tarihi</th>
+                <th style="cursor:pointer;">Şube</th>
+                <th style="cursor:pointer;">Avukat</th>
+                <th></th> <!-- İşlemler Kolonu -->
             </tr>
-        }
-    </tbody>
-</table>
+            <!-- 2. Satır: Gizli Arama Kutuları -->
+            <tr class="bg-light search-row" style="display: none;">
+                <td><input type="text" class="form-control form-control-sm ihtar-column-search" placeholder="Ara..." data-col="0"></td>
+                <td><input type="text" class="form-control form-control-sm ihtar-column-search" placeholder="Ara..." data-col="1"></td>
+                <td><input type="text" class="form-control form-control-sm ihtar-column-search" placeholder="Ara..." data-col="2"></td>
+                <td><input type="text" class="form-control form-control-sm ihtar-column-search" placeholder="Ara..." data-col="3"></td>
+                <td><input type="text" class="form-control form-control-sm ihtar-column-search" placeholder="Ara..." data-col="4"></td>
+                <td><input type="text" class="form-control form-control-sm ihtar-column-search" placeholder="Ara..." data-col="5"></td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ihtar in Model)
+            {
+                <tr>
+                    <td>@ihtar.MusteriAd</td>
+                    <td>@ihtar.UrunAd</td>
+                    <td>@ihtar.BorcTutar.ToString("N2") ₺</td>
+                    <td>@ihtar.IhtarTarih.ToString("dd.MM.yyyy")</td>
+                    <td>@ihtar.SubeAd</td>
+                    <td>@ihtar.AvukatAd</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item text-danger updateBtn" data-id="@ihtar.IhtarId">Güncelle</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger deleteBtn" data-id="@ihtar.IhtarId">Sil</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Tablo Altındaki Kayıt Gösterim ve Sayfalama Kartı -->
+<div class="card p-3 my-3 border-0 shadow-sm bg-light">
+    <div class="row align-items-center g-3">
+        <div class="col-md-4 d-flex align-items-center gap-2">
+            <label for="ihtarPageSize" class="form-label mb-0 fw-medium">Sayfada</label>
+            <select id="ihtarPageSize" class="form-select form-select-sm" style="width: auto;">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+            <span class="fw-medium">kayıt göster</span>
+        </div>
+
+        <div class="col-md-4 text-center text-muted small">
+            <span id="ihtarTableInfo"></span>
+        </div>
+
+        <div class="col-md-4 d-flex justify-content-end align-items-center gap-3">
+            <div class="text-muted small">
+                Toplam: <strong id="ihtarTotalRecordCount">@Model.Count()</strong> |
+                Sayfa: <strong id="ihtarCurrentPageNum">1</strong> / <strong id="ihtarTotalPagesNum">1</strong>
+            </div>
+            <nav>
+                <ul class="pagination pagination-sm mb-0" id="ihtarPaginationNav"></ul>
+            </nav>
+        </div>
+    </div>
+</div>
 
 @Html.Partial("_IhtarModals", new Entity.Dto.IhtarDto())
 
 @section Scripts {
-    <script src="~/Scripts/crud.js"></script>
-    <script>
-        initCrud("Ihtar", ["IhtarId", "MusteriId", "SubeId", "AvukatId", "BorcTutar", "IhtarTarih", "UrunId"], {
-            validationRules: {
-                "MusteriId": function (value) {
-                    if (!value || value === "0") return "Müşteri seçilmelidir.";
-                    return null;
-                },
-                "UrunId": function (value) {
-                    if (!value || value === "0") return "Ürün seçilmelidir.";
-                    return null;
-                },
-                "SubeId": function (value) {
-                    if (!value || value === "0") return "Şube seçilmelidir.";
-                    return null;
-                },
-                "AvukatId": function (value) {
-                    if (!value || value === "0") return "Avukat seçilmelidir.";
-                    return null;
-                },
-                "BorcTutar": function (value) {
-                    if (!value || value.trim() === "") return "Borç tutarı zorunludur.";
-                    if (isNaN(value)) return "Borç tutarı sadece rakamlardan oluşmalıdır.";
-                    if (parseFloat(value) <= 0) return "Borç tutarı 0'dan büyük olmalıdır.";
-                    return null;
-                },
-                "IhtarTarih": function (value) {
-                    if (!value || value.trim() === "") return "İhtar tarihi zorunludur.";
-                    var date = new Date(value);
-                    if (isNaN(date.getTime())) return "Geçerli bir tarih giriniz.";
-                    // if (date > new Date()) return "İhtar tarihi gelecekte olamaz.";
-                    return null;
-                }
-            }
-        });
+    <script src="~/Scripts/crud.js?v=1.1"></script>
+    <script src="~/Scripts/Ihtar/ihtarValidation.js"></script>
+    <script src="~/Scripts/Ihtar/TablePagination.js"></script>
 
+    <script>
+        $(document).ready(function () {
+            // İhtar tablosu için özelleştirilmiş sayfalama ve filtreleme
+            initIhtarTablePagination("ihtarTable", "ihtarPageSize", "ihtarPaginationNav", "ihtarTableInfo");
+
+            // Genel CRUD mimarisi ile uyumlu initCrud çağrısı
+            initCrud("Ihtar", ["IhtarId", "MusteriId", "UrunId", "BorcTutar", "IhtarTarih", "SubeId", "AvukatId"], ihtarOptions);
+        });
     </script>
 }
