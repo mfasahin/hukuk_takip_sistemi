@@ -42,7 +42,6 @@ namespace Presentation.Controllers
             }
 
             Session["KullaniciId"] = kullanici.KULLANICI_ID;
-            Session["KullaniciAd"] = kullanici.KULLANICI_AD;
 
             return RedirectToAction("Index", "Musteri");
         }
@@ -82,7 +81,12 @@ namespace Presentation.Controllers
             Session.Abandon();
             FormsAuthentication.SignOut();
 
-            // Giriş yapacağın ekrana yönlendirir
+            // AJAX isteği ile gelindiyse JSON dön, normal link tıklandıysa Login'e yönlendir
+            if (Request.IsAjaxRequest())
+            {
+                return Json(new { success = true, redirectUrl = Url.Action("Login", "Kullanici") }, JsonRequestBehavior.AllowGet);
+            }
+
             return RedirectToAction("Login", "Kullanici");
         }
     }

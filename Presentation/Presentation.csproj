@@ -220,6 +220,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\Avukat\avukatValidation.js" />
     <Content Include="Scripts\Avukat\tablePagination.js" />
+    <Content Include="Scripts\common.js" />
     <Content Include="Scripts\crud.js" />
     <Content Include="Scripts\Icra\icraValidation.js" />
     <Content Include="Scripts\Icra\tablePagination.js" />

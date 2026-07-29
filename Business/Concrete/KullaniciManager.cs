@@ -1,5 +1,4 @@
-﻿// Business/Concrete/KullaniciManager.cs
-using Business.Abstract;
+﻿using Business.Abstract;
 using Core.Security;
 using DataAccess.Abstract;
 using Entity.Concrete;
