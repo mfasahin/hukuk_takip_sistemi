@@ -12,16 +12,16 @@
             }
             return null;
         },
-        "BorcTutar": function (value) { // BorcTutari -> BorcTutar yapıldı
+        "BorcTutar": function (value) {
             if (value === undefined || value === null || value.toString().trim() === "") {
                 return "Borç tutarı boş bırakılamaz.";
             }
             var numericValue = parseFloat(value.toString().replace(",", "."));
             if (isNaN(numericValue)) return "Lütfen geçerli bir borç tutarı giriniz.";
-            if (numericValue < 0) return "Borç tutarı negatif olamaz.";
+            if (numericValue <= 0) return "Borç tutarı 0'dan büyük olmalıdır.";
             return null;
         },
-        "IhtarTarih": function (value) { // IhtarTarihi -> IhtarTarih yapıldı
+        "IhtarTarih": function (value) {
             if (!value || value.trim() === "") {
                 return "İhtar tarihi boş bırakılamaz.";
             }

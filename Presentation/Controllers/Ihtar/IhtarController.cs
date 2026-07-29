@@ -89,24 +89,19 @@ namespace Presentation.Controllers
 
             try
             {
-                // 1. İş Mantığı, Validation ve Ara Tablo (IhtarUrun) Kaydı Servis Katmanında Halledilir
                 _ihtarService.Add(model);
-
                 return Json(new { success = true, message = "İhtar başarıyla eklendi." });
             }
             catch (ValidationException ex)
             {
+                // "Doğrulama Hataları:" ön eki kaldırıldı, doğrudan mesajlar dönüyor
                 var errorList = ex.Errors.Select(e => e.ErrorMessage).ToList();
-                return Json(new { success = false, message = string.Join("<br>", errorList) });
+                return Json(new { success = false, message = errorList });
             }
             catch (Exception ex)
             {
-                // Manager veya Veritabanı seviyesinde fırlatılan tüm özel mesajlar (Örn: "Borç tutarı negatif olamaz.") buraya düşer
-                return Json(new
-                {
-                    success = false,
-                    message = ex.InnerException != null ? ex.InnerException.Message : ex.Message
-                });
+                var msg = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                return Json(new { success = false, message = msg });
             }
         }
 
@@ -132,16 +127,12 @@ namespace Presentation.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var errors = ModelState
-                    .Where(x => x.Value.Errors.Count > 0)
-                    .Select(x => new
-                    {
-                        Field = x.Key,
-                        Errors = x.Value.Errors.Select(e => e.ErrorMessage).ToList()
-                    })
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
                     .ToList();
 
-                return Json(new { success = false, error = "ModelState geçersiz", details = errors });
+                return Json(new { success = false, message = errors });
             }
 
             try
@@ -149,7 +140,7 @@ namespace Presentation.Controllers
                 var IHTAR = _ihtarService.GetById(ihtarDto.IhtarId);
 
                 if (IHTAR == null)
-                    return Json(new { success = false, error = "İhtar kaydı bulunamadı" });
+                    return Json(new { success = false, message = "İhtar kaydı bulunamadı." });
 
                 // İhtar alanlarını güncelle
                 IHTAR.BORC_TUTAR = ihtarDto.BorcTutar;
@@ -188,11 +179,11 @@ namespace Presentation.Controllers
                         _ihtarUrunService.Delete(ihtarUrunDto.IhtarUrunId);
                 }
 
-                return Json(new { success = true });
+                return Json(new { success = true, message = "İhtar başarıyla güncellendi." });
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, error = ex.Message });
+                return Json(new { success = false, message = ex.Message });
             }
         }
 
@@ -203,18 +194,18 @@ namespace Presentation.Controllers
             {
                 var ihtar = _ihtarService.GetById(id);
                 if (ihtar == null)
-                    return Json(new { success = false, error = "Kayıt bulunamadı." });
+                    return Json(new { success = false, message = "Kayıt bulunamadı." });
 
                 var ihtarurun = _ihtarUrunService.GetByIhtarIdTekli(id);
                 if (ihtarurun == null)
-                    return Json(new { success = false, error = "İhtar-Ürün kaydı bulunamadı." });
+                    return Json(new { success = false, message = "İhtar-Ürün kaydı bulunamadı." });
 
                 if (_icraService.IhtaraBagliIcraVarMi(ihtarurun.IHTAR_URUN_ID))
                 {
                     return Json(new
                     {
                         success = false,
-                        error = "Bu ihtara bağlı icra kaydı bulunduğu için silinemez."
+                        message = "Bu ihtara bağlı icra kaydı bulunduğu için silinemez."
                     });
                 }
 
@@ -234,11 +225,8 @@ namespace Presentation.Controllers
             }
             catch (Exception ex)
             {
-                // Hata mesajını modalda göstereceğiz
-                return Json(new { success = false, error = "Silme sırasında hata: " + ex.Message });
+                return Json(new { success = false, message = "Silme sırasında hata: " + ex.Message });
             }
         }
-
-
     }
 }

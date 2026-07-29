@@ -13,15 +13,15 @@ namespace Business.Validation
                 .NotEmpty().WithMessage("Lütfen bir müşteri seçiniz.")
                 .NotEqual(Guid.Empty).WithMessage("Lütfen geçerli bir müşteri seçiniz.");
 
-            // 2. İhtarUrun (Ürün) Seçimi
+            // 2. Ürün Seçimi
             RuleFor(x => x.UrunId)
                 .NotEmpty().WithMessage("Lütfen bir ürün seçiniz.")
                 .NotEqual(Guid.Empty).WithMessage("Lütfen geçerli bir ürün seçiniz.");
 
-            // 3. Borç Tutarı (Negatif olamaz)
+            // 3. Borç Tutarı (0'dan büyük olmalı)
             RuleFor(x => x.BorcTutar)
                 .NotNull().WithMessage("Borç tutarı boş bırakılamaz.")
-                .GreaterThanOrEqualTo(0).WithMessage("Borç tutarı negatif olamaz.");
+                .GreaterThan(0).WithMessage("Borç tutarı 0'dan büyük olmalıdır.");
 
             // 4. İhtar Tarihi
             RuleFor(x => x.IhtarTarih)

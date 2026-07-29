@@ -20,10 +20,11 @@ function resetCreateForm(formId, extraCallback) {
         .addClass("field-validation-valid");
     $form.find(".input-validation-error").removeClass("input-validation-error");
 
-    // Doğrulama hata işaretlerini temizle
+    // Doğrulama hata işaretlerini ve genel uyarı alanını temizle
     $form.find(".is-invalid").removeClass("is-invalid");
     $form.find(".invalid-feedback").remove();
-    $form.find(".alert-danger").closest(".row").addClass("d-none");
+
+    clearFormError($form);
 
     if (typeof extraCallback === "function") {
         extraCallback();
@@ -37,10 +38,10 @@ function validateForm(formId, options) {
     var $form = $("#" + formId);
     var isValid = true;
 
-    // Önceki hata mesajlarını ve genel uyarı alanını temizle
+    // Önceki hata işaretlerini ve genel uyarı alanını temizle
     $form.find(".is-invalid").removeClass("is-invalid");
     $form.find(".invalid-feedback").remove();
-    $form.find(".alert-danger").closest(".row").addClass("d-none");
+    clearFormError($form);
 
     var allValues = {};
     $form.find("input, select, textarea").each(function () {
@@ -50,21 +51,19 @@ function validateForm(formId, options) {
         allValues[name] = $input.val();
     });
 
-    // Form tamamen boş mu kontrolü
+    // 1. AŞAMA: Form tamamen boş mu kontrol et
     var allEmpty = Object.keys(allValues).every(function (key) {
-        return !allValues[key] || allValues[key].toString().trim() === "";
+        var val = allValues[key];
+        return !val || val.toString().trim() === "" || val === "0" || val === "00000000-0000-0000-0000-000000000000";
     });
 
+    // Form TAMAMEN boşsa sadece alttaki kırmızı genel kutuda mesaj göster
     if (allEmpty) {
-        var $errContainer = $form.find(".error-message-container");
-        if ($errContainer.length > 0) {
-            $errContainer.text("Tüm alanlar boş bırakılamaz.");
-            $errContainer.closest(".row").removeClass("d-none");
-        }
+        showFormError($form, "Tüm alanlar boş bırakılamaz.");
         return false;
     }
 
-    // Elemanları tek tek doğrula
+    // 2. AŞAMA: Kısmi boşluklar veya özel kurallar için tekil alan doğrulaması yap
     $form.find("input, select, textarea").each(function () {
         var $input = $(this);
         var name = $input.attr("name") || "";
@@ -77,47 +76,56 @@ function validateForm(formId, options) {
         var valTrimmed = value ? value.toString().trim() : "";
         var errorMsg = null;
 
-        // 1. Özel kural tanımlanmışsa önceliği ona ver
+        // Özel kural tanımlanmışsa çalıştır, yoksa varsayılan boşluk kontrolü yap
         if (customRules[name] && typeof customRules[name] === "function") {
             errorMsg = customRules[name](value, allValues);
         }
         else if (customRules[id] && typeof customRules[id] === "function") {
             errorMsg = customRules[id](value, allValues);
         }
-        // 2. Boş değer kontrolü
-        else if (!valTrimmed) {
+        else if (!valTrimmed || valTrimmed === "0" || valTrimmed === "00000000-0000-0000-0000-000000000000") {
             errorMsg = "Bu alan zorunludur.";
         }
 
-        // Hata varsa ilgili input altına uyarı ekle
+        // Hata varsa SADECE ilgili input/select altına uyarı ekle
         if (errorMsg) {
             isValid = false;
             $input.addClass("is-invalid");
-            $input.after('<div class="invalid-feedback d-block">' + errorMsg + '</div>');
+
+            if ($input.next(".invalid-feedback").length === 0) {
+                $input.after('<div class="invalid-feedback d-block">' + errorMsg + '</div>');
+            }
         }
     });
 
     return isValid;
 }
 
+// Dropdown veya input değiştiğinde kırmızılığı ve hata mesajını anında kaldır
+$(document).on("input change", ".is-invalid", function () {
+    var $input = $(this);
+    var val = $input.val();
+
+    if (val && val.toString().trim() !== "" && val !== "0" && val !== "00000000-0000-0000-0000-000000000000") {
+        $input.removeClass("is-invalid");
+        $input.next(".invalid-feedback").remove();
+    }
+});
 
 // ==========================================================================
 // 2. KLAVYE GİRİŞ KISITLAMALARI VE MASKELER
 // ==========================================================================
 
 $(document).ready(function () {
-    // Sadece Sayı Girilebilir Alanlar (Sayılar dışındakileri siler)
     $(document).on('input', '.only-number', function () {
         this.value = this.value.replace(/[^0-9]/g, '');
     });
 
-    // Sadece Harf Girilebilir Alanlar (Harfler ve Boşluk dışındakileri siler)
     $(document).on('input', '.only-text', function () {
         this.value = this.value.replace(/[^a-zA-ZğüşöçıİĞÜŞÖÇ\s]/g, '');
     });
 });
 
-// Otomatik Telefon Formatlama Maskesi (5XX XXX XX XX)
 $(document).on('input', 'input[name="MustTelNo"], input[name="MUST_TEL_NO"], input[name="AvktTelNo"], input[name="AVKT_TEL_NO"], input[name="OfisTelNo"]', function () {
     let rawValue = $(this).val().replace(/\D/g, '');
     if (rawValue.startsWith('0')) rawValue = rawValue.substring(1);
@@ -132,12 +140,10 @@ $(document).on('input', 'input[name="MustTelNo"], input[name="MUST_TEL_NO"], inp
     $(this).val(formatted);
 });
 
-
 // ==========================================================================
 // 3. SWEETALERT2 BİLDİRİM VE POP-UP YARDIMCILARI
 // ==========================================================================
 
-// Hata Pop-up'ı
 function showErrorModal(message) {
     if (typeof Swal !== "undefined") {
         Swal.fire({
@@ -152,14 +158,7 @@ function showErrorModal(message) {
     }
 }
 
-// Başarılı Pop-up'ı ve Modal Kapatıcı
-function closeModalThenShowSuccess(modalId, message, onClose) {
-    var modalEl = document.getElementById(modalId);
-    if (modalEl) {
-        var modal = bootstrap.Modal.getInstance(modalEl) || bootstrap.Modal.getOrCreateInstance(modalEl);
-        modal.hide();
-    }
-
+function showSuccessModal(message, onClose) {
     if (typeof Swal !== "undefined") {
         Swal.fire({
             icon: 'success',
@@ -178,7 +177,15 @@ function closeModalThenShowSuccess(modalId, message, onClose) {
     }
 }
 
-// Silme Onay Pop-up'ı (Görseldeki Tasarım)
+function closeModalThenShowSuccess(modalId, message, onClose) {
+    var modalEl = document.getElementById(modalId);
+    if (modalEl) {
+        var modal = bootstrap.Modal.getInstance(modalEl) || bootstrap.Modal.getOrCreateInstance(modalEl);
+        modal.hide();
+    }
+    showSuccessModal(message, onClose);
+}
+
 function showConfirmModal(message, onConfirm) {
     if (typeof Swal !== "undefined") {
         Swal.fire({
@@ -201,35 +208,6 @@ function showConfirmModal(message, onConfirm) {
         }
     }
 }
-// Başarı Pop-up'ı (Sadece SweetAlert2 kullanır, eski HTML modalları tetiklemez)
-function showSuccessModal(message, onClose) {
-    if (typeof Swal !== "undefined") {
-        Swal.fire({
-            icon: 'success',
-            title: 'Başarılı!',
-            text: message,
-            confirmButtonColor: '#01538b',
-            confirmButtonText: 'Tamam'
-        }).then(function (result) {
-            if (result.isConfirmed || result.isDismissed) {
-                if (typeof onClose === "function") onClose();
-            }
-        });
-    } else {
-        alert(message);
-        if (typeof onClose === "function") onClose();
-    }
-}
-
-// Modal Kapatıp Başarı Pop-up'ı Gösterme
-function closeModalThenShowSuccess(modalId, message, onClose) {
-    var modalEl = document.getElementById(modalId);
-    if (modalEl) {
-        var modal = bootstrap.Modal.getInstance(modalEl) || bootstrap.Modal.getOrCreateInstance(modalEl);
-        modal.hide();
-    }
-    showSuccessModal(message, onClose);
-}
 
 // ==========================================================================
 // 4. ANA JENERİK CRUD İŞLEMLERİ (INITCRUD)
@@ -247,11 +225,8 @@ function initCrud(entityName, fields, options) {
     $("#createModal").off("show.bs.modal" + ns)
         .on("show.bs.modal" + ns, function () {
             var $form = $("#createForm");
-
-            // 1. Önce formu ve önceki hata mesajlarını sıfırla
             resetCreateForm("createForm", options.onResetCreateForm);
 
-            // 2. Otomatik numara endpoint'i varsa çağır ve sıfırlanmış forma yaz
             var getNextUrl = options.getNextNoUrl || (options.validationRules && options.validationRules.getNextNoUrl);
             if (getNextUrl) {
                 $.ajax({
@@ -284,7 +259,8 @@ function initCrud(entityName, fields, options) {
         .on("submit" + ns, function (e) {
             e.preventDefault();
             var $form = $(this);
-            var skip = options.validationSkipFields || ["MusteriId", "UrunId"];
+            // VARSAYILAN OLARAK HİÇBİR ALAN ATLANIYOR (MusteriId, UrunId dahil hepsi doğrulanır)
+            var skip = options.validationSkipFields || [];
 
             if (!validateForm("createForm", {
                 skipFields: skip,
@@ -302,7 +278,7 @@ function initCrud(entityName, fields, options) {
                     data: { tcNo: tcNo.trim() },
                     success: function (checkResult) {
                         if (checkResult.exists) {
-                            showErrorModal("Bu TC kimlik numarasına ait müşteri zaten kayıtlı.");
+                            showFormError($form, "Bu TC kimlik numarasına ait müşteri zaten kayıtlı.");
                             return;
                         }
                         executeCreateRequest($form);
@@ -317,6 +293,8 @@ function initCrud(entityName, fields, options) {
         });
 
     function executeCreateRequest($form) {
+        clearFormError($form);
+
         $.ajax({
             url: createUrl,
             type: 'POST',
@@ -329,14 +307,14 @@ function initCrud(entityName, fields, options) {
                         location.reload();
                     });
                 } else {
-                    showErrorModal(result.message || result.error || "Ekleme işlemi başarısız.");
+                    handleBackendValidationErrors($form, result.message || result.error);
                 }
             })
             .fail(function (xhr) {
                 var msg = (xhr && xhr.responseJSON && xhr.responseJSON.message)
                     ? xhr.responseJSON.message
                     : "Sunucu ile iletişimde hata oluştu (" + (xhr ? xhr.status : "?") + ")";
-                showErrorModal(msg);
+                showFormError($form, msg);
             });
     }
 
@@ -349,7 +327,10 @@ function initCrud(entityName, fields, options) {
                 .done(function (data) {
                     fields.forEach(function (f) {
                         if (data[f] === undefined) return;
-                        var $input = $("#updateForm #" + f);
+                        var $input = $("#updateForm #" + f) || $("#updateForm #Update" + f);
+                        if ($input.length === 0) {
+                            $input = $("#updateForm [name='" + f + "']");
+                        }
                         if ($input.length === 0) return;
 
                         if ($input.attr("type") === "date" && data[f]) {
@@ -373,6 +354,7 @@ function initCrud(entityName, fields, options) {
                         options.onGetSuccess(data);
                     }
 
+                    clearFormError($("#updateForm"));
                     $("#updateModal").modal("show");
                 })
                 .fail(function (xhr) {
@@ -390,8 +372,8 @@ function initCrud(entityName, fields, options) {
     $("#updateForm").off("submit" + ns)
         .on("submit" + ns, function (e) {
             e.preventDefault();
-
-            var skip = options.validationSkipFields || ["MusteriId", "UrunId"];
+            var $form = $(this);
+            var skip = options.validationSkipFields || [];
 
             if (!validateForm("updateForm", {
                 skipFields: skip,
@@ -400,22 +382,25 @@ function initCrud(entityName, fields, options) {
                 return false;
             }
 
-            $.ajax({ url: updateUrl, type: 'POST', data: $(this).serialize() })
+            clearFormError($form);
+
+            $.ajax({ url: updateUrl, type: 'POST', data: $form.serialize() })
                 .done(function (result) {
                     if (result.success) {
                         closeModalThenShowSuccess("updateModal", entityName + " başarıyla güncellendi.", function () {
                             location.reload();
                         });
                     } else {
-                        showErrorModal(result.message || result.error || "Güncelleme başarısız.");
+                        handleBackendValidationErrors($form, result.message || result.error);
                     }
                 })
                 .fail(function (xhr) {
-                    showErrorModal("Güncelleme sırasında sunucu hatası oluştu (" + xhr.status + ")");
+                    var msg = "Güncelleme sırasında sunucu hatası oluştu (" + xhr.status + ")";
+                    showFormError($form, msg);
                 });
         });
 
-    // DELETE - Silme İşlemi (SweetAlert2 Onay Modalı)
+    // DELETE - Silme İşlemi
     $(document).off("click" + ns, ".deleteBtn")
         .on("click" + ns, ".deleteBtn", function () {
             var id = $(this).data("id");
@@ -443,4 +428,82 @@ function initCrud(entityName, fields, options) {
                     });
             });
         });
+}
+
+// ==========================================================================
+// 5. YARDIMCI HATA VE FORM FONKSİYONLARI (UI HATA MESAJLARI)
+// ==========================================================================
+
+// Backend'den Dönen Hataları İlgili Elemanların Altına Dağıtan Akıllı Fonksiyon
+function handleBackendValidationErrors($form, errors) {
+    if (!errors) return;
+
+    var errList = [];
+    if (Array.isArray(errors)) {
+        errList = errors;
+    } else if (typeof errors === "string") {
+        // "Doğrulama Hataları: " metni kesin olarak temizleniyor
+        var cleanMsg = errors.replace(/^Doğrulama Hataları:\s*/i, "");
+        errList = cleanMsg.split(/\.\s+/).map(function (e) { return e.trim(); }).filter(function (e) { return e.length > 0; });
+    }
+
+    var mappedAny = false;
+
+    errList.forEach(function (errorMsg) {
+        var lowerMsg = errorMsg.toLowerCase();
+        var $targetInput = null;
+
+        if (lowerMsg.includes("müşteri")) $targetInput = $form.find("#MusteriId, #UpdateMusteriId, [name='MusteriId']");
+        else if (lowerMsg.includes("ürün")) $targetInput = $form.find("#UrunId, #UpdateUrunId, [name='UrunId']");
+        else if (lowerMsg.includes("borç")) $targetInput = $form.find("#BorcTutar, #UpdateBorcTutar, [name='BorcTutar']");
+        else if (lowerMsg.includes("şube")) $targetInput = $form.find("#SubeId, #UpdateSubeId, [name='SubeId']");
+        else if (lowerMsg.includes("avukat")) $targetInput = $form.find("#AvukatId, #UpdateAvukatId, [name='AvukatId']");
+        else if (lowerMsg.includes("tarih")) $targetInput = $form.find("#IhtarTarih, #UpdateIhtarTarih, [name='IhtarTarih']");
+
+        if ($targetInput && $targetInput.length > 0) {
+            mappedAny = true;
+            $targetInput.addClass("is-invalid");
+
+            // Eğer alanın altında mesaj yoksa ekle (Mükerrer mesaj yazılmasını engeller)
+            if ($targetInput.next(".invalid-feedback").length === 0) {
+                var formattedMsg = errorMsg.endsWith('.') ? errorMsg : errorMsg + '.';
+                $targetInput.after('<div class="invalid-feedback d-block">' + formattedMsg + '</div>');
+            }
+        }
+    });
+
+    if (!mappedAny) {
+        showFormError($form, errors);
+    }
+}
+
+// Form Altındaki Genel UI Hata Alanına Mesaj Yazma (Sadece Tüm Form Boşsa veya Sistemsel Hatada Çalışır)
+function showFormError($form, message) {
+    var $errContainer = $form.find(".error-message-container");
+
+    if (typeof message === "object") {
+        if (Array.isArray(message)) {
+            message = message.join("<br/>");
+        } else if (message.message) {
+            message = message.message;
+        } else {
+            message = JSON.stringify(message);
+        }
+    }
+
+    if ($errContainer.length > 0) {
+        $errContainer.html(message);
+        $errContainer.closest(".row").removeClass("d-none");
+    } else {
+        showErrorModal(message);
+    }
+}
+
+// Form Altındaki UI Hata Alanını Temizleme
+function clearFormError($form) {
+    var $errContainer = $form.find(".error-message-container");
+    if ($errContainer.length > 0) {
+        $errContainer.empty();
+        $errContainer.closest(".row").addClass("d-none");
+    }
 }
