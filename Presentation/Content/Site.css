@@ -1,9 +1,16 @@
-﻿/* İçerik alanı */
+﻿/* ==========================================================================
+   1. GENEL SAYFA VE İÇERİK ALANI
+   ========================================================================== */
+body {
+    background-color: #f4f6f9 !important;
+}
+
 .body-content {
-    margin-top: 15px;
-    padding-left: 15px;
-    padding-right: 15px;
-    margin-left: 240px; /* sidebar genişliği kadar sağa kaydır */
+    margin-top: 35px;
+    padding: 10px 30px 40px 30px;
+    margin-left: 220px; /* Sidebar genişliği */
+    background-color: #f4f6f9;
+    min-height: 100vh;
 }
 
 /* Bootstrap override */
@@ -11,48 +18,51 @@
     white-space: normal;
 }
 
-/* Form elemanları */
 input, select, textarea {
     max-width: 280px;
 }
 
-/* Sidebar Genel Görünüm (Flexbox yapısı eklendi) */
+/* ==========================================================================
+   2. SIDEBAR STİLLERİ (GERİ YÜKLENDİ)
+   ========================================================================== */
 .sidebar {
-    background-color: #01538b;
-    color: #fff;
+    background-color: #01538b !important;
+    color: #fff !important;
     padding: 0 0 20px 0;
     min-height: 100vh;
     width: 220px;
     position: fixed;
     top: 0;
     left: 0;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+    box-shadow: 2px 0 8px rgba(0,0,0,0.25);
     z-index: 1000;
-    /* İçerikleri ve çıkış butonunu en alta itebilmek için Flexbox */
     display: flex;
     flex-direction: column;
 }
 
-    /* Nav menüsünün kalan tüm boşluğu kaplamasını sağlar */
     .sidebar .nav {
         flex-grow: 1;
     }
 
-/* Logo (Sağdan ve soldan tam dayalı) */
 .sidebar-logo {
     width: 100%;
     margin-bottom: 20px;
 }
-/* Çıkış Yap Buton Alanı (En Alta Yapışık) */
+
+    .sidebar-logo img {
+        width: 100%;
+        display: block;
+        height: auto;
+    }
+
 .sidebar-logout {
-    margin-top: auto; /* Otomatik olarak en alta iter */
+    margin-top: auto;
     padding: 10px 15px;
-    border-top: 1px solid rgba(255, 255, 255, 0.15); /* Üstüne hafif bir çizgi */
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-    /* Çıkış Buton Stili */
     .sidebar-logout .btn-logout {
-        color: #fff; /* Dikkat çeken kırmızı/mercan tonu */
+        color: #fff !important;
         font-size: 18px;
         font-weight: 600;
         padding: 10px 15px;
@@ -65,18 +75,11 @@ input, select, textarea {
     }
 
         .sidebar-logout .btn-logout:hover {
-            background-color: rgba(220, 53, 69, 0.2); /* Hafif kırmızı arka plan vurgusu */
-            color: #ff4d4d;
+            background-color: rgba(220, 53, 69, 0.2);
+            color: #ff4d4d !important;
             transform: translateX(4px);
         }
 
-.sidebar-logo img {
-    width: 100%;
-    display: block;
-    height: auto;
-}
-
-/* Menü başlığı */
 .sidebar h5 {
     font-size: 22px;
     font-weight: bold;
@@ -84,53 +87,61 @@ input, select, textarea {
     padding: 0 15px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: #f1c40f; /* altın sarısı */
+    color: #f1c40f;
 }
 
-/* Menü linkleri */
 .sidebar .nav-link {
-    color: #fff;
-    font-size: 19px; /* Buton yazıları büyütüldü */
+    color: #fff !important;
+    font-size: 19px;
     font-weight: 500;
-    padding: 12px 18px; /* Buton iç boşlukları genişletildi */
+    padding: 12px 18px;
     display: flex;
     align-items: center;
     border-radius: 0;
     transition: all 0.2s ease-in-out;
 }
 
-    /* Hover efekti */
     .sidebar .nav-link:hover {
-        background-color: rgba(255, 255, 255, 0.18); /* Yarı saydam şık açık vurgu */
-        color: #fff;
-        transform: translateX(4px); /* Hafif sağa kayma efekti */
+        background-color: rgba(255, 255, 255, 0.18) !important;
+        color: #fff !important;
+        transform: translateX(4px);
     }
 
-/* Aktif menü */
-.nav-link.active {
-    background-color: #01395f; /* Koyu mavi aktif tonu */
-    color: #fff !important;
-    font-weight: bold;
-}
+    .sidebar .nav-link.active {
+        background-color: #01395f !important;
+        color: #fff !important;
+        font-weight: bold;
+    }
 
-.nav-link i {
-    margin-right: 10px; /* İkon ile yazı arası boşluk */
-    font-size: 20px; /* İkon boyutu yazıya oranla büyütüldü */
-}
+    .sidebar .nav-link i {
+        margin-right: 10px;
+        font-size: 20px;
+    }
 
-/* Tablo Kartı Контейнери */
-.table-card {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+/* ==========================================================================
+   3. KART VE TABLO DÜZENLEMELERİ
+   ========================================================================== */
+.card {
+    background-color: #ffffff !important;
+    border: none !important;
+    border-radius: 10px !important;
     overflow: hidden;
+    max-width: 1250px;
+    margin: 0 auto;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08) !important;
 }
 
-/* Sütun Başlıkları Clean Look */
+.card-header {
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #f0f2f5 !important;
+}
 
-table thead th,
-.table thead th {
+.card-footer {
+    border-top: 1px solid #e5e7eb !important;
+    background-color: #ffffff !important;
+}
+
+table thead th, .table thead th {
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
@@ -138,60 +149,124 @@ table thead th,
     letter-spacing: 0.5px;
     border-bottom: 1px solid #e5e7eb;
     padding: 12px 16px;
-}   padding: 12px 16px;
 }
 
-/* Arama Kutuları Minimalist */
-.column-search {
-    border: 1px solid #d1d5db !important;
-    border-radius: 6px !important;
-    font-size: 12px !important;
-    padding: 4px 8px !important;
-    box-shadow: none !important;
+.table {
+    margin-bottom: 0 !important;
 }
 
-    .column-search:focus {
-        border-color: #01538b !important;
+    .table > :not(caption) > * > * {
+        border-bottom-color: #f0f0f0;
     }
 
-/* İşlemler Dropdown Butonunu İnceltme */
-.btn-action-trigger {
-    background: transparent !important;
-    border: none !important;
-    color: #9ca3af !important;
-    font-size: 18px;
-    padding: 4px 8px;
-    border-radius: 50%;
+/* ==========================================================================
+   4. ANIMASYONLU EXPANDABLE BUTONLAR VE ARAMA ÇUBUĞU
+   ========================================================================== */
+.expandable-btn {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 8px;
+    justify-content: center;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), padding 0.35s ease;
+    box-shadow: 0 2px 6px rgba(25, 135, 84, 0.2);
 }
 
-    .btn-action-trigger:hover {
-        background-color: #f3f4f6 !important;
-        color: #111827 !important;
+    .expandable-btn i {
+        min-width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-/* Tablo Alt Sayfalama Alanı */
-.table-footer-card {
-    background-color: #f9fafb;
-    border-top: 1px solid #e5e7eb;
-    padding: 12px 20px;
+    .expandable-btn .btn-text {
+        opacity: 0;
+        max-width: 0;
+        transition: opacity 0.25s ease, max-width 0.35s ease;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .expandable-btn:hover {
+        width: 175px;
+        padding-right: 14px;
+    }
+
+        .expandable-btn:hover .btn-text {
+            opacity: 1;
+            max-width: 130px;
+            margin-left: -4px;
+        }
+
+.expandable-search {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s, background-color 0.2s;
 }
 
-/* Modal içindeki select elemanlarının boyutunu sınırlama */
+    .expandable-search .search-btn {
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: transparent;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: color 0.2s;
+    }
+
+    .expandable-search .search-input {
+        width: 100%;
+        border: none;
+        background: transparent;
+        outline: none;
+        padding: 0 12px 0 0;
+        font-size: 14px;
+        color: #1e293b;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+    }
+
+    .expandable-search.expanded,
+    .expandable-search:focus-within {
+        width: 260px;
+        background-color: #ffffff;
+        border-color: #01538b;
+        box-shadow: 0 0 0 3px rgba(1, 83, 139, 0.12);
+    }
+
+        .expandable-search.expanded .search-input,
+        .expandable-search:focus-within .search-input {
+            opacity: 1;
+        }
+
+        .expandable-search.expanded .search-btn,
+        .expandable-search:focus-within .search-btn {
+            color: #01538b;
+        }
+
+/* Modal içi ve tarih düzenlemeleri */
 .modal-body select.form-select option {
     padding: 6px 10px;
 }
 
-/* Chrome / Webkit tarayıcılarda seçenek menüsünü scroll'a zorlama */
-.modal-body select.form-select:focus {
-    max-height: 200px;
-}
-
-/* Tüm input type="date" alanlarında Türkçe placeholder gösterimi */
 input[type="date"] {
     position: relative;
 }
 
-    /* Tarih boşken tarayıcının varsayılan 'mm/dd/yyyy' metnini gizle ve Türkçe bas */
     input[type="date"]:invalid::-webkit-datetime-edit-text,
     input[type="date"]:invalid::-webkit-datetime-edit-month-field,
     input[type="date"]:invalid::-webkit-datetime-edit-day-field,
@@ -209,9 +284,7 @@ input[type="date"] {
         pointer-events: none;
     }
 
-/* Select / Dropdown elemanlarında is-invalid ünlem ikonunu gösterir */
-select.form-select.is-invalid,
-select.form-control.is-invalid {
+select.form-select.is-invalid, select.form-control.is-invalid {
     border-color: #dc3545 !important;
     padding-right: 4.125rem !important;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e"), url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e") !important;
@@ -219,3 +292,11 @@ select.form-control.is-invalid {
     background-size: 16px 12px, 1.25rem 1.25rem !important;
     background-repeat: no-repeat, no-repeat !important;
 }
+.hover-elevate {
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+    .hover-elevate:hover {
+        background-color: #f8fafc !important;
+        transform: translateY(-1px);
+    }

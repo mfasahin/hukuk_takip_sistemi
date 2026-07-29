@@ -1,32 +1,24 @@
-﻿function initTablePagination(tableId, pageSizeSelectId, paginationNavId, tableInfoId) {
+﻿function initTablePagination(tableId, pageSizeSelectId, paginationNavId, tableInfoId, searchInputId) {
+    searchInputId = searchInputId || "globalSearchInput";
     var currentPage = 1;
     var pageSize = parseInt($("#" + pageSizeSelectId).val()) || 10;
 
     function renderTable() {
-        var $rows = $("#" + tableId + " tbody tr");
-        var filters = [];
+        var $rows = $("#" + tableId + " tbody tr:not(#noDataRow)");
+        var searchText = $("#" + searchInputId).val() ? $("#" + searchInputId).val().toLowerCase().trim() : "";
 
-        $(".column-search").each(function () {
-            var colIndex = $(this).data("col");
-            var val = $(this).val().toLowerCase().trim();
-            filters.push({ col: colIndex, val: val });
-        });
-
+        // Hücre Bazlı Hassas Arama Filtresi
         var $filteredRows = $rows.filter(function () {
-            var $row = $(this);
-            var isMatch = true;
+            if (searchText === "") return true;
 
-            $.each(filters, function (i, f) {
-                if (f.val !== "") {
-                    var cellText = $row.find("td").eq(f.col).text().toLowerCase().trim();
-                    if (cellText.indexOf(f.val) === -1) {
-                        isMatch = false;
-                        return false;
-                    }
-                }
+            // İşlemler (son sütun) hariç tüm hücreleri tek tek kontrol et
+            var $cells = $(this).find("td:not(:last-child)");
+
+            // Hücrelerden en az bir tanesi aranan metni içeriyorsa true döner
+            return $cells.toArray().some(function (cell) {
+                var cellText = $(cell).text().toLowerCase().trim();
+                return cellText.indexOf(searchText) > -1;
             });
-
-            return isMatch;
         });
 
         var totalRecords = $filteredRows.length;
@@ -36,17 +28,24 @@
         if (currentPage < 1) currentPage = 1;
 
         $rows.hide();
-        var start = (currentPage - 1) * pageSize;
-        var end = start + pageSize;
-        $filteredRows.slice(start, end).show();
+        $("#noDataRow").remove();
+
+        if (totalRecords === 0) {
+            var colCount = $("#" + tableId + " thead th").length;
+            $("#" + tableId + " tbody").append('<tr id="noDataRow"><td colspan="' + colCount + '" class="text-center text-muted py-3">Aranan kriterlere uygun kayıt bulunamadı.</td></tr>');
+        } else {
+            var start = (currentPage - 1) * pageSize;
+            var end = start + pageSize;
+            $filteredRows.slice(start, end).show();
+
+            var startDisplay = start + 1;
+            var endDisplay = end > totalRecords ? totalRecords : end;
+            $("#" + tableInfoId).text(totalRecords + " kayıttan " + startDisplay + " - " + endDisplay + " arası gösteriliyor.");
+        }
 
         $("#totalRecordCount").text(totalRecords);
         $("#currentPageNum").text(currentPage);
         $("#totalPagesNum").text(totalPages);
-
-        var startDisplay = totalRecords === 0 ? 0 : start + 1;
-        var endDisplay = end > totalRecords ? totalRecords : end;
-        $("#" + tableInfoId).text(totalRecords + " kayıttan " + startDisplay + " - " + endDisplay + " arası gösteriliyor.");
 
         renderPagination(totalPages);
     }
@@ -69,31 +68,29 @@
         $nav.append('<li class="page-item ' + nextClass + '"><a class="page-link" href="javascript:void(0)" data-page="' + (currentPage + 1) + '">&raquo;</a></li>');
     }
 
-    // Başlığa tıklandığında arama satırını göster/gizle (İşlemler sütunu hariç)
-    $("#" + tableId + " thead tr:first-child th").on("click", function () {
-        if ($(this).index() === 7) return;
-        $("#" + tableId + " thead tr.search-row").toggle();
-    });
-
-    $(document).on("keyup change", ".column-search", function () {
+    // Arama kutusunu (document katmanında delegasyon ile) kaçırmadan dinle
+    $(document).off("input keyup search", "#" + searchInputId).on("input keyup search", "#" + searchInputId, function () {
         currentPage = 1;
         renderTable();
     });
 
-    $("#" + pageSizeSelectId).on("change", function () {
+    // Sayfa boyutu değiştiğinde
+    $(document).off("change", "#" + pageSizeSelectId).on("change", "#" + pageSizeSelectId, function () {
         pageSize = parseInt($(this).val());
         currentPage = 1;
         renderTable();
     });
 
-    $(document).on("click", "#" + paginationNavId + " a", function (e) {
+    // Sayfalama butonlarına tıklandığında
+    $(document).off("click", "#" + paginationNavId + " a").on("click", "#" + paginationNavId + " a", function (e) {
         e.preventDefault();
         var page = $(this).data("page");
-        if (page && page !== currentPage) {
+        if (page && page !== currentPage && page >= 1) {
             currentPage = page;
             renderTable();
         }
     });
 
+    // İlk yüklemede çalıştır
     renderTable();
 }
