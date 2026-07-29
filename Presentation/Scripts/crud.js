@@ -51,19 +51,10 @@ function validateForm(formId, options) {
         allValues[name] = $input.val();
     });
 
-    // 1. AŞAMA: Form tamamen boş mu kontrol et
-    var allEmpty = Object.keys(allValues).every(function (key) {
-        var val = allValues[key];
-        return !val || val.toString().trim() === "" || val === "0" || val === "00000000-0000-0000-0000-000000000000";
-    });
+    // NOT: "Tüm alanlar boş bırakılamaz" genel kutu uyarısı tamamen kaldırıldı.
+    // Artık form tamamen boş olsa dahi her input tek tek kontrol edilecek.
 
-    // Form TAMAMEN boşsa sadece alttaki kırmızı genel kutuda mesaj göster
-    if (allEmpty) {
-        showFormError($form, "Tüm alanlar boş bırakılamaz.");
-        return false;
-    }
-
-    // 2. AŞAMA: Kısmi boşluklar veya özel kurallar için tekil alan doğrulaması yap
+    // Elemanları tek tek doğrula ve her birinin altına kırmızılık bas
     $form.find("input, select, textarea").each(function () {
         var $input = $(this);
         var name = $input.attr("name") || "";
@@ -76,18 +67,19 @@ function validateForm(formId, options) {
         var valTrimmed = value ? value.toString().trim() : "";
         var errorMsg = null;
 
-        // Özel kural tanımlanmışsa çalıştır, yoksa varsayılan boşluk kontrolü yap
+        // 1. Özel kural tanımlanmışsa çalıştır
         if (customRules[name] && typeof customRules[name] === "function") {
             errorMsg = customRules[name](value, allValues);
         }
         else if (customRules[id] && typeof customRules[id] === "function") {
             errorMsg = customRules[id](value, allValues);
         }
+        // 2. Varsayılan zorunlu alan kontrolü
         else if (!valTrimmed || valTrimmed === "0" || valTrimmed === "00000000-0000-0000-0000-000000000000") {
             errorMsg = "Bu alan zorunludur.";
         }
 
-        // Hata varsa SADECE ilgili input/select altına uyarı ekle
+        // Hata varsa SADECE ilgili input/select altına kırmızı uyarı ve ikonu ekle
         if (errorMsg) {
             isValid = false;
             $input.addClass("is-invalid");
