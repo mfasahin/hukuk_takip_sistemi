@@ -47,12 +47,12 @@ namespace Business.Concrete
             {
                 throw new Exception("Borç tutarı negatif olamaz.");
             }
-
+            //var 01538b = __urunl.Get(p => p.URUN_ID == urun).musteriId;
             // 3. DTO'dan Entity Dönüşümü
             var ihtar = new Ihtar
             {
                 IHTAR_ID = Guid.NewGuid(),
-                MUSTERI_ID = ihtarDto.MusteriId,
+                MUSTERI_ID = ihtarDto.MusteriId,//01538b
                 BORC_TUTAR = ihtarDto.BorcTutar,
                 IHTAR_TAR_ZMN = ihtarDto.IhtarTarih,
                 SUBE_ID = ihtarDto.SubeId,

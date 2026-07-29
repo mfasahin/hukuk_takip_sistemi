@@ -1,97 +1,215 @@
 ﻿/* Genel Sayfa Ayarları */
-body {
-    background-color: #e6eefc; /* Görseldeki açık mavi arka plan */
-    font-family: Arial, Helvetica, sans-serif;
+html, body {
+    height: 100%;
     margin: 0;
     padding: 0;
 }
 
-/* Header Şeridi */
-.login-header {
-    background-color: #0b4e8a; /* Halkbank Mavisı */
-    padding: 18px 0;
-    width: 100%;
+body {
+    background: linear-gradient(135deg, #e6eefc 0%, #c9daf8 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
+
+/* Header Şeritleri */
 .login-header-1 {
-    background-color: #ffffff; /* Halkbank Mavisı */
-    padding: 18px 0;
+    background-color: #ffffff;
+    padding: 8px 0;
     width: 100%;
 }
 
-    /* Logo kapsayıcı div'e göre tam uyumlu */
-    .login-header .logo {
-        max-width: 100%;
-        height: auto;
-        max-height: 55px; /* İsteğe göre yükseklik limiti */
-        object-fit: contain;
-        display: inline-block;
+.login-header {
+    background-color: #0b4e8a;
+    padding: 22px 0;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 8px 16px rgba(11, 78, 138, 0.15);
+    position: relative;
+    z-index: 10;
+}
+
+.header-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 1.8rem;
+    color: #ffffff;
+    letter-spacing: 4px;
+    margin: 0;
+    padding: 0;
+    text-transform: uppercase;
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    display: inline-block;
+}
+
+    .header-title::after {
+        content: '';
+        display: block;
+        width: 40%;
+        height: 3px;
+        background-color: #ffffff;
+        margin: 8px auto 0 auto;
+        border-radius: 3px;
+        opacity: 0.9;
     }
 
-/* Form Konumlandırma - Üstten Düzgün Boşluk Bırakıldı */
+/* KARTIN EKRANIN TAM ORTASINA HİZALANMASI */
 .login-container {
+    flex: 1; /* Header'dan kalan tüm dikey alanı kaplar */
     display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Tam ortalamak yerine yukarıya daha yakın hizalar */
-    padding-top: 70px; /* Header ile container arasındaki boşluk */
-    padding-bottom: 40px;
-    min-height: calc(100vh - 90px);
+    justify-content: center; /* Yatayda tam ortalar */
+    align-items: center; /* Dikeyde tam ortalar */
+    padding: 30px 20px;
 }
 
-.login-form-wrapper {
-    width: 100%;
-    max-width: 360px; /* Görseldeki forma uygun genişlik */
-}
-
-/* Form Elemanları Style */
-.custom-label {
-    color: #0b4e8a;
-    font-weight: 700;
-    font-size: 0.9rem;
-    letter-spacing: 0.5px;
-    display: block;
-    margin-bottom: 6px;
-}
-
-/* İnput Kutuları (Oval ve Siyah Kenarlıklı) */
-.custom-input {
-    border: 2px solid #000000;
-    border-radius: 25px;
-    height: 48px;
-    padding: 0 20px;
-    font-size: 1rem;
+/* BÜYÜTÜLMÜŞ VE YUKARI DOĞRU UZATILMIŞ KART YAPISI */
+.login-card {
     background-color: #ffffff;
+    width: 100%;
+    max-width: 460px;
+    padding: 60px 45px 50px 45px; /* Üst padding 60px yapılarak kart dikeyde uzatıldı */
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(11, 78, 138, 0.12), 0 8px 20px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+/* KART İÇİ KARŞILAMA METİNLERİ */
+.welcome-header {
+    margin-bottom: 30px !important;
+}
+
+.welcome-title {
+    font-family: 'Montserrat', sans-serif;
+    color: #0b4e8a; /* Kurumsal Mavi */
+    font-weight: 700;
+    font-size: 1.6rem;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+
+.welcome-subtitle {
+    color: #7a8e9e; /* Soft Gri */
+    font-size: 0.9rem;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Label (Etiket) Ayarları */
+.custom-label {
+    color: #5c728e;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 8px;
+    margin-left: 5px;
+}
+
+/* İnput Kutuları */
+.custom-input {
+    border: 2px solid #dce4ee;
+    border-radius: 25px;
+    height: 52px;
+    padding: 0 22px;
+    font-size: 1rem;
+    color: #0b4e8a;
+    font-weight: 500;
+    background-color: #f8fafc;
+    transition: all 0.3s ease;
     box-shadow: none !important;
 }
 
     .custom-input:focus {
         border-color: #0b4e8a;
+        background-color: #ffffff;
+        box-shadow: 0 0 0 4px rgba(11, 78, 138, 0.12) !important;
     }
 
 /* Giriş Butonu */
 .btn-login {
-    background-color: #0b4e8a;
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 1.1rem;
-    border-radius: 25px; /* Tam oval görünüm */
-    height: 50px;
-    border: none;
-    transition: background-color 0.2s ease;
-    margin-top: 10px;
+    background: transparent;
+    position: relative;
+    padding: 0 20px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    border: 2px solid #0b4e8a;
+    border-radius: 25px;
+    outline: none;
+    overflow: hidden;
+    color: #0b4e8a;
+    transition: color 0.3s ease-out;
+    text-align: center;
+    margin-top: 25px;
+    z-index: 1;
 }
 
+    .btn-login .login-btn-img {
+        height: 24px;
+        width: auto;
+        margin-right: 10px;
+        object-fit: contain;
+        transition: transform 0.3s ease, filter 0.3s ease;
+        z-index: 2;
+    }
+
+    .btn-login span {
+        margin: 0 4px;
+        letter-spacing: 0.5px;
+        transition: transform 0.3s ease;
+        display: inline-block;
+        z-index: 2;
+    }
+
     .btn-login:hover {
-        background-color: #083864;
-        color: #ffffff;
+        color: #ffffff !important;
+        border-color: #0b4e8a;
+    }
+
+        .btn-login:hover .login-btn-img {
+            transform: scale(1.15);
+            filter: brightness(0) invert(1);
+        }
+
+        .btn-login:hover span {
+            transform: scale(1.05);
+        }
+
+    .btn-login::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 150%;
+        padding-top: 150%;
+        border-radius: 50%;
+        background-color: #0b4e8a;
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.4s ease-out;
+        z-index: 1;
+    }
+
+    .btn-login:hover::before {
+        transform: translate(-50%, -50%) scale(1);
     }
 
 /* Kayıt Linki */
 .register-link {
-    color: #0b4e8a;
+    color: #6482a6;
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: color 0.2s ease;
 }
 
     .register-link:hover {
+        color: #0b4e8a;
         text-decoration: underline;
     }
