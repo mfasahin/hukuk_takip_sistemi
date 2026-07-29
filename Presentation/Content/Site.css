@@ -128,7 +128,9 @@ input, select, textarea {
 }
 
 /* Sütun Başlıkları Clean Look */
-#musteriTable thead th {
+
+table thead th,
+.table thead th {
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
@@ -136,6 +138,7 @@ input, select, textarea {
     letter-spacing: 0.5px;
     border-bottom: 1px solid #e5e7eb;
     padding: 12px 16px;
+}   padding: 12px 16px;
 }
 
 /* Arama Kutuları Minimalist */

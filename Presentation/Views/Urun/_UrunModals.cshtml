@@ -1,33 +1,40 @@
 ﻿<!-- Create Modal -->
-<div class="modal fade" id="createModal">
-    <div class="modal-dialog modal-lg">
-        <!-- geniş modal -->
-        <div class="modal-content">
+<div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
             <form id="createForm">
-                <div class="modal-header">
+                <div class="modal-header text-white" style="background-color: #01538b;">
                     <h5 class="modal-title">Ürün Bilgileri</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @Html.Label("Ürün Adı")
-                                <input type="text" id="UrunAd" name="UrunAd" class="form-control" />
+                                <label for="UrunAd" class="form-label fw-bold">Ürün Adı</label>
+                                <input type="text" id="UrunAd" name="UrunAd" class="form-control" maxlength="25" placeholder="Örn: Kredi Sözleşmesi" required />
                             </div>
                             <div class="col-md-4">
-                                @Html.Label("Ürün Kodu")
-                                <input type="text" id="UrunKod" name="UrunKod" class="form-control" />
+                                <label for="UrunKod" class="form-label fw-bold">Ürün Kodu</label>
+                                <input type="text" id="UrunKod" name="UrunKod" class="form-control" maxlength="5" placeholder="Örn: URN01" required />
                             </div>
                             <div class="col-md-4">
-                                @Html.Label("Ürün Son Geçerlilik Tarihi")
-                                <input type="date" id="SonGecerlilikTar" name="SonGecerlilikTar" class="form-control" />
+                                <label for="SonGecerlilikTar" class="form-label fw-bold">Ürün Son Geçerlilik Tarihi</label>
+                                <input type="date" id="SonGecerlilikTar" name="SonGecerlilikTar" class="form-control" required />
+                            </div>
+                        </div>
+
+                        <!-- Genel Form Hata Mesaj Alanı -->
+                        <div id="formGeneralError" class="row d-none">
+                            <div class="col-12">
+                                <div class="alert alert-danger mb-0 text-center py-2 error-message-container"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" id="createSaveBtn" class="btn btn-primary">Kaydet</button>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" id="createSaveBtn" class="btn btn-success px-4">Kaydet</button>
                 </div>
             </form>
         </div>
@@ -35,35 +42,43 @@
 </div>
 
 <!-- Update Modal -->
-<div class="modal fade" id="updateModal">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+<div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
             <form id="updateForm">
                 <input type="hidden" id="UrunId" name="UrunId" />
-                <div class="modal-header">
+                <div class="modal-header text-white" style="background-color: #01538b;">
                     <h5 class="modal-title">Ürün Bilgileri</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @Html.Label("Ürün Adı")
-                                <input type="text" id="UrunAd" name="UrunAd" class="form-control" />
+                                <label for="UrunAd" class="form-label fw-bold">Ürün Adı</label>
+                                <input type="text" id="UrunAd" name="UrunAd" class="form-control" maxlength="25" required />
                             </div>
                             <div class="col-md-4">
-                                @Html.Label("Ürün Kodu")
-                                <input type="text" id="UrunKod" name="UrunKod" class="form-control" />
+                                <label for="UrunKod" class="form-label fw-bold">Ürün Kodu</label>
+                                <input type="text" id="UrunKod" name="UrunKod" class="form-control" maxlength="5" required />
                             </div>
                             <div class="col-md-4">
-                                @Html.Label("Ürün Son Geçerlilik Tarihi")
-                                <input type="date" id="SonGecerlilikTar" name="SonGecerlilikTar" class="form-control" />
+                                <label for="SonGecerlilikTar" class="form-label fw-bold">Ürün Son Geçerlilik Tarihi</label>
+                                <input type="date" id="SonGecerlilikTar" name="SonGecerlilikTar" class="form-control" required />
+                            </div>
+                        </div>
+
+                        <!-- Genel Form Hata Mesaj Alanı -->
+                        <div id="updateFormGeneralError" class="row d-none">
+                            <div class="col-12">
+                                <div class="alert alert-danger mb-0 text-center py-2 error-message-container"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" id="updateSaveBtn" class="btn btn-primary">Kaydet</button>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" id="updateSaveBtn" class="btn btn-success px-4">Kaydet</button>
                 </div>
             </form>
         </div>

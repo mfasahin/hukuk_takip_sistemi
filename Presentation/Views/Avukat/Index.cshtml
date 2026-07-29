@@ -58,10 +58,11 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a class="dropdown-item text-danger updateBtn" data-id="@avukat.AvukatId">Güncelle</a>
+                                    <a class="dropdown-item updateBtn" href="javascript:void(0);" data-id="@avukat.AvukatId">Güncelle</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item text-danger deleteBtn" data-id="@avukat.AvukatId">Sil</a>
+                                    <!-- NOT: data-bs-toggle="modal" KULLANILMIYOR, doğrudan crud.js tetikler -->
+                                    <a class="dropdown-item text-danger deleteBtn" href="javascript:void(0);" data-id="@avukat.AvukatId">Sil</a>
                                 </li>
                             </ul>
                         </div>
@@ -105,7 +106,11 @@
 @Html.Partial("_AvukatModals", new Presentation.Models.AvukatModel())
 
 @section Scripts {
-    <script src="~/Scripts/crud.js?v=1.1"></script>
+    <!-- SweetAlert2 Kütüphanesi (Yoksa Şık Modallar İçin Zorunludur) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="~/Scripts/crud.js?v=2.0"></script>
     <script src="~/Scripts/Avukat/avukatValidation.js"></script>
     <script src="~/Scripts/Avukat/TablePagination.js"></script>
 

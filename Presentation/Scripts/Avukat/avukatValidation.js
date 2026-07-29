@@ -4,7 +4,7 @@
             if (!value || value.trim() === "") {
                 return "Avukat adı boş bırakılamaz.";
             }
-            if (value.length > 25) {
+            if (value.trim().length > 25) {
                 return "Avukat adı en fazla 25 karakter olabilir.";
             }
             if (!/^[a-zA-ZğüşöçıİĞÜŞÖÇ\s]+$/.test(value)) {
@@ -16,7 +16,7 @@
             if (!value || value.trim() === "") {
                 return "Avukat soyadı boş bırakılamaz.";
             }
-            if (value.length > 25) {
+            if (value.trim().length > 25) {
                 return "Avukat soyadı en fazla 25 karakter olabilir.";
             }
             if (!/^[a-zA-ZğüşöçıİĞÜŞÖÇ\s]+$/.test(value)) {
@@ -31,7 +31,7 @@
             if (!/^[0-9]+$/.test(value)) {
                 return "TBB Sicil No sadece rakamlardan oluşmalıdır.";
             }
-            if (value.length > 10) {
+            if (value.trim().length > 10) {
                 return "TBB Sicil No en fazla 10 karakter olabilir.";
             }
             return null;
@@ -40,7 +40,7 @@
             if (!value || value.trim() === "") {
                 return "E-posta adresi boş bırakılamaz.";
             }
-            if (value.length > 25) {
+            if (value.trim().length > 25) {
                 return "E-posta adresi en fazla 25 karakter olabilir.";
             }
             var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -51,24 +51,31 @@
         },
         "AvktTelNo": function (value) {
             if (!value || value.trim() === "") return "Telefon numarası boş bırakılamaz.";
-            if (value.length !== 13) return "Telefon numarası 5XX XXX XX XX formatında 10 haneli olmalıdır.";
+            var rawDigits = value.replace(/\D/g, '');
+            if (rawDigits.length !== 10) return "Telefon numarası başında 0 olmadan 10 hane olmalıdır (5XX XXX XX XX).";
             return null;
         },
         "HkkBuroAd": function (value) {
-            if (value && value.length > 50) {
+            if (value && value.trim().length > 50) {
                 return "Hukuk büro adı en fazla 50 karakter olabilir.";
             }
             return null;
         },
         "HkkBuroAdres": function (value) {
-            if (value && value.length > 70) {
+            if (value && value.trim().length > 70) {
                 return "Hukuk büro adresi en fazla 70 karakter olabilir.";
             }
             return null;
         },
         "OfisTelNo": function (value) {
-            if (!value || value.trim() === "") return "Telefon numarası boş bırakılamaz.";
-            if (value.length !== 13) return "Telefon numarası 5XX XXX XX XX formatında 10 haneli olmalıdır.";
+            // Eğer alan boşsa doğrulama hatası verme (opsiyonel)
+            if (!value || value.trim() === "") return null;
+
+            // Eğer bir değer girildiyse 10 haneli format kontrolü yap
+            var rawDigits = value.replace(/\D/g, '');
+            if (rawDigits.length !== 10) {
+                return "Ofis telefon numarası 10 hane olmalıdır (2XX XXX XX XX).";
+            }
             return null;
         }
     }

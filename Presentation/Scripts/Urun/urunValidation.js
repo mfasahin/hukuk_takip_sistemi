@@ -4,7 +4,7 @@
             if (!value || value.trim() === "") {
                 return "Ürün adı boş bırakılamaz.";
             }
-            if (value.length > 25) {
+            if (value.trim().length > 25) {
                 return "Ürün adı en fazla 25 karakter olabilir.";
             }
             return null;
@@ -13,7 +13,7 @@
             if (!value || value.trim() === "") {
                 return "Ürün kodu boş bırakılamaz.";
             }
-            if (value.length > 5) {
+            if (value.trim().length > 5) {
                 return "Ürün kodu en fazla 5 karakter olabilir.";
             }
             return null;
@@ -26,7 +26,6 @@
             var secilenTarih = new Date(value);
             var bugun = new Date();
 
-            // Saat/dakika farklarını sıfırlayıp sadece gün bazlı karşılaştırıyoruz
             bugun.setHours(0, 0, 0, 0);
             secilenTarih.setHours(0, 0, 0, 0);
 

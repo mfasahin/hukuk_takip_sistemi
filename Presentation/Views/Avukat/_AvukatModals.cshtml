@@ -1,57 +1,69 @@
 ﻿<!-- Create Modal -->
-<div class="modal fade" id="createModal">
-    <div class="modal-dialog modal-lg">
-        <!-- geniş modal -->
-        <div class="modal-content">
+<div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
             <form id="createForm">
-                <div class="modal-header">
+                <div class="modal-header text-white" style="background-color: #01538b;">
                     <h5 class="modal-title">Avukat Bilgileri</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
+                        <!-- 1. Satır: Ad, Soyad, TBB Sicil No -->
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @Html.Label("Avukat Adı")
-                                <input type="text" id="AvktAd" name="AvktAd" class="form-control" />
+                                <label for="AvktAd" class="form-label fw-bold">Avukat Adı</label>
+                                <input type="text" id="AvktAd" name="AvktAd" class="form-control only-text" maxlength="25" placeholder="Örn: Ahmet" required />
                             </div>
                             <div class="col-md-4">
-                                @Html.Label("Avukat Soyadı")
-                                <input type="text" id="AvktSoyad" name="AvktSoyad" class="form-control" />
+                                <label for="AvktSoyad" class="form-label fw-bold">Avukat Soyadı</label>
+                                <input type="text" id="AvktSoyad" name="AvktSoyad" class="form-control only-text" maxlength="25" placeholder="Örn: Yılmaz" required />
                             </div>
                             <div class="col-md-4">
-                                @Html.Label("TBB Sicil Numarası")
-                                <input type="text" id="TbbSicilNo" name="TbbSicilNo" class="form-control" />
+                                <label for="TbbSicilNo" class="form-label fw-bold">TBB Sicil Numarası</label>
+                                <input type="text" id="TbbSicilNo" name="TbbSicilNo" class="form-control only-number" maxlength="10" placeholder="10 Haneli Sicil No" required />
                             </div>
                         </div>
+
+                        <!-- 2. Satır: E-posta, Telefon No, Hukuk Bürosu Adı -->
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @Html.Label("Avukat E-posta")
-                                <input type="text" id="AvktEposta" name="AvktEposta" class="form-control" />
+                                <label for="AvktEposta" class="form-label fw-bold">Avukat E-posta</label>
+                                <input type="email" id="AvktEposta" name="AvktEposta" class="form-control" maxlength="25" placeholder="ornek@domain.com" required />
                             </div>
                             <div class="col-md-4">
-                                @Html.Label("Avukat Telefon Numarası")
-                                <input type="text" id="AvktTelNo" name="AvktTelNo" class="form-control" />
+                                <label for="AvktTelNo" class="form-label fw-bold">Avukat Telefon Numarası</label>
+                                <input type="text" id="AvktTelNo" name="AvktTelNo" class="form-control" maxlength="13" placeholder="5XX XXX XX XX" required />
                             </div>
                             <div class="col-md-4">
-                                @Html.Label("Hukuk Bürosu Adı")
-                                <input type="email" id="HkkBuroAd" name="HkkBuroAd" class="form-control" />
+                                <label for="HkkBuroAd" class="form-label fw-bold">Hukuk Bürosu Adı</label>
+                                <input type="text" id="HkkBuroAd" name="HkkBuroAd" class="form-control" maxlength="50" placeholder="Örn: Yılmaz Hukuk" />
                             </div>
                         </div>
+
+                        <!-- 3. Satır: Hukuk Bürosu Adresi, Ofis Telefon Numarası -->
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @Html.Label("Hukuk Bürosu Adresi")
-                                <input type="text" id="HkkBuroAdres" name="HkkBuroAdres" class="form-control" />
+                                <label for="HkkBuroAdres" class="form-label fw-bold">Hukuk Bürosu Adresi</label>
+                                <input type="text" id="HkkBuroAdres" name="HkkBuroAdres" class="form-control" maxlength="70" placeholder="Büro Adresi" />
                             </div>
                             <div class="col-md-4">
-                                @Html.Label("Ofis Telefon Numarası")
-                                <input type="text" id="OfisTelNo" name="OfisTelNo" class="form-control" />
+                                <label for="OfisTelNo" class="form-label fw-bold">Ofis Telefon Numarası</label>
+                                <input type="text" id="OfisTelNo" name="OfisTelNo" class="form-control" maxlength="13" placeholder="2XX XXX XX XX" />
+                            </div>
+                        </div>
+
+                        <!-- Genel Form Hata Mesajının Alt Tarafta Görüneceği Alan -->
+                        <div id="formGeneralError" class="row d-none">
+                            <div class="col-12">
+                                <div class="alert alert-danger mb-0 text-center py-2 error-message-container"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" id="createSaveBtn" class="btn btn-primary">Kaydet</button>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" id="createSaveBtn" class="btn btn-success px-4">Kaydet</button>
                 </div>
             </form>
         </div>
@@ -59,59 +71,72 @@
 </div>
 
 <!-- Update Modal -->
-<div class="modal fade" id="updateModal">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+<div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
             <form id="updateForm">
                 <input type="hidden" id="AvukatId" name="AvukatId" />
-                <div class="modal-header">
+                <div class="modal-header text-white" style="background-color: #01538b;">
                     <h5 class="modal-title">Avukat Bilgileri</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
+                        <!-- 1. Satır: Ad, Soyad, TBB Sicil No -->
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @Html.Label("Avukat Adı")
-                                <input type="text" id="AvktAd" name="AvktAd" class="form-control" />
+                                <label for="AvktAd" class="form-label fw-bold">Avukat Adı</label>
+                                <input type="text" id="AvktAd" name="AvktAd" class="form-control only-text" maxlength="25" required />
                             </div>
                             <div class="col-md-4">
-                                @Html.Label("Avukat Soyadı")
-                                <input type="text" id="AvktSoyad" name="AvktSoyad" class="form-control" />
+                                <label for="AvktSoyad" class="form-label fw-bold">Avukat Soyadı</label>
+                                <input type="text" id="AvktSoyad" name="AvktSoyad" class="form-control only-text" maxlength="25" required />
                             </div>
                             <div class="col-md-4">
-                                @Html.Label("TBB Sicil Numarası")
-                                <input type="text" id="TbbSicilNo" name="TbbSicilNo" class="form-control" />
+                                <label for="TbbSicilNo" class="form-label fw-bold">TBB Sicil Numarası</label>
+                                <input type="text" id="TbbSicilNo" name="TbbSicilNo" class="form-control only-number" maxlength="10" required />
                             </div>
                         </div>
+
+                        <!-- 2. Satır: E-posta, Telefon No, Hukuk Bürosu Adı -->
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @Html.Label("Avukat E-posta")
-                                <input type="text" id="AvktEposta" name="AvktEposta" class="form-control" />
+                                <label for="AvktEposta" class="form-label fw-bold">Avukat E-posta</label>
+                                <input type="email" id="AvktEposta" name="AvktEposta" class="form-control" maxlength="25" required />
                             </div>
                             <div class="col-md-4">
-                                @Html.Label("Avukat Telefon Numarası")
-                                <input type="text" id="AvktTelNo" name="AvktTelNo" class="form-control" />
+                                <label for="AvktTelNo" class="form-label fw-bold">Avukat Telefon Numarası</label>
+                                <input type="text" id="AvktTelNo" name="AvktTelNo" class="form-control" maxlength="13" required />
                             </div>
                             <div class="col-md-4">
-                                @Html.Label("Hukuk Bürosu Adı")
-                                <input type="email" id="HkkBuroAd" name="HkkBuroAd" class="form-control" />
+                                <label for="HkkBuroAd" class="form-label fw-bold">Hukuk Bürosu Adı</label>
+                                <input type="text" id="HkkBuroAd" name="HkkBuroAd" class="form-control" maxlength="50" />
                             </div>
                         </div>
+
+                        <!-- 3. Satır: Hukuk Bürosu Adresi, Ofis Telefon Numarası -->
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @Html.Label("Hukuk Bürosu Adresi")
-                                <input type="text" id="HkkBuroAdres" name="HkkBuroAdres" class="form-control" />
+                                <label for="HkkBuroAdres" class="form-label fw-bold">Hukuk Bürosu Adresi</label>
+                                <input type="text" id="HkkBuroAdres" name="HkkBuroAdres" class="form-control" maxlength="70" />
                             </div>
                             <div class="col-md-4">
-                                @Html.Label("Ofis Telefon Numarası")
-                                <input type="text" id="OfisTelNo" name="OfisTelNo" class="form-control" />
+                                <label for="OfisTelNo" class="form-label fw-bold">Ofis Telefon Numarası</label>
+                                <input type="text" id="OfisTelNo" name="OfisTelNo" class="form-control" maxlength="13" />
+                            </div>
+                        </div>
+
+                        <!-- Hata Mesaj Alanı -->
+                        <div id="updateFormGeneralError" class="row d-none">
+                            <div class="col-12">
+                                <div class="alert alert-danger mb-0 text-center py-2 error-message-container"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" id="updateSaveBtn" class="btn btn-primary">Kaydet</button>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" id="updateSaveBtn" class="btn btn-success px-4">Kaydet</button>
                 </div>
             </form>
         </div>

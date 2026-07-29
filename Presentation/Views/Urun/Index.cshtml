@@ -43,10 +43,11 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a class="dropdown-item text-danger updateBtn" data-id="@urun.UrunId">Güncelle</a>
+                                    <a class="dropdown-item updateBtn" href="javascript:void(0);" data-id="@urun.UrunId">Güncelle</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item text-danger deleteBtn" data-id="@urun.UrunId">Sil</a>
+                                    <!-- NOT: data-bs-toggle="modal" KULLANILMIYOR, doğrudan crud.js tetikler -->
+                                    <a class="dropdown-item text-danger deleteBtn" href="javascript:void(0);" data-id="@urun.UrunId">Sil</a>
                                 </li>
                             </ul>
                         </div>
