@@ -32,9 +32,10 @@ function validateForm(formId, options) {
     var $form = $("#" + formId);
     var isValid = true;
 
-    // Önceki hata mesajlarını ve kırmızı kenarlıkları temizle
+    // Önceki hata mesajlarını ve genel uyarı alanını temizle
     $form.find(".is-invalid").removeClass("is-invalid");
     $form.find(".invalid-feedback").remove();
+    $form.find(".alert-danger").closest(".row").addClass("d-none");
 
     var allValues = {};
     $form.find("input, select, textarea").each(function () {
@@ -50,7 +51,12 @@ function validateForm(formId, options) {
     });
 
     if (allEmpty) {
-        $form.prepend('<div class="invalid-feedback d-block alert alert-danger mb-3">Tüm alanlar boş bırakılamaz.</div>');
+        // Hata mesajını en alta basar
+        var $errContainer = $form.find(".error-message-container");
+        if ($errContainer.length > 0) {
+            $errContainer.text("Tüm alanlar boş bırakılamaz.");
+            $errContainer.closest(".row").removeClass("d-none");
+        }
         return false;
     }
 
@@ -78,15 +84,8 @@ function validateForm(formId, options) {
         else if (!valTrimmed) {
             errorMsg = "Bu alan zorunludur.";
         }
-        // 3. İcra Dosya No varsayılan Regex format doğrulaması (YYYY/SIRA E.)
-        else if (name.toLowerCase().indexOf("icradosyano") !== -1 || id.toLowerCase().indexOf("icradosyano") !== -1) {
-            var dosyaNoRegex = /^(19|20)\d{2}\/\d{1,7}\s?[eE]\.$/;
-            if (!dosyaNoRegex.test(valTrimmed)) {
-                errorMsg = "Format hatalı! Örn: 2026/1234 E.";
-            }
-        }
 
-        // Hata varsa ilgili input altına uyarı ekle
+        // Hata varsa ilgili input altına kırmızı uyarı ekle
         if (errorMsg) {
             isValid = false;
             $input.addClass("is-invalid");
@@ -97,8 +96,21 @@ function validateForm(formId, options) {
     return isValid;
 }
 
-// Otomatik Telefon Formatlama Maskeleri
-$(document).on('input', 'input[name="MustTelNo"], input[name="MUST_TEL_NO"], input[name="AvktTelNo"], input[name="AVKT_TEL_NO"], input[name="OfisTelNo"], input[name="OFIS_TEL-NO"]', function () {
+// KLAVYE GİRİŞ KISITLAMALARI (Önyüz Engelleyiciler)
+$(document).ready(function () {
+    // Sadece Sayı Girilebilir Alanlar (Sayılar dışındakileri siler)
+    $(document).on('input', '.only-number', function () {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+    // Sadece Harf Girilebilir Alanlar (Harfler ve Boşluk dışındakileri siler)
+    $(document).on('input', '.only-text', function () {
+        this.value = this.value.replace(/[^a-zA-ZğüşöçıİĞÜŞÖÇ\s]/g, '');
+    });
+});
+
+// Otomatik Telefon Formatlama Maskesi (5XX XXX XX XX)
+$(document).on('input', 'input[name="MustTelNo"], input[name="MUST_TEL_NO"], input[name="AvktTelNo"], input[name="AVKT_TEL_NO"], input[name="OfisTelNo"]', function () {
     let rawValue = $(this).val().replace(/\D/g, '');
     if (rawValue.startsWith('0')) rawValue = rawValue.substring(1);
     if (rawValue.length > 10) rawValue = rawValue.substring(0, 10);
@@ -113,46 +125,55 @@ $(document).on('input', 'input[name="MustTelNo"], input[name="MUST_TEL_NO"], inp
 });
 
 // Modal & Bildirim Yardımcıları
-function closeModalThenShowSuccess(modalId, message, onClose) {
-    var modalEl = document.getElementById(modalId);
-    if (!modalEl) return;
-    var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-
-    $(modalEl).off("hidden.bs.modal.chain").on("hidden.bs.modal.chain", function () {
-        showSuccessModal(message, onClose);
-    });
-
-    modal.hide();
+// Hata Mesajı Gösterici
+function showErrorModal(message) {
+    if (typeof Swal !== "undefined") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Hata!',
+            html: message,
+            confirmButtonColor: '#01538b',
+            confirmButtonText: 'Tamam'
+        });
+    } else {
+        // Fallback: Bootstrap modal veya özel div varsa oraya bas
+        var $errorContainer = $(".error-message-container");
+        if ($errorContainer.length > 0) {
+            $errorContainer.html(message).closest(".row").removeClass("d-none");
+        } else {
+            alert(message);
+        }
+    }
 }
 
-function showSuccessModal(message, onClose) {
+// Başarı Mesajı Gösterici ve Modal Kapatıcı
+function closeModalThenShowSuccess(modalId, message, onClose) {
+    var modalEl = document.getElementById(modalId);
+    if (modalEl) {
+        var modal = bootstrap.Modal.getInstance(modalEl) || bootstrap.Modal.getOrCreateInstance(modalEl);
+        modal.hide();
+    }
+
     if (typeof Swal !== "undefined") {
         Swal.fire({
             icon: 'success',
             title: 'Başarılı!',
-            text: message
-        }).then(function () {
-            if (typeof onClose === "function") onClose();
+            text: message,
+            confirmButtonColor: '#01538b',
+            confirmButtonText: 'Tamam'
+        }).then(function (result) {
+            if (result.isConfirmed || result.isDismissed) {
+                if (typeof onClose === "function") onClose();
+            }
         });
-        return;
-    }
-
-    $("#successModalMessage").text(message);
-    var modalEl = document.getElementById("successModal");
-    if (!modalEl) {
+    } else {
+        // Fallback alert
         alert(message);
         if (typeof onClose === "function") onClose();
-        return;
     }
-    var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-
-    $(modalEl).off("hidden.bs.modal.success").on("hidden.bs.modal.success", function () {
-        if (typeof onClose === "function") onClose();
-    });
-
-    modal.show();
 }
 
+// Onay Modal Gösterici (Silme vb. için)
 function showConfirmModal(message, onConfirm) {
     if (typeof Swal !== "undefined") {
         Swal.fire({
@@ -160,33 +181,20 @@ function showConfirmModal(message, onConfirm) {
             text: message,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#01538b',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Evet, Sil!',
             cancelButtonText: 'İptal'
-        }).then((result) => {
+        }).then(function (result) {
             if (result.isConfirmed) {
                 if (typeof onConfirm === "function") onConfirm();
             }
         });
-        return;
+    } else {
+        if (confirm(message)) {
+            if (typeof onConfirm === "function") onConfirm();
+        }
     }
-
-    $("#confirmModalMessage").text(message);
-    var modalEl = document.getElementById("confirmModal");
-    if (!modalEl) {
-        if (confirm(message)) { if (typeof onConfirm === "function") onConfirm(); }
-        return;
-    }
-    var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-    var $okBtn = $("#confirmModalOkBtn");
-
-    $okBtn.off("click.confirm").on("click.confirm", function () {
-        modal.hide();
-        if (typeof onConfirm === "function") onConfirm();
-    });
-
-    modal.show();
 }
 
 // Ana CRUD Başlatıcı Fonksiyon
@@ -200,9 +208,37 @@ function initCrud(entityName, fields, options) {
 
     $("#createModal").off("show.bs.modal" + ns)
         .on("show.bs.modal" + ns, function () {
+            var $form = $("#createForm");
+
+            // 1. Önce formu ve önceki validasyon/hata mesajlarını temizle
             resetCreateForm("createForm", options.onResetCreateForm);
+
+            // 2. Otomatik numara üretme endpoint'i tanımlanmışsa çağır
+            if (options.getNextNoUrl) {
+                $.ajax({
+                    url: options.getNextNoUrl,
+                    type: 'GET',
+                    cache: false, // Her modal açılışında taze ve benzersiz numara üretilmesi için
+                    success: function (data) {
+                        if (!data) return;
+
+                        var generatedNo = data.mustNo || data.autoNo || data.number || data;
+
+                        if (generatedNo) {
+                            var $noInput = $form.find("#MustNo, [name='MustNo'], .auto-number-input");
+                            if ($noInput.length > 0) {
+                                $noInput.val(generatedNo);
+                            }
+                        }
+                    },
+                    error: function (xhr) {
+                        console.error("Otomatik numara alınırken hata oluştu (" + entityName + "):", xhr);
+                    }
+                });
+            }
         });
 
+    // Modal Kaydet Butonu Tetikleyicisi
     $(document).off("click" + ns, "#createSaveBtn")
         .on("click" + ns, "#createSaveBtn", function (e) {
             e.preventDefault();
@@ -214,7 +250,6 @@ function initCrud(entityName, fields, options) {
         .on("submit" + ns, function (e) {
             e.preventDefault();
             var $form = $(this);
-
             var skip = options.validationSkipFields || ["MusteriId", "UrunId"];
 
             // 1. Önyüz Form Doğrulaması
@@ -376,12 +411,3 @@ function initCrud(entityName, fields, options) {
             });
         });
 }
-
-// Select Açılır Liste Taşmasını Engelleme
-$(document).on('focus', '.modal-body select.form-select', function () {
-    if ($(this).find('option').length > 5) {
-        $(this).attr('size', '5');
-    }
-}).on('change blur', '.modal-body select.form-select', function () {
-    $(this).removeAttr('size');
-});

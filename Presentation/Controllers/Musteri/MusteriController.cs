@@ -56,6 +56,14 @@ namespace Presentation.Controllers
             bool isExists = _musteriService.GetAll().Any(x => x.MUST_KIMLIK_NO == tcNo);
             return Json(new { exists = isExists }, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpGet]
+        public JsonResult GetNextMusteriNo()
+        {
+            var newMustNo = _musteriService.GenerateUniqueMustNo();
+            return Json(new { mustNo = newMustNo }, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public ActionResult Create(MusteriModel model)
         {
@@ -64,9 +72,14 @@ namespace Presentation.Controllers
                 return Json(new { success = false, message = "Gönderilen müşteri verisi boş olamaz." });
             }
 
+            // Eğer arayüzden MustNo boş veya hatalı gelmişse sunucuda otomatik üret
+            if (string.IsNullOrWhiteSpace(model.MustNo))
+            {
+                model.MustNo = _musteriService.GenerateUniqueMustNo();
+            }
+
             try
             {
-                // 1. Müşteri Modelinden Entity Dönüşümü
                 var musteri = new Musteri
                 {
                     MUSTERI_ID = Guid.NewGuid(),
@@ -79,7 +92,6 @@ namespace Presentation.Controllers
                     MUST_TEL_NO = model.MustTelNo
                 };
 
-                // 2. Fluent Validation Çalıştırma (Önce Validation Yapılmalı)
                 var validator = new MusteriValidator();
                 var result = validator.Validate(musteri);
 
@@ -89,35 +101,19 @@ namespace Presentation.Controllers
                     return Json(new { success = false, message = errorMessage });
                 }
 
-                // 3. Duplicate TC Kontrolü (Validation geçtikten ve Kimlik No boş değilse yap)
                 if (!string.IsNullOrWhiteSpace(musteri.MUST_KIMLIK_NO) &&
-                    _musteriService.GetAll().Any(x => x.MUST_KIMLIK_NO == musteri.MUST_KIMLIK_NO))
+                    _musteriService.GetAll().Any(x => x.MUST_KIMLIK_NO == musteri.MUST_KIMLIK_NO && x.SIL_TAR_ZMN == null))
                 {
                     return Json(new { success = false, message = "Bu kimlik numarası ile kayıtlı müşteri mevcut." });
                 }
 
-                // 4. Servis Katmanı Üzerinden Ekleme
                 _musteriService.Add(musteri);
-
                 return Json(new { success = true, message = "Müşteri başarıyla eklendi." });
-            }
-            catch (ValidationException ex)
-            {
-                var errorList = ex.Errors.Select(e => e.ErrorMessage).ToList();
-                string errorMessage = string.Join("<br>", errorList);
-
-                return Json(new { success = false, message = errorMessage });
             }
             catch (Exception ex)
             {
-                // Hatanın tam detayını görebilmek için ex.ToString() veya ex.StackTrace alıyoruz
                 var fullError = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-
-                return Json(new
-                {
-                    success = false,
-                    message = "Sistemsel Hata: " + fullError
-                });
+                return Json(new { success = false, message = "Sistemsel Hata: " + fullError });
             }
         }
         // TEKİL KAYIT (modal doldurma için)

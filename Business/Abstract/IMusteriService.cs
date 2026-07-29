@@ -8,10 +8,13 @@ namespace Business.Abstract
     public interface IMusteriService
     {
         List<Musteri> GetAll();
+        Musteri GetById(Guid id);
         void Add(Musteri musteri);
         void Update(Musteri musteri);
         void Delete(Musteri musteri);
-        Musteri GetById(Guid id);
+
+        // Business katmanı saf veri tipleriyle çalışmalıdır (JsonResult kullanılmaz)
+        string GenerateUniqueMustNo();
         ValidationResult Validate(Musteri musteri);
     }
 }

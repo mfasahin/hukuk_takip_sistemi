@@ -101,17 +101,24 @@
 @Html.Partial("_MusteriModals", new Presentation.Models.MusteriModel())
 
 @section Scripts {
-    <script src="~/Scripts/crud.js?v=1.1"></script>
-    <script src="~/Scripts/Musteri/musteriValidation.js"></script>
+    <!-- 1. Önce validation options ve kurallar yüklenmeli -->
+    <script src="~/Scripts/Musteri/musteriValidation.js?v=2.0"></script>
+
+    <!-- 2. Sonra genel CRUD kütüphanesi yüklenmeli -->
+    <script src="~/Scripts/crud.js?v=1.2"></script>
+
+    <!-- 3. Sayfalama -->
     <script src="~/Scripts/Musteri/tablePagination.js"></script>
 
     <script>
         $(document).ready(function () {
-            // Sadece tablo filtreleme/sayfalamayı başlat
             initTablePagination("musteriTable", "pageSizeSelect", "paginationNav", "tableInfo");
 
-            // Orijinal initCrud çağrısı (Sizinkiyle Birebir Aynı)
-            initCrud("Musteri", ["MusteriId", "MustNo", "MustAd", "MustSoyad", "MustKimlikNo", "MustVknNo", "MustEposta", "MustTelNo"], musteriOptions);
+            // musteriOptions nesnesinin 3. parametre olarak iletildiğinden emin ol!
+            initCrud("Musteri",
+                ["MusteriId", "MustNo", "MustAd", "MustSoyad", "MustKimlikNo", "MustVknNo", "MustEposta", "MustTelNo"],
+                musteriOptions
+            );
         });
     </script>
 }

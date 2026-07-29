@@ -1,16 +1,18 @@
 ﻿var musteriOptions = {
+    // KİTİT NOKTA: Otomatik müşteri no endpoint'i buraya eklenmeli!
+    getNextNoUrl: '/Musteri/GetNextMusteriNo',
+
     validationRules: {
         "MustNo": function (value) {
-            if (!value || !/^[0-9]+$/.test(value)) return "Müşteri numarası sadece rakamlardan oluşmalıdır.";
-            if (parseInt(value) <= 0) return "Müşteri numarası 0'dan büyük olmalıdır.";
+            if (!value || value.trim() === "") return "Müşteri numarası boş olamaz.";
             return null;
         },
         "MustAd": function (value) {
-            if (!value || !/^[a-zA-ZğüşöçıİĞÜŞÖÇ\s]+$/.test(value)) return "Müşteri adı sadece harflerden oluşmalıdır.";
+            if (!value || value.trim() === "") return "Müşteri adı boş bırakılamaz.";
             return null;
         },
-        "MustSoyad": function (value) {
-            if (value && !/^[a-zA-ZğüşöçıİĞÜŞÖÇ\s]+$/.test(value)) {
+        "MustSoyad": function (value, allValues) {
+            if (value && value.trim() !== "" && !/^[a-zA-ZğüşöçıİĞÜŞÖÇ\s]+$/.test(value)) {
                 return "Müşteri soyadı sadece harflerden oluşmalıdır.";
             }
             return null;
@@ -19,12 +21,13 @@
             var soyadDolu = allValues.MustSoyad && allValues.MustSoyad.trim() !== "";
             var tcDolu = value && value.trim() !== "";
 
-            if (soyadDolu && !tcDolu) return "TC Kimlik No zorunludur.";
+            if (soyadDolu && !tcDolu) return "Soyad girildiğinde TC Kimlik No zorunludur.";
             if (!soyadDolu && tcDolu) return "TC Kimlik No boş bırakılmalıdır.";
 
             if (tcDolu) {
                 if (!/^[0-9]+$/.test(value)) return "TC Kimlik No sadece rakamlardan oluşmalıdır.";
                 if (value.length !== 11) return "TC Kimlik No 11 haneli olmalıdır.";
+                if (value[0] === '0') return "TC Kimlik No 0 ile başlayamaz.";
 
                 var toplam = 0;
                 for (var i = 0; i < 10; i++) {
@@ -59,7 +62,6 @@
         },
         "MustTelNo": function (value) {
             if (!value || value.trim() === "") return "Telefon numarası boş bırakılamaz.";
-            if (value.length !== 13) return "Telefon numarası 5XX XXX XX XX formatında 10 haneli olmalıdır.";
             return null;
         }
     }
