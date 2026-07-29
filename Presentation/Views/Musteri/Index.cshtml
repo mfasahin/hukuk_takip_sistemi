@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Presentation.Models.MusteriModel>
 @{
-    ViewBag.Title = "Müsteri Listesi";
+    ViewBag.Title = "Müşteri Listesi";
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -15,7 +15,7 @@
 <div class="table-responsive">
     <table class="table table-striped align-middle" id="musteriTable">
         <thead>
-            <!-- 1. Satır: Kolon Başlıkları (Sadece Tıklayınca Arama Açılır) -->
+            <!-- 1. Satır: Kolon Başlıkları -->
             <tr>
                 <th style="cursor:pointer;">Müşteri Numarası</th>
                 <th style="cursor:pointer;">Müşteri Adı</th>
@@ -24,6 +24,7 @@
                 <th style="cursor:pointer;">Vergi Kimlik Numarası</th>
                 <th style="cursor:pointer;">Müşteri E-Posta</th>
                 <th style="cursor:pointer;">Müşteri Telefon Numarası</th>
+                <th style="width: 50px;">İşlemler</th>
             </tr>
             <!-- 2. Satır: Gizli Arama Kutuları -->
             <tr class="bg-light search-row" style="display: none;">
@@ -54,10 +55,11 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a class="dropdown-item text-danger updateBtn" data-id="@musteri.MusteriId">Güncelle</a>
+                                    <a class="dropdown-item updateBtn" href="javascript:void(0);" data-id="@musteri.MusteriId">Güncelle</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item text-danger deleteBtn" data-id="@musteri.MusteriId">Sil</a>
+                                    <!-- NOT: data-bs-toggle="modal" KULLANILMIYOR, doğrudan crud.js tetikler -->
+                                    <a class="dropdown-item text-danger deleteBtn" href="javascript:void(0);" data-id="@musteri.MusteriId">Sil</a>
                                 </li>
                             </ul>
                         </div>
@@ -101,11 +103,15 @@
 @Html.Partial("_MusteriModals", new Presentation.Models.MusteriModel())
 
 @section Scripts {
-    <!-- 1. Önce validation options ve kurallar yüklenmeli -->
+    <!-- SweetAlert2 Kütüphanesi (Yoksa Şık Modallar İçin Zorunludur) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- 1. Validation options ve kurallar -->
     <script src="~/Scripts/Musteri/musteriValidation.js?v=2.0"></script>
 
-    <!-- 2. Sonra genel CRUD kütüphanesi yüklenmeli -->
-    <script src="~/Scripts/crud.js?v=1.2"></script>
+    <!-- 2. Genel CRUD kütüphanesi -->
+    <script src="~/Scripts/crud.js?v=2.0"></script>
 
     <!-- 3. Sayfalama -->
     <script src="~/Scripts/Musteri/tablePagination.js"></script>
@@ -114,7 +120,6 @@
         $(document).ready(function () {
             initTablePagination("musteriTable", "pageSizeSelect", "paginationNav", "tableInfo");
 
-            // musteriOptions nesnesinin 3. parametre olarak iletildiğinden emin ol!
             initCrud("Musteri",
                 ["MusteriId", "MustNo", "MustAd", "MustSoyad", "MustKimlikNo", "MustVknNo", "MustEposta", "MustTelNo"],
                 musteriOptions

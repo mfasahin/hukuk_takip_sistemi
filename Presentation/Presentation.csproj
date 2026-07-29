@@ -220,7 +220,6 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\Avukat\avukatValidation.js" />
     <Content Include="Scripts\Avukat\tablePagination.js" />
-    <Content Include="Scripts\common.js" />
     <Content Include="Scripts\crud.js" />
     <Content Include="Scripts\Icra\icraValidation.js" />
     <Content Include="Scripts\Icra\tablePagination.js" />
@@ -284,7 +283,6 @@
     <Content Include="Views\Icra\_IcraModals.cshtml" />
     <Content Include="Views\Kullanici\Login.cshtml" />
     <Content Include="Views\Kullanici\Register.cshtml" />
-    <Content Include="Views\Shared\ErrorModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Business\Business.csproj">

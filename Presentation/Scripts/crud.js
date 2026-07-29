@@ -1,4 +1,8 @@
-﻿function resetCreateForm(formId, extraCallback) {
+﻿// ==========================================================================
+// 1. FORM TEMİZLEME VE DOĞRULAMA (VALIDATION) FONKSİYONLARI
+// ==========================================================================
+
+function resetCreateForm(formId, extraCallback) {
     var $form = $("#" + formId);
     if ($form.length === 0) return;
 
@@ -19,6 +23,7 @@
     // Doğrulama hata işaretlerini temizle
     $form.find(".is-invalid").removeClass("is-invalid");
     $form.find(".invalid-feedback").remove();
+    $form.find(".alert-danger").closest(".row").addClass("d-none");
 
     if (typeof extraCallback === "function") {
         extraCallback();
@@ -51,7 +56,6 @@ function validateForm(formId, options) {
     });
 
     if (allEmpty) {
-        // Hata mesajını en alta basar
         var $errContainer = $form.find(".error-message-container");
         if ($errContainer.length > 0) {
             $errContainer.text("Tüm alanlar boş bırakılamaz.");
@@ -85,7 +89,7 @@ function validateForm(formId, options) {
             errorMsg = "Bu alan zorunludur.";
         }
 
-        // Hata varsa ilgili input altına kırmızı uyarı ekle
+        // Hata varsa ilgili input altına uyarı ekle
         if (errorMsg) {
             isValid = false;
             $input.addClass("is-invalid");
@@ -96,7 +100,11 @@ function validateForm(formId, options) {
     return isValid;
 }
 
-// KLAVYE GİRİŞ KISITLAMALARI (Önyüz Engelleyiciler)
+
+// ==========================================================================
+// 2. KLAVYE GİRİŞ KISITLAMALARI VE MASKELER
+// ==========================================================================
+
 $(document).ready(function () {
     // Sadece Sayı Girilebilir Alanlar (Sayılar dışındakileri siler)
     $(document).on('input', '.only-number', function () {
@@ -124,8 +132,12 @@ $(document).on('input', 'input[name="MustTelNo"], input[name="MUST_TEL_NO"], inp
     $(this).val(formatted);
 });
 
-// Modal & Bildirim Yardımcıları
-// Hata Mesajı Gösterici
+
+// ==========================================================================
+// 3. SWEETALERT2 BİLDİRİM VE POP-UP YARDIMCILARI
+// ==========================================================================
+
+// Hata Pop-up'ı
 function showErrorModal(message) {
     if (typeof Swal !== "undefined") {
         Swal.fire({
@@ -136,17 +148,11 @@ function showErrorModal(message) {
             confirmButtonText: 'Tamam'
         });
     } else {
-        // Fallback: Bootstrap modal veya özel div varsa oraya bas
-        var $errorContainer = $(".error-message-container");
-        if ($errorContainer.length > 0) {
-            $errorContainer.html(message).closest(".row").removeClass("d-none");
-        } else {
-            alert(message);
-        }
+        alert(message);
     }
 }
 
-// Başarı Mesajı Gösterici ve Modal Kapatıcı
+// Başarılı Pop-up'ı ve Modal Kapatıcı
 function closeModalThenShowSuccess(modalId, message, onClose) {
     var modalEl = document.getElementById(modalId);
     if (modalEl) {
@@ -167,13 +173,12 @@ function closeModalThenShowSuccess(modalId, message, onClose) {
             }
         });
     } else {
-        // Fallback alert
         alert(message);
         if (typeof onClose === "function") onClose();
     }
 }
 
-// Onay Modal Gösterici (Silme vb. için)
+// Silme Onay Pop-up'ı (Görseldeki Tasarım)
 function showConfirmModal(message, onConfirm) {
     if (typeof Swal !== "undefined") {
         Swal.fire({
@@ -183,7 +188,7 @@ function showConfirmModal(message, onConfirm) {
             showCancelButton: true,
             confirmButtonColor: '#01538b',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Evet, Sil!',
+            confirmButtonText: 'Tamam!',
             cancelButtonText: 'İptal'
         }).then(function (result) {
             if (result.isConfirmed) {
@@ -196,8 +201,40 @@ function showConfirmModal(message, onConfirm) {
         }
     }
 }
+// Başarı Pop-up'ı (Sadece SweetAlert2 kullanır, eski HTML modalları tetiklemez)
+function showSuccessModal(message, onClose) {
+    if (typeof Swal !== "undefined") {
+        Swal.fire({
+            icon: 'success',
+            title: 'Başarılı!',
+            text: message,
+            confirmButtonColor: '#01538b',
+            confirmButtonText: 'Tamam'
+        }).then(function (result) {
+            if (result.isConfirmed || result.isDismissed) {
+                if (typeof onClose === "function") onClose();
+            }
+        });
+    } else {
+        alert(message);
+        if (typeof onClose === "function") onClose();
+    }
+}
 
-// Ana CRUD Başlatıcı Fonksiyon
+// Modal Kapatıp Başarı Pop-up'ı Gösterme
+function closeModalThenShowSuccess(modalId, message, onClose) {
+    var modalEl = document.getElementById(modalId);
+    if (modalEl) {
+        var modal = bootstrap.Modal.getInstance(modalEl) || bootstrap.Modal.getOrCreateInstance(modalEl);
+        modal.hide();
+    }
+    showSuccessModal(message, onClose);
+}
+
+// ==========================================================================
+// 4. ANA JENERİK CRUD İŞLEMLERİ (INITCRUD)
+// ==========================================================================
+
 function initCrud(entityName, fields, options) {
     options = options || {};
     var getUrl = options.getUrl || ('/' + entityName + '/Get' + entityName);
@@ -206,39 +243,36 @@ function initCrud(entityName, fields, options) {
     var deleteUrl = options.deleteUrl || ('/' + entityName + '/Delete');
     var ns = ".crud-" + entityName;
 
+    // CREATE MODAL AÇILIŞI & OTOMATİK NUMARA YÜKLEME
     $("#createModal").off("show.bs.modal" + ns)
         .on("show.bs.modal" + ns, function () {
             var $form = $("#createForm");
 
-            // 1. Önce formu ve önceki validasyon/hata mesajlarını temizle
+            // 1. Önce formu ve önceki hata mesajlarını sıfırla
             resetCreateForm("createForm", options.onResetCreateForm);
 
-            // 2. Otomatik numara üretme endpoint'i tanımlanmışsa çağır
-            if (options.getNextNoUrl) {
+            // 2. Otomatik numara endpoint'i varsa çağır ve sıfırlanmış forma yaz
+            var getNextUrl = options.getNextNoUrl || (options.validationRules && options.validationRules.getNextNoUrl);
+            if (getNextUrl) {
                 $.ajax({
-                    url: options.getNextNoUrl,
+                    url: getNextUrl,
                     type: 'GET',
-                    cache: false, // Her modal açılışında taze ve benzersiz numara üretilmesi için
+                    cache: false,
                     success: function (data) {
                         if (!data) return;
-
                         var generatedNo = data.mustNo || data.autoNo || data.number || data;
-
                         if (generatedNo) {
-                            var $noInput = $form.find("#MustNo, [name='MustNo'], .auto-number-input");
-                            if ($noInput.length > 0) {
-                                $noInput.val(generatedNo);
-                            }
+                            $form.find("#MustNo, [name='MustNo'], .auto-number-input").val(generatedNo);
                         }
                     },
                     error: function (xhr) {
-                        console.error("Otomatik numara alınırken hata oluştu (" + entityName + "):", xhr);
+                        console.error("Otomatik numara alınamadı (" + entityName + "):", xhr);
                     }
                 });
             }
         });
 
-    // Modal Kaydet Butonu Tetikleyicisi
+    // Kaydet Butonu Tetikleyicisi
     $(document).off("click" + ns, "#createSaveBtn")
         .on("click" + ns, "#createSaveBtn", function (e) {
             e.preventDefault();
@@ -252,7 +286,6 @@ function initCrud(entityName, fields, options) {
             var $form = $(this);
             var skip = options.validationSkipFields || ["MusteriId", "UrunId"];
 
-            // 1. Önyüz Form Doğrulaması
             if (!validateForm("createForm", {
                 skipFields: skip,
                 customRules: options.validationRules
@@ -382,7 +415,7 @@ function initCrud(entityName, fields, options) {
                 });
         });
 
-    // DELETE
+    // DELETE - Silme İşlemi (SweetAlert2 Onay Modalı)
     $(document).off("click" + ns, ".deleteBtn")
         .on("click" + ns, ".deleteBtn", function () {
             var id = $(this).data("id");
@@ -406,7 +439,7 @@ function initCrud(entityName, fields, options) {
                         }
                     })
                     .fail(function (xhr) {
-                        showErrorModal("Silme işlemi sırasında hata oluştu: " + xhr.statusText);
+                        showErrorModal("Silme işlemi sırasında hata oluştu: " + (xhr.statusText || xhr.status));
                     });
             });
         });
