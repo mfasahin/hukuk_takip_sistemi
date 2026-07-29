@@ -29,16 +29,14 @@ namespace Business.Validation
                 .NotEmpty().WithMessage("Lütfen bir mahkeme seçiniz.")
                 .NotEqual(Guid.Empty).WithMessage("Lütfen geçerli bir mahkeme seçiniz.");
 
+            // İcra Dosya No Doğrulaması (Tekil kural ve regex tanımı)
             RuleFor(x => x.IcraDosyaNo)
-                .NotEmpty().WithMessage("İcra dosya numarası boş geçilemez.");
+                .NotEmpty().WithMessage("İcra dosya numarası boş bırakılamaz.")
+                .Matches(@"^(19|20)\d{2}\/\d{1,7}\s?[eE]\.$")
+                .WithMessage("Format hatalı! Doğru Format Örn: 2026/1234 E.");
 
             RuleFor(x => x.IcraTakipTar)
-                .NotEmpty().WithMessage("İcra takip tarihi boş geçilemez.");
-            // İcra Dosya No Format Doğrulaması
-            RuleFor(x => x.IcraDosyaNo)
-                .NotEmpty().WithMessage("İcra dosya numarası boş geçilemez.")
-                .Matches(@"^(19|20)\d{2}\/\d{1,7}\s?[eE]\.$")
-                .WithMessage("İcra dosya numarası formatı hatalı! (Örn: 2026/1234 E.)");
+                .NotEmpty().WithMessage("İcra takip tarihi boş bırakılamaz.");
         }
     }
 }

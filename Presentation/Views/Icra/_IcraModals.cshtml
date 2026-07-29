@@ -3,20 +3,20 @@
 
 <!-- Create Modal -->
 <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
             @using (Html.BeginForm("Create", "Icra", FormMethod.Post, new { id = "createForm" }))
             {
                 @Html.AntiForgeryToken()
-                <div class="modal-header">
+                <div class="modal-header text-white" style="background-color: #01538b;">
                     <h5 class="modal-title" id="createModalLabel">Yeni İcra</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                <label class="form-label">Müşteri</label>
+                                <label for="createMusteriSelect" class="form-label fw-bold">Müşteri</label>
                                 <select class="form-select" id="createMusteriSelect" name="MusteriId">
                                     <option value="">Seçiniz</option>
                                     @if (ViewBag.MusteriList != null)
@@ -29,13 +29,13 @@
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Ürün</label>
+                                <label for="createUrunSelect" class="form-label fw-bold">Ürün</label>
                                 <select class="form-select" id="createUrunSelect" name="UrunId" disabled>
                                     <option value="">Önce müşteri seçiniz</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">İhtar</label>
+                                <label for="createIhtarUrunSelect" class="form-label fw-bold">İhtar</label>
                                 @Html.DropDownListFor(m => m.IhtarUrunId,
                                     Enumerable.Empty<SelectListItem>(),
                                     "Önce ürün seçiniz",
@@ -45,25 +45,32 @@
 
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @Html.LabelFor(m => m.MahkemeId, "Mahkeme", new { @class = "form-label" })
+                                @Html.LabelFor(m => m.MahkemeId, "Mahkeme", new { @class = "form-label fw-bold" })
                                 @Html.DropDownListFor(m => m.MahkemeId,
                                     ViewBag.MahkemeList as IEnumerable<SelectListItem>,
                                     "Seçiniz", new { @class = "form-select", id = "createMahkemeId" })
                             </div>
                             <div class="col-md-4">
-                                @Html.LabelFor(m => m.IcraDosyaNo, "İcra Dosya No", new { @class = "form-label" })
-                                @Html.TextBoxFor(m => m.IcraDosyaNo, new { @class = "form-control", id = "createIcraDosyaNo", name = "IcraDosyaNo" })
+                                @Html.LabelFor(m => m.IcraDosyaNo, "İcra Dosya No", new { @class = "form-label fw-bold" })
+                                @Html.TextBoxFor(m => m.IcraDosyaNo, new { @class = "form-control", id = "createIcraDosyaNo", placeholder = "Örn: 2026/1234 E." })
                             </div>
                             <div class="col-md-4">
-                                @Html.LabelFor(m => m.IcraTakipTar, "İcra Takip Tarihi", new { @class = "form-label" })
+                                @Html.LabelFor(m => m.IcraTakipTar, "İcra Takip Tarihi", new { @class = "form-label fw-bold" })
                                 @Html.TextBoxFor(m => m.IcraTakipTar, new { @class = "form-control", type = "date", id = "createIcraTakipTar" })
+                            </div>
+                        </div>
+
+                        <!-- Genel Form Hata Mesaj Alanı -->
+                        <div id="formGeneralError" class="row d-none">
+                            <div class="col-12">
+                                <div class="alert alert-danger mb-0 text-center py-2 error-message-container"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" id="createSaveBtn" class="btn btn-primary">Kaydet</button>
+                <div class="modal-footer bg-light">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" id="createSaveBtn" class="btn btn-success px-4">Kaydet</button>
                 </div>
             }
         </div>
@@ -72,24 +79,24 @@
 
 <!-- Update Modal -->
 <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
             @using (Html.BeginForm("Update", "Icra", FormMethod.Post, new { id = "updateForm" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(m => m.IcraId, new { id = "IcraId" })
                 @Html.HiddenFor(m => m.IhtarUrunId, new { id = "updateIhtarUrunIdHidden" })
 
-                <div class="modal-header">
+                <div class="modal-header text-white" style="background-color: #01538b;">
                     <h5 class="modal-title" id="updateModalLabel">İcra Güncelle</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                <label class="form-label">Müşteri</label>
-                                <select class="form-select" id="updateMusteriSelect" disabled>
+                                <label for="updateMusteriSelect" class="form-label fw-bold">Müşteri</label>
+                                <select class="form-select" id="updateMusteriSelect" name="MusteriId" disabled>
                                     <option value="">Seçiniz</option>
                                     @if (ViewBag.MusteriList != null)
                                     {
@@ -101,14 +108,14 @@
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Ürün</label>
-                                <select class="form-select" id="updateUrunSelect" disabled>
+                                <label for="updateUrunSelect" class="form-label fw-bold">Ürün</label>
+                                <select class="form-select" id="updateUrunSelect" name="UrunId" disabled>
                                     <option value="">Seçiniz</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">İhtar</label>
-                                <select class="form-select" id="updateIhtarUrunSelect" disabled>
+                                <label for="updateIhtarUrunSelect" class="form-label fw-bold">İhtar</label>
+                                <select class="form-select" id="updateIhtarUrunSelect" name="IhtarUrunId" disabled>
                                     <option value="">Seçiniz</option>
                                 </select>
                             </div>
@@ -116,25 +123,32 @@
 
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                @Html.LabelFor(m => m.MahkemeId, "Mahkeme", new { @class = "form-label" })
+                                @Html.LabelFor(m => m.MahkemeId, "Mahkeme", new { @class = "form-label fw-bold" })
                                 @Html.DropDownListFor(m => m.MahkemeId,
                                     ViewBag.MahkemeList as IEnumerable<SelectListItem>,
-                                    "Seçiniz", new { @class = "form-select", id = "MahkemeId" })
+                                    "Seçiniz", new { @class = "form-select", id = "UpdateMahkemeId" })
                             </div>
                             <div class="col-md-4">
-                                @Html.LabelFor(m => m.IcraDosyaNo, "İcra Dosya No", new { @class = "form-label" })
-                                @Html.TextBoxFor(m => m.IcraDosyaNo, new { @class = "form-control", id = "IcraDosyaNo", name = "IcraDosyaNo" })
+                                @Html.LabelFor(m => m.IcraDosyaNo, "İcra Dosya No", new { @class = "form-label fw-bold" })
+                                @Html.TextBoxFor(m => m.IcraDosyaNo, new { @class = "form-control", id = "UpdateIcraDosyaNo" })
                             </div>
                             <div class="col-md-4">
-                                @Html.LabelFor(m => m.IcraTakipTar, "İcra Takip Tarihi", new { @class = "form-label" })
-                                @Html.TextBoxFor(m => m.IcraTakipTar, new { @class = "form-control", type = "date", id = "IcraTakipTar" })
+                                @Html.LabelFor(m => m.IcraTakipTar, "İcra Takip Tarihi", new { @class = "form-label fw-bold" })
+                                @Html.TextBoxFor(m => m.IcraTakipTar, new { @class = "form-control", type = "date", id = "UpdateIcraTakipTar" })
+                            </div>
+                        </div>
+
+                        <!-- Genel Form Hata Mesaj Alanı -->
+                        <div id="updateFormGeneralError" class="row d-none">
+                            <div class="col-12">
+                                <div class="alert alert-danger mb-0 text-center py-2 error-message-container"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" id="updateSaveBtn" class="btn btn-primary">Güncelle</button>
+                <div class="modal-footer bg-light">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" id="updateSaveBtn" class="btn btn-success px-4">Kaydet</button>
                 </div>
             }
         </div>

@@ -259,7 +259,6 @@ function initCrud(entityName, fields, options) {
         .on("submit" + ns, function (e) {
             e.preventDefault();
             var $form = $(this);
-            // VARSAYILAN OLARAK HİÇBİR ALAN ATLANIYOR (MusteriId, UrunId dahil hepsi doğrulanır)
             var skip = options.validationSkipFields || [];
 
             if (!validateForm("createForm", {
@@ -442,7 +441,6 @@ function handleBackendValidationErrors($form, errors) {
     if (Array.isArray(errors)) {
         errList = errors;
     } else if (typeof errors === "string") {
-        // "Doğrulama Hataları: " metni kesin olarak temizleniyor
         var cleanMsg = errors.replace(/^Doğrulama Hataları:\s*/i, "");
         errList = cleanMsg.split(/\.\s+/).map(function (e) { return e.trim(); }).filter(function (e) { return e.length > 0; });
     }
@@ -453,18 +451,31 @@ function handleBackendValidationErrors($form, errors) {
         var lowerMsg = errorMsg.toLowerCase();
         var $targetInput = null;
 
-        if (lowerMsg.includes("müşteri")) $targetInput = $form.find("#MusteriId, #UpdateMusteriId, [name='MusteriId']");
-        else if (lowerMsg.includes("ürün")) $targetInput = $form.find("#UrunId, #UpdateUrunId, [name='UrunId']");
-        else if (lowerMsg.includes("borç")) $targetInput = $form.find("#BorcTutar, #UpdateBorcTutar, [name='BorcTutar']");
-        else if (lowerMsg.includes("şube")) $targetInput = $form.find("#SubeId, #UpdateSubeId, [name='SubeId']");
-        else if (lowerMsg.includes("avukat")) $targetInput = $form.find("#AvukatId, #UpdateAvukatId, [name='AvukatId']");
-        else if (lowerMsg.includes("tarih")) $targetInput = $form.find("#IhtarTarih, #UpdateIhtarTarih, [name='IhtarTarih']");
+        // Form alanları ile hata metni eşleştirmeleri (Tüm modüller)
+        if (lowerMsg.includes("müşteri")) {
+            $targetInput = $form.find("#MusteriId, #UpdateMusteriId, #createMusteriSelect, #updateMusteriSelect, [name='MusteriId']");
+        } else if (lowerMsg.includes("ürün")) {
+            $targetInput = $form.find("#UrunId, #UpdateUrunId, #createUrunSelect, #updateUrunSelect, [name='UrunId']");
+        } else if (lowerMsg.includes("ihtar")) {
+            $targetInput = $form.find("#IhtarUrunId, #createIhtarUrunSelect, #updateIhtarUrunSelect, [name='IhtarUrunId']");
+        } else if (lowerMsg.includes("mahkeme")) {
+            $targetInput = $form.find("#MahkemeId, #createMahkemeId, [name='MahkemeId']");
+        } else if (lowerMsg.includes("dosya")) {
+            $targetInput = $form.find("#IcraDosyaNo, #createIcraDosyaNo, [name='IcraDosyaNo']");
+        } else if (lowerMsg.includes("takip") || lowerMsg.includes("tarih")) {
+            $targetInput = $form.find("#IcraTakipTar, #createIcraTakipTar, #IhtarTarih, #UpdateIhtarTarih, [name='IcraTakipTar'], [name='IhtarTarih']");
+        } else if (lowerMsg.includes("borç")) {
+            $targetInput = $form.find("#BorcTutar, #UpdateBorcTutar, [name='BorcTutar']");
+        } else if (lowerMsg.includes("şube")) {
+            $targetInput = $form.find("#SubeId, #UpdateSubeId, [name='SubeId']");
+        } else if (lowerMsg.includes("avukat")) {
+            $targetInput = $form.find("#AvukatId, #UpdateAvukatId, [name='AvukatId']");
+        }
 
         if ($targetInput && $targetInput.length > 0) {
             mappedAny = true;
             $targetInput.addClass("is-invalid");
 
-            // Eğer alanın altında mesaj yoksa ekle (Mükerrer mesaj yazılmasını engeller)
             if ($targetInput.next(".invalid-feedback").length === 0) {
                 var formattedMsg = errorMsg.endsWith('.') ? errorMsg : errorMsg + '.';
                 $targetInput.after('<div class="invalid-feedback d-block">' + formattedMsg + '</div>');

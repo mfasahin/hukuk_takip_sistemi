@@ -34,7 +34,6 @@ namespace Presentation.Controllers
         public ActionResult Index()
         {
             var model = _icraService.GetIcraDto();
-                
 
             ViewBag.MusteriList = _icraService.GetIhtariOlanMusteriler()
                 .Select(m => new SelectListItem
@@ -57,14 +56,15 @@ namespace Presentation.Controllers
                 {
                     Value = m.MAHKEME_ID.ToString(),
                     Text = m.MAHKEME_AD
-
                 }).ToList();
+
             ViewBag.IhtarUrunList = _icraService.GetIcraDto()
                 .Select(x => new SelectListItem
                 {
                     Value = x.IhtarUrunId.ToString(),
                     Text = x.MusteriAd + " - " + x.UrunAd + " - " + x.IhtarTarih.ToString("dd.MM.yyyy")
                 }).ToList();
+
             return View(model);
         }
 
@@ -86,7 +86,6 @@ namespace Presentation.Controllers
                 .Select(x => new
                 {
                     value = x.IhtarUrunId,
-                    // Tarihi dd.MM.yyyy (Gün.Ay.Yıl) formatına zorluyoruz
                     text = x.IhtarTarih.ToString("dd.MM.yyyy") + " - Borç: " + x.BorcTutar.ToString("N2") + " TL"
                 });
 
@@ -107,16 +106,16 @@ namespace Presentation.Controllers
             }
             catch (ValidationException ex)
             {
-                var errorList = ex.Errors.Select(e => e.ErrorMessage).ToList();
-                return Json(new { success = false, message = string.Join("<br>", errorList) });
+                // Hataları nokta ile birleştirip tek bir metin string'i olarak dönüyoruz
+                var errorMessages = string.Join(". ", ex.Errors.Select(e => e.ErrorMessage));
+                return Json(new { success = false, message = errorMessages });
             }
             catch (Exception ex)
             {
-                // FluentValidation dışındaki tüm Exception'ların da (IcraManager vs.) mesajını doğrudan iletiyoruz
                 string errorMessage = ex.Message;
                 if (ex.InnerException != null && !string.IsNullOrEmpty(ex.InnerException.Message))
                 {
-                    errorMessage += "<br>" + ex.InnerException.Message;
+                    errorMessage += " " + ex.InnerException.Message;
                 }
 
                 return Json(new { success = false, message = errorMessage });
@@ -156,15 +155,15 @@ namespace Presentation.Controllers
             }
             catch (ValidationException ex)
             {
-                var errorList = ex.Errors.Select(e => e.ErrorMessage).ToList();
-                return Json(new { success = false, message = string.Join("<br>", errorList) });
+                var errorMessages = string.Join(". ", ex.Errors.Select(e => e.ErrorMessage));
+                return Json(new { success = false, message = errorMessages });
             }
             catch (Exception ex)
             {
                 string errorMessage = ex.Message;
                 if (ex.InnerException != null && !string.IsNullOrEmpty(ex.InnerException.Message))
                 {
-                    errorMessage += "<br>" + ex.InnerException.Message;
+                    errorMessage += " " + ex.InnerException.Message;
                 }
 
                 return Json(new { success = false, message = errorMessage });
