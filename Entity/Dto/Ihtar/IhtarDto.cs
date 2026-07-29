@@ -28,6 +28,7 @@ namespace Entity.Dto
         public string AvukatAd { get; set; }
         public string AvukatSoyad { get; set; }
 
+        public DateTime? GrsTarZmn { get; set; }
         public DateTime? SilTarZmn { get; set; }
         public List<UrunDto> Urunler { get; set; }
 

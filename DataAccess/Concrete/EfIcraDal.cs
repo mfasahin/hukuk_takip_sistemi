@@ -34,7 +34,8 @@ namespace DataAccess.Concrete
                        IhtarTarih = ihtar.IHTAR_TAR_ZMN,
                        BorcTutar = ihtar.BORC_TUTAR,
                        AvukatAd = avukat.AVKT_AD,
-                       SilTarZmn = ic.SIL_TAR_ZMN
+                       SilTarZmn = ic.SIL_TAR_ZMN,
+                       GrsTarZmn = ic.GRS_TAR_ZMN
                    };
         }
 
@@ -44,6 +45,7 @@ namespace DataAccess.Concrete
             {
                 return BuildIcraDtoQuery(context)
                     .Where(dto => dto.SilTarZmn == null)
+                    .OrderByDescending(x => x.GrsTarZmn)
                     .ToList();
             }
         }

@@ -29,7 +29,7 @@ namespace Entity.Dto
         public Guid MahkemeId { get; set; }
         public string MahkemeAd { get; set; }
 
-
+        public DateTime? GrsTarZmn { get; set; }
         public DateTime? SilTarZmn { get; set; }
 
         //List<IhtarUrunDto>

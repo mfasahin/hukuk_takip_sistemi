@@ -34,6 +34,7 @@ namespace Presentation.Controllers
         public ActionResult Index()
         {
             var model = _icraService.GetIcraDto();
+                
 
             ViewBag.MusteriList = _icraService.GetIhtariOlanMusteriler()
                 .Select(m => new SelectListItem

@@ -26,7 +26,9 @@ namespace Presentation.Controllers
         public ActionResult Index()
         {
             var urunList = _urunService.GetAll()
-                .Where(m => m.SIL_TAR_ZMN == null);
+                .Where(m => m.SIL_TAR_ZMN == null)
+                .OrderByDescending(x=>x.GRS_TAR_ZMN)
+                .ToList();
 
             var model = urunList.Select(u => new UrunModel
             {

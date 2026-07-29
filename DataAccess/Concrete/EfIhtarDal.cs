@@ -39,6 +39,7 @@ namespace DataAccess.Concrete
                        AvukatSoyad = avukat.AVKT_SOYAD,
 
                        SilTarZmn = ihtar.SIL_TAR_ZMN,
+                       GrsTarZmn = ihtar.GRS_TAR_ZMN,
 
                        UrunAd = urun.URUN_AD
                    };
@@ -51,6 +52,7 @@ namespace DataAccess.Concrete
             {
                 return IhtarDtoQuery(context)
                     .Where(dto => dto.SilTarZmn == null)
+                    .OrderByDescending(x => x.GrsTarZmn)
                     .ToList();
             }
         }

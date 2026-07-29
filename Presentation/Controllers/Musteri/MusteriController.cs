@@ -27,7 +27,9 @@ namespace Presentation.Controllers
         public ActionResult Index()
         {
             var musteriList = _musteriService.GetAll()
-                .Where(m => m.SIL_TAR_ZMN == null);
+                .Where(m => m.SIL_TAR_ZMN == null)
+                .OrderByDescending(x=>x.GRS_TAR_ZMN)
+                .ToList();
 
             var model = musteriList.Select(m => new MusteriModel
             {
