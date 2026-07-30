@@ -197,11 +197,7 @@ namespace Presentation.Controllers
                         message = "Bu ürüne bağlı ihtar kaydı bulunduğu için silinemez."
                     });
                 }
-
-                // Soft Delete
-                urun.SIL_TAR_ZMN = DateTime.Now;
-                _urunService.Update(urun);
-
+                _urunService.Delete(urun);
                 return Json(new { success = true, message = "Ürün başarıyla silindi." });
             }
             catch (Exception ex)

@@ -49,7 +49,7 @@
     <!-- Tablo Alanı -->
     <div class="table-responsive">
         <table class="table table-striped align-middle mb-0" id="ihtarTable">
-            <thead class="table-light text-secondary small text-uppercase">
+            <thead class="table-light text-secondary small text-capitalize">
                 <tr>
                     <th class="ps-4">Müşteri</th>
                     <th>Ürün</th>
@@ -64,12 +64,12 @@
                 @foreach (var ihtar in Model)
                 {
                     <tr>
-                        <td class="ps-4">@(string.IsNullOrEmpty(ihtar.MusteriAd) ? "-" : ihtar.MusteriAd)</td>
+                        <td class="ps-4">@((ihtar.MusteriNo + "-" + ihtar.MusteriAd + " " + ihtar.MusteriSoyad).Trim())</td>
                         <td>@(string.IsNullOrEmpty(ihtar.UrunAd) ? "-" : ihtar.UrunAd)</td>
                         <td class="fw-semibold text-dark">@ihtar.BorcTutar.ToString("N2") ₺</td>
                         <td>@ihtar.IhtarTarih.ToString("dd.MM.yyyy")</td>
                         <td>@(string.IsNullOrEmpty(ihtar.SubeAd) ? "-" : ihtar.SubeAd)</td>
-                        <td>@(string.IsNullOrEmpty(ihtar.AvukatAd) ? "-" : ihtar.AvukatAd)</td>
+                        <td class="ps-4">@((ihtar.AvukatAd + " " + ihtar.AvukatSoyad).Trim())</td>
                         <td class="text-end pe-4 no-print">
                             <div class="dropdown">
                                 <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
