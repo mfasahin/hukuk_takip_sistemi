@@ -1,33 +1,27 @@
-﻿function initTablePagination(tableId, pageSizeSelectId, paginationNavId, tableInfoId) {
+﻿function initTablePagination(tableId, pageSizeSelectId, paginationNavId, tableInfoId, searchInputId) {
+    // Varsayılan id'leri belirle
+    tableId = tableId || "urunTable";
+    pageSizeSelectId = pageSizeSelectId || "urunPageSize";
+    paginationNavId = paginationNavId || "urunPaginationNav";
+    tableInfoId = tableInfoId || "urunTableInfo";
+    searchInputId = searchInputId || "globalSearchInput";
+
     var currentPage = 1;
     var pageSize = parseInt($("#" + pageSizeSelectId).val()) || 10;
 
     function renderTable() {
-        var $rows = $("#" + tableId + " tbody tr");
-        var filters = [];
+        var $rows = $("#" + tableId + " tbody tr:not(#noDataRow)");
+        var searchText = $("#" + searchInputId).val() ? $("#" + searchInputId).val().toLowerCase().trim() : "";
 
-        // Ürün tablosuna özel arama class'ı: .urun-column-search
-        $(".urun-column-search").each(function () {
-            var colIndex = $(this).data("col");
-            var val = $(this).val().toLowerCase().trim();
-            filters.push({ col: colIndex, val: val });
-        });
-
+        // Hücre Bazlı Arama Filtresi (Son sütun olan İşlemler hariç)
         var $filteredRows = $rows.filter(function () {
-            var $row = $(this);
-            var isMatch = true;
+            if (searchText === "") return true;
 
-            $.each(filters, function (i, f) {
-                if (f.val !== "") {
-                    var cellText = $row.find("td").eq(f.col).text().toLowerCase().trim();
-                    if (cellText.indexOf(f.val) === -1) {
-                        isMatch = false;
-                        return false;
-                    }
-                }
+            var $cells = $(this).find("td:not(:last-child)");
+            return $cells.toArray().some(function (cell) {
+                var cellText = $(cell).text().toLowerCase().trim();
+                return cellText.indexOf(searchText) > -1;
             });
-
-            return isMatch;
         });
 
         var totalRecords = $filteredRows.length;
@@ -37,18 +31,26 @@
         if (currentPage < 1) currentPage = 1;
 
         $rows.hide();
-        var start = (currentPage - 1) * pageSize;
-        var end = start + pageSize;
-        $filteredRows.slice(start, end).show();
+        $("#noDataRow").remove();
 
-        // Ürün tablosuna özel sayaç ID'leri
+        if (totalRecords === 0) {
+            var colCount = $("#" + tableId + " thead th").length;
+            $("#" + tableId + " tbody").append('<tr id="noDataRow"><td colspan="' + colCount + '" class="text-center text-muted py-3">Aranan kriterlere uygun kayıt bulunamadı.</td></tr>');
+            $("#" + tableInfoId).text("Kayıt bulunamadı.");
+        } else {
+            var start = (currentPage - 1) * pageSize;
+            var end = start + pageSize;
+            $filteredRows.slice(start, end).show();
+
+            var startDisplay = start + 1;
+            var endDisplay = end > totalRecords ? totalRecords : end;
+            $("#" + tableInfoId).text(totalRecords + " kayıttan " + startDisplay + " - " + endDisplay + " arası gösteriliyor.");
+        }
+
+        // Ürünler sayfasındaki sayaç elemanlarını güncelle
         $("#urunTotalRecordCount").text(totalRecords);
         $("#urunCurrentPageNum").text(currentPage);
         $("#urunTotalPagesNum").text(totalPages);
-
-        var startDisplay = totalRecords === 0 ? 0 : start + 1;
-        var endDisplay = end > totalRecords ? totalRecords : end;
-        $("#" + tableInfoId).text(totalRecords + " kayıttan " + startDisplay + " - " + endDisplay + " arası gösteriliyor.");
 
         renderPagination(totalPages);
     }
@@ -71,34 +73,29 @@
         $nav.append('<li class="page-item ' + nextClass + '"><a class="page-link" href="javascript:void(0)" data-page="' + (currentPage + 1) + '">&raquo;</a></li>');
     }
 
-    // Başlığa tıklandığında arama satırını göster/gizle
-    // Not: Ürün tablosunda 3 veri kolonu (0: Ad, 1: Kod, 2: Tarih) varsa 3. indeks "İşlemler" butonlarıdır.
-    $("#" + tableId + " thead tr:first-child th").on("click", function () {
-        if ($(this).index() === 3) return; // İşlemler sütununda gizlemeyi tetikleme
-        $("#" + tableId + " thead tr.search-row").toggle();
+    // ARAMA KUTUSU DİNLEYİCİSİ (Document Delegasyonlu)
+    $(document).off("input keyup search", "#" + searchInputId).on("input keyup search", "#" + searchInputId, function () {
+        currentPage = 1;
+        renderTable();
     });
 
-    $(document).off("keyup change", ".urun-column-search")
-        .on("keyup change", ".urun-column-search", function () {
-            currentPage = 1;
-            renderTable();
-        });
-
-    $("#" + pageSizeSelectId).off("change").on("change", function () {
+    // SAYFA BOYUTU DİNLEYİCİSİ
+    $(document).off("change", "#" + pageSizeSelectId).on("change", "#" + pageSizeSelectId, function () {
         pageSize = parseInt($(this).val());
         currentPage = 1;
         renderTable();
     });
 
-    $(document).off("click", "#" + paginationNavId + " a")
-        .on("click", "#" + paginationNavId + " a", function (e) {
-            e.preventDefault();
-            var page = $(this).data("page");
-            if (page && page !== currentPage) {
-                currentPage = page;
-                renderTable();
-            }
-        });
+    // SAYFALAMA TIKLAMA DİNLEYİCİSİ
+    $(document).off("click", "#" + paginationNavId + " a").on("click", "#" + paginationNavId + " a", function (e) {
+        e.preventDefault();
+        var page = $(this).data("page");
+        if (page && page !== currentPage && page >= 1) {
+            currentPage = page;
+            renderTable();
+        }
+    });
 
+    // İlk Çalıştırma
     renderTable();
 }
