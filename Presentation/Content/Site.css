@@ -70,7 +70,7 @@ body {
 
 .sidebar .nav-link {
     color: rgba(255, 255, 255, 0.9) !important;
-    font-size: 15px !important;
+    font-size: 20px !important;
     font-weight: 500;
     padding: 12px 18px !important;
     display: flex;
@@ -99,7 +99,7 @@ body {
 
     .sidebar-logout .btn-logout {
         color: #fff !important;
-        font-size: 15px !important;
+        font-size: 22px !important;
         font-weight: 600;
         padding: 8px 12px;
         display: flex;
@@ -144,13 +144,14 @@ body {
    4. HALKBANK MAVİSİ OUTLINED CARD
    ========================================================================== */
 .card.outlined-card {
-    position: relative;
+    position: relative !important;
     background-color: #ffffff !important;
     border: 2px solid #01538b !important;
     border-radius: 12px !important;
     max-width: 1400px;
     margin: 20px auto 0 auto;
     box-shadow: 0 4px 18px rgba(1, 83, 139, 0.08) !important;
+    overflow: visible !important; /* Kart dışına taşan menüleri görünür yapar */
 }
 
 .outlined-card-title {
@@ -179,10 +180,11 @@ body {
 }
 
 /* ==========================================================================
-   6. TABLO VE SAYFALAMA BİLEŞENLERİ
+   6. TABLO, DROPDOWN VE SAYFALAMA BİLEŞENLERİ (DROPDOWN KESİN ÇÖZÜM)
    ========================================================================== */
+/* Kırpılmayı engellemek için overflow değerini visible yapıyoruz */
 .table-responsive {
-    overflow-x: auto;
+    overflow: visible !important;
 }
 
 .table {
@@ -194,9 +196,22 @@ body {
         white-space: nowrap;
     }
 
+        /* Dropdown menünün tablo hücrelerinin ve footer'ın üstüne çıkmasını sağlar */
+        .table td .dropdown {
+            position: relative !important;
+        }
+
+        .table td .dropdown-menu {
+            position: absolute !important;
+            z-index: 1050 !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+        }
+
 .card-footer {
     background-color: #ffffff !important;
     border-top: 1px solid #e5e7eb !important;
+    position: relative;
+    z-index: 1;
 }
 
 .pagination .page-link {
