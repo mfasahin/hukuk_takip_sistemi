@@ -3,15 +3,13 @@
     ViewBag.Title = "İcra Takip";
 }
 
-<!-- Sayfa Üst Başlık Alanı -->
-<div class="d-flex justify-content-between align-items-center mb-3" style="max-width: 1250px; margin: 0 auto;">
-    <h2 class="fw-bold m-0 text-dark">İcra Takip</h2>
-</div>
+<!-- Halkbank Mavisi Çerçeveli Kart Yapısı -->
+<div class="card outlined-card my-4">
+    <!-- Çizginin üstünde duran başlık -->
+    <span class="outlined-card-title">İcra Takip</span>
 
-<!-- Ana Tablo Kartı -->
-<div class="card border-0 shadow rounded-3">
     <!-- Kart Üst Barı: Sol Tarafa Dışa Aktar Butonları, Sağ Tarafa Arama & Ekleme -->
-    <div class="card-header bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
+    <div class="card-header bg-transparent border-0 pt-4 pb-2 px-4 d-flex justify-content-between align-items-center">
 
         <!-- Sol Taraf: Excel, PDF ve Yazdır Buton Grubu -->
         <div class="d-flex align-items-center gap-2">
@@ -99,7 +97,7 @@
     </div>
 
     <!-- Kart Altı: Sayfalama ve Alt Bilgiler -->
-    <div class="card-footer bg-white border-top py-3 px-4">
+    <div class="card-footer bg-transparent border-top py-3 px-4">
         <div class="row align-items-center g-3">
             <div class="col-md-4 d-flex align-items-center gap-2">
                 <label for="icraPageSize" class="form-label mb-0 small text-muted">Sayfada</label>
@@ -230,6 +228,8 @@
             // İcra tablosu sayfalama ve tekli arama başlatma
             if (typeof initIcraTablePagination === "function") {
                 initIcraTablePagination("icraTable", "icraPageSize", "icraPaginationNav", "icraTableInfo", "globalSearchInput");
+            } else if (typeof initTablePagination === "function") {
+                initTablePagination("icraTable", "icraPageSize", "icraPaginationNav", "icraTableInfo", "globalSearchInput");
             }
 
             // CREATE MODAL kademeli seçim dinleyicileri
@@ -405,7 +405,7 @@
                     doc.save("Icra_Takip_Listesi.pdf");
                 } catch (err) {
                     console.error("PDF Oluşturma Hatası:", err);
-                    alert("PDF indirilirken bir sorun oluştu.");
+                    showErrorModal("PDF dosyası indirilirken bir sorun oluştu.");
                 }
             });
         });

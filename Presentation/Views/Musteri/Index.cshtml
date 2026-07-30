@@ -230,7 +230,7 @@
                     doc.save("Musteri_Listesi.pdf");
                 } catch (err) {
                     console.error("PDF Oluşturma Hatası:", err);
-                    alert("PDF indirilirken bir sorun oluştu.");
+                    showErrorModal("PDF dosyası indirilirken bir sorun oluştu.");
                 }
             });
         });
