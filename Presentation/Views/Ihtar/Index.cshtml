@@ -3,96 +3,126 @@
     ViewBag.Title = "İhtar Listesi";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>İhtarlar</h2>
-    <button type="button" class="btn btn-success"
-            data-bs-toggle="modal"
-            data-bs-target="#createModal">
-        İhtar Ekle
-    </button>
+<!-- Sayfa Üst Başlık Alanı -->
+<div class="d-flex justify-content-between align-items-center mb-3" style="max-width: 1250px; margin: 0 auto;">
+    <h2 class="fw-bold m-0 text-dark">İhtarlar</h2>
 </div>
 
-<div class="table-responsive">
-    <table class="table table-striped align-middle" id="ihtarTable">
-        <thead>
-            <!-- 1. Satır: Kolon Başlıkları (Sadece Tıklayınca Arama Açılır) -->
-            <tr>
-                <th style="cursor:pointer;">Müşteri</th>
-                <th style="cursor:pointer;">Ürün</th>
-                <th style="cursor:pointer;">Borç Tutarı</th>
-                <th style="cursor:pointer;">İhtar Tarihi</th>
-                <th style="cursor:pointer;">Şube</th>
-                <th style="cursor:pointer;">Avukat</th>
-                <th></th> <!-- İşlemler Kolonu -->
-            </tr>
-            <!-- 2. Satır: Gizli Arama Kutuları -->
-            <tr class="bg-light search-row" style="display: none;">
-                <td><input type="text" class="form-control form-control-sm ihtar-column-search" placeholder="Ara..." data-col="0"></td>
-                <td><input type="text" class="form-control form-control-sm ihtar-column-search" placeholder="Ara..." data-col="1"></td>
-                <td><input type="text" class="form-control form-control-sm ihtar-column-search" placeholder="Ara..." data-col="2"></td>
-                <td><input type="text" class="form-control form-control-sm ihtar-column-search" placeholder="Ara..." data-col="3"></td>
-                <td><input type="text" class="form-control form-control-sm ihtar-column-search" placeholder="Ara..." data-col="4"></td>
-                <td><input type="text" class="form-control form-control-sm ihtar-column-search" placeholder="Ara..." data-col="5"></td>
-                <td></td>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var ihtar in Model)
-            {
-                <tr>
-                    <td>@ihtar.MusteriAd</td>
-                    <td>@ihtar.UrunAd</td>
-                    <td>@ihtar.BorcTutar.ToString("N2") ₺</td>
-                    <td>@ihtar.IhtarTarih.ToString("dd.MM.yyyy")</td>
-                    <td>@ihtar.SubeAd</td>
-                    <td>@ihtar.AvukatAd</td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item updateBtn" href="javascript:void(0);" data-id="@ihtar.IhtarId">Güncelle</a>
-                                </li>
-                                <li>
-                                    <!-- NOT: data-bs-toggle="modal" KULLANILMIYOR, doğrudan crud.js tetikler -->
-                                    <a class="dropdown-item text-danger deleteBtn" href="javascript:void(0);" data-id="@ihtar.IhtarId">Sil</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+<!-- Ana Tablo Kartı -->
+<div class="card border-0 shadow rounded-3">
+    <!-- Kart Üst Barı: Sol Tarafa Dışa Aktar Butonları, Sağ Tarafa Arama & Ekleme -->
+    <div class="card-header bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
 
-<!-- Tablo Altındaki Kayıt Gösterim ve Sayfalama Kartı -->
-<div class="card p-3 my-3 border-0 shadow-sm bg-light">
-    <div class="row align-items-center g-3">
-        <div class="col-md-4 d-flex align-items-center gap-2">
-            <label for="ihtarPageSize" class="form-label mb-0 fw-medium">Sayfada</label>
-            <select id="ihtarPageSize" class="form-select form-select-sm" style="width: auto;">
-                <option value="5">5</option>
-                <option value="10" selected>10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-            </select>
-            <span class="fw-medium">kayıt göster</span>
-        </div>
-
-        <div class="col-md-4 text-center text-muted small">
-            <span id="ihtarTableInfo"></span>
-        </div>
-
-        <div class="col-md-4 d-flex justify-content-end align-items-center gap-3">
-            <div class="text-muted small">
-                Toplam: <strong id="ihtarTotalRecordCount">@Model.Count()</strong> |
-                Sayfa: <strong id="ihtarCurrentPageNum">1</strong> / <strong id="ihtarTotalPagesNum">1</strong>
+        <!-- Sol Taraf: Excel, PDF ve Yazdır Buton Grubu -->
+        <div class="d-flex align-items-center gap-2">
+            <span class="text-muted small fw-medium me-1">Dışa Aktar:</span>
+            <div class="btn-group btn-group-sm shadow-sm" role="group" aria-label="Dışa Aktar">
+                <button type="button" class="btn btn-outline-light text-dark border border-light-subtle bg-white hover-elevate" id="btnExportExcel" title="Excel'e Aktar">
+                    <i class="bi bi-file-earmark-excel text-success me-1"></i> Excel
+                </button>
+                <button type="button" class="btn btn-outline-light text-dark border border-light-subtle bg-white hover-elevate" id="btnExportPdf" title="PDF İndir">
+                    <i class="bi bi-file-earmark-pdf text-danger me-1"></i> PDF
+                </button>
+                <button type="button" class="btn btn-outline-light text-dark border border-light-subtle bg-white hover-elevate" id="btnPrint" title="Yazdır">
+                    <i class="bi bi-printer text-primary me-1"></i> Yazdır
+                </button>
             </div>
-            <nav>
-                <ul class="pagination pagination-sm mb-0" id="ihtarPaginationNav"></ul>
-            </nav>
+        </div>
+
+        <!-- Sağ Taraf: Animasyonlu Ekleme ve Arama Butonları -->
+        <div class="d-flex align-items-center gap-2">
+            <!-- 1. Animasyonlu Expandable Arama Çubuğu -->
+            <div class="expandable-search" id="searchWrapper">
+                <button type="button" class="search-btn" id="searchTriggerBtn">
+                    <i class="bi bi-search"></i>
+                </button>
+                <input type="text" id="globalSearchInput" class="search-input" placeholder="İhtar ara..." autocomplete="off" />
+            </div>
+
+            <!-- 2. Animasyonlu Expandable İhtar Ekle Butonu -->
+            <button type="button" class="btn btn-success expandable-btn d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createModal">
+                <i class="bi bi-plus-lg fs-5"></i>
+                <span class="btn-text">Yeni İhtar Ekle</span>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Tablo Alanı -->
+    <div class="table-responsive">
+        <table class="table table-striped align-middle mb-0" id="ihtarTable">
+            <thead class="table-light text-secondary small text-uppercase">
+                <tr>
+                    <th class="ps-4">Müşteri</th>
+                    <th>Ürün</th>
+                    <th>Borç Tutarı</th>
+                    <th>İhtar Tarihi</th>
+                    <th>Şube</th>
+                    <th>Avukat</th>
+                    <th class="text-end pe-4 no-print">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ihtar in Model)
+                {
+                    <tr>
+                        <td class="ps-4">@(string.IsNullOrEmpty(ihtar.MusteriAd) ? "-" : ihtar.MusteriAd)</td>
+                        <td>@(string.IsNullOrEmpty(ihtar.UrunAd) ? "-" : ihtar.UrunAd)</td>
+                        <td class="fw-semibold text-dark">@ihtar.BorcTutar.ToString("N2") ₺</td>
+                        <td>@ihtar.IhtarTarih.ToString("dd.MM.yyyy")</td>
+                        <td>@(string.IsNullOrEmpty(ihtar.SubeAd) ? "-" : ihtar.SubeAd)</td>
+                        <td>@(string.IsNullOrEmpty(ihtar.AvukatAd) ? "-" : ihtar.AvukatAd)</td>
+                        <td class="text-end pe-4 no-print">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                                    <li>
+                                        <a class="dropdown-item updateBtn py-2" href="javascript:void(0);" data-id="@ihtar.IhtarId">
+                                            <i class="bi bi-pencil me-2 text-primary"></i>Güncelle
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider my-1"></li>
+                                    <li>
+                                        <a class="dropdown-item text-danger deleteBtn py-2" href="javascript:void(0);" data-id="@ihtar.IhtarId">
+                                            <i class="bi bi-trash me-2"></i>Sil
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Kart Altı: Sayfalama ve Alt Bilgiler -->
+    <div class="card-footer bg-white border-top py-3 px-4">
+        <div class="row align-items-center g-3">
+            <div class="col-md-4 d-flex align-items-center gap-2">
+                <label for="ihtarPageSize" class="form-label mb-0 small text-muted">Sayfada</label>
+                <select id="ihtarPageSize" class="form-select form-select-sm border-light bg-light" style="width: auto;">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+                <span class="small text-muted">kayıt göster</span>
+            </div>
+
+            <div class="col-md-4 text-center text-muted small">
+                <span id="ihtarTableInfo"></span>
+            </div>
+
+            <div class="col-md-4 d-flex justify-content-end align-items-center gap-3">
+                <div class="text-muted small">
+                    Toplam: <strong id="ihtarTotalRecordCount">@Model.Count()</strong> |
+                    Sayfa: <strong id="ihtarCurrentPageNum">1</strong> / <strong id="ihtarTotalPagesNum">1</strong>
+                </div>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0" id="ihtarPaginationNav"></ul>
+                </nav>
+            </div>
         </div>
     </div>
 </div>
@@ -100,7 +130,16 @@
 @Html.Partial("_IhtarModals", new Entity.Dto.IhtarDto())
 
 @section Scripts {
-    <script src="~/Scripts/crud.js?v=1.1"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Excel ve PDF Dışa Aktarım CDN Kütüphaneleri -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+    <script src="~/Scripts/common.js"></script>
+    <script src="~/Scripts/crud.js?v=2.0"></script>
     <script src="~/Scripts/Ihtar/ihtarValidation.js"></script>
     <script src="~/Scripts/Ihtar/TablePagination.js"></script>
 
@@ -109,11 +148,105 @@
             $(document).on("focus", 'input[type="date"]', function () {
                 $(this).attr("placeholder", "gg.aa.yyyy");
             });
-            // İhtar tablosu için özelleştirilmiş sayfalama ve filtreleme
-            initIhtarTablePagination("ihtarTable", "ihtarPageSize", "ihtarPaginationNav", "ihtarTableInfo");
 
-            // Genel CRUD mimarisi ile uyumlu initCrud çağrısı
+            // İhtar tablosu için sayfalama ve tekli arama başlatma
+            initIhtarTablePagination("ihtarTable", "ihtarPageSize", "ihtarPaginationNav", "ihtarTableInfo", "globalSearchInput");
+
+            // Genel CRUD motoru
             initCrud("Ihtar", ["IhtarId", "MusteriId", "UrunId", "BorcTutar", "IhtarTarih", "SubeId", "AvukatId"], ihtarOptions);
+
+            // Arama İkonu Tıklama Mantığı
+            $("#searchTriggerBtn").on("click", function (e) {
+                e.stopPropagation();
+                $("#searchWrapper").toggleClass("expanded");
+                if ($("#searchWrapper").hasClass("expanded")) {
+                    $("#globalSearchInput").focus();
+                }
+            });
+
+            $("#globalSearchInput").on("click", function (e) {
+                e.stopPropagation();
+            });
+
+            $(document).on("click", function () {
+                if ($("#globalSearchInput").val().trim() === "") {
+                    $("#searchWrapper").removeClass("expanded");
+                }
+            });
+
+            // --------------------------------------------------------------------------
+            // DIŞA AKTAR BUTONLARI (EXCEL, PDF, YAZDIR)
+            // --------------------------------------------------------------------------
+
+            // 1. EXCEL
+            $("#btnExportExcel").on("click", function () {
+                var data = [];
+                var headers = ["Musteri", "Urun", "Borc Tutari", "Ihtar Tarihi", "Sube", "Avukat"];
+                data.push(headers);
+
+                $("#ihtarTable tbody tr:visible").each(function () {
+                    var $tds = $(this).find("td");
+                    if ($tds.length > 1) {
+                        data.push([
+                            $tds.eq(0).text().trim(),
+                            $tds.eq(1).text().trim(),
+                            $tds.eq(2).text().trim(),
+                            $tds.eq(3).text().trim(),
+                            $tds.eq(4).text().trim(),
+                            $tds.eq(5).text().trim()
+                        ]);
+                    }
+                });
+
+                var wb = XLSX.utils.book_new();
+                var ws = XLSX.utils.aoa_to_sheet(data);
+                XLSX.utils.book_append_sheet(wb, ws, "Ihtarlar");
+                XLSX.writeFile(wb, "Ihtar_Listesi.xlsx");
+            });
+
+            // 2. YAZDIR
+            $("#btnPrint").on("click", function () {
+                window.print();
+            });
+
+            // 3. PDF
+            $("#btnExportPdf").on("click", function () {
+                try {
+                    var { jsPDF } = window.jspdf;
+                    var doc = new jsPDF('p', 'mm', 'a4');
+
+                    var headers = [["Musteri", "Urun", "Borc Tutari", "Ihtar Tarihi", "Sube", "Avukat"]];
+                    var body = [];
+
+                    $("#ihtarTable tbody tr:visible").each(function () {
+                        var $tds = $(this).find("td");
+                        if ($tds.length > 1) {
+                            body.push([
+                                $tds.eq(0).text().trim(),
+                                $tds.eq(1).text().trim(),
+                                $tds.eq(2).text().trim(),
+                                $tds.eq(3).text().trim(),
+                                $tds.eq(4).text().trim(),
+                                $tds.eq(5).text().trim()
+                            ]);
+                        }
+                    });
+
+                    doc.autoTable({
+                        head: headers,
+                        body: body,
+                        startY: 15,
+                        theme: 'grid',
+                        headStyles: { fillColor: [1, 83, 139] },
+                        styles: { fontSize: 9, cellPadding: 3 }
+                    });
+
+                    doc.save("Ihtar_Listesi.pdf");
+                } catch (err) {
+                    console.error("PDF Oluşturma Hatası:", err);
+                    alert("PDF indirilirken bir sorun oluştu.");
+                }
+            });
         });
     </script>
 }

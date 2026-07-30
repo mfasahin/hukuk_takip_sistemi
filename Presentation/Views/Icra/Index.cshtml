@@ -3,99 +3,128 @@
     ViewBag.Title = "İcra Takip";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>İcra Takip</h2>
-    <button type="button" class="btn btn-success"
-            data-bs-toggle="modal"
-            data-bs-target="#createModal">
-        İcra Ekle
-    </button>
+<!-- Sayfa Üst Başlık Alanı -->
+<div class="d-flex justify-content-between align-items-center mb-3" style="max-width: 1250px; margin: 0 auto;">
+    <h2 class="fw-bold m-0 text-dark">İcra Takip</h2>
 </div>
 
-<div class="table-responsive">
-    <table class="table table-striped align-middle" id="icraTable">
-        <thead>
-            <!-- 1. Satır: Kolon Başlıkları -->
-            <tr>
-                <th style="cursor:pointer;">Müşteri</th>
-                <th style="cursor:pointer;">Ürün</th>
-                <th style="cursor:pointer;">Borç Tutarı</th>
-                <th style="cursor:pointer;">İcra Takip Tarihi</th>
-                <th style="cursor:pointer;">Mahkeme</th>
-                <th style="cursor:pointer;">İcra Dosya No</th>
-                <th style="cursor:pointer;">Avukat</th>
-                <th></th> <!-- İşlemler Kolonu -->
-            </tr>
-            <!-- 2. Satır: Gizli Arama Kutuları -->
-            <tr class="bg-light search-row" style="display: none;">
-                <td><input type="text" class="form-control form-control-sm icra-column-search" placeholder="Ara..." data-col="0"></td>
-                <td><input type="text" class="form-control form-control-sm icra-column-search" placeholder="Ara..." data-col="1"></td>
-                <td><input type="text" class="form-control form-control-sm icra-column-search" placeholder="Ara..." data-col="2"></td>
-                <td><input type="text" class="form-control form-control-sm icra-column-search" placeholder="Ara..." data-col="3"></td>
-                <td><input type="text" class="form-control form-control-sm icra-column-search" placeholder="Ara..." data-col="4"></td>
-                <td><input type="text" class="form-control form-control-sm icra-column-search" placeholder="Ara..." data-col="5"></td>
-                <td><input type="text" class="form-control form-control-sm icra-column-search" placeholder="Ara..." data-col="6"></td>
-                <td></td>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var icra in Model)
-            {
-                <tr>
-                    <td>@((icra.MusteriAd + " " + icra.MusteriSoyad).Trim())</td>
-                    <td>@icra.UrunAd</td>
-                    <td>@icra.BorcTutar.ToString("N2") ₺</td>
-                    <td>@icra.IcraTakipTar.ToString("dd.MM.yyyy")</td>
-                    <td>@icra.MahkemeAd</td>
-                    <td>@icra.IcraDosyaNo</td>
-                    <td>@((icra.AvukatAd + " " + icra.AvukatSoyad).Trim())</td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item updateBtn" href="javascript:void(0);" data-id="@icra.IcraId">Güncelle</a>
-                                </li>
-                                <li>
-                                    <!-- NOT: data-bs-toggle="modal" KULLANILMIYOR, doğrudan crud.js tetikler -->
-                                    <a class="dropdown-item text-danger deleteBtn" href="javascript:void(0);" data-id="@icra.IcraId">Sil</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+<!-- Ana Tablo Kartı -->
+<div class="card border-0 shadow rounded-3">
+    <!-- Kart Üst Barı: Sol Tarafa Dışa Aktar Butonları, Sağ Tarafa Arama & Ekleme -->
+    <div class="card-header bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
 
-<!-- Tablo Altındaki Kayıt Gösterim ve Sayfalama Kartı -->
-<div class="card p-3 my-3 border-0 shadow-sm bg-light">
-    <div class="row align-items-center g-3">
-        <div class="col-md-4 d-flex align-items-center gap-2">
-            <label for="icraPageSize" class="form-label mb-0 fw-medium">Sayfada</label>
-            <select id="icraPageSize" class="form-select form-select-sm" style="width: auto;">
-                <option value="5">5</option>
-                <option value="10" selected>10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-            </select>
-            <span class="fw-medium">kayıt göster</span>
-        </div>
-
-        <div class="col-md-4 text-center text-muted small">
-            <span id="icraTableInfo"></span>
-        </div>
-
-        <div class="col-md-4 d-flex justify-content-end align-items-center gap-3">
-            <div class="text-muted small">
-                Toplam: <strong id="icraTotalRecordCount">@Model.Count()</strong> |
-                Sayfa: <strong id="icraCurrentPageNum">1</strong> / <strong id="icraTotalPagesNum">1</strong>
+        <!-- Sol Taraf: Excel, PDF ve Yazdır Buton Grubu -->
+        <div class="d-flex align-items-center gap-2">
+            <span class="text-muted small fw-medium me-1">Dışa Aktar:</span>
+            <div class="btn-group btn-group-sm shadow-sm" role="group" aria-label="Dışa Aktar">
+                <button type="button" class="btn btn-outline-light text-dark border border-light-subtle bg-white hover-elevate" id="btnExportExcel" title="Excel'e Aktar">
+                    <i class="bi bi-file-earmark-excel text-success me-1"></i> Excel
+                </button>
+                <button type="button" class="btn btn-outline-light text-dark border border-light-subtle bg-white hover-elevate" id="btnExportPdf" title="PDF İndir">
+                    <i class="bi bi-file-earmark-pdf text-danger me-1"></i> PDF
+                </button>
+                <button type="button" class="btn btn-outline-light text-dark border border-light-subtle bg-white hover-elevate" id="btnPrint" title="Yazdır">
+                    <i class="bi bi-printer text-primary me-1"></i> Yazdır
+                </button>
             </div>
-            <nav>
-                <ul class="pagination pagination-sm mb-0" id="icraPaginationNav"></ul>
-            </nav>
+        </div>
+
+        <!-- Sağ Taraf: Animasyonlu Ekleme ve Arama Butonları -->
+        <div class="d-flex align-items-center gap-2">
+            <!-- 1. Animasyonlu Expandable Arama Çubuğu -->
+            <div class="expandable-search" id="searchWrapper">
+                <button type="button" class="search-btn" id="searchTriggerBtn">
+                    <i class="bi bi-search"></i>
+                </button>
+                <input type="text" id="globalSearchInput" class="search-input" placeholder="İcra ara..." autocomplete="off" />
+            </div>
+
+            <!-- 2. Animasyonlu Expandable İcra Ekle Butonu -->
+            <button type="button" class="btn btn-success expandable-btn d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createModal">
+                <i class="bi bi-plus-lg fs-5"></i>
+                <span class="btn-text">Yeni İcra Ekle</span>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Tablo Alanı -->
+    <div class="table-responsive">
+        <table class="table table-striped align-middle mb-0" id="icraTable">
+            <thead class="table-light text-secondary small text-uppercase">
+                <tr>
+                    <th class="ps-4">Müşteri</th>
+                    <th>Ürün</th>
+                    <th>Borç Tutarı</th>
+                    <th>İcra Takip Tarihi</th>
+                    <th>Mahkeme</th>
+                    <th>İcra Dosya No</th>
+                    <th>Avukat</th>
+                    <th class="text-end pe-4 no-print">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var icra in Model)
+                {
+                    <tr>
+                        <td class="ps-4">@((icra.MusteriAd + " " + icra.MusteriSoyad).Trim())</td>
+                        <td>@icra.UrunAd</td>
+                        <td class="fw-semibold text-dark">@icra.BorcTutar.ToString("N2") ₺</td>
+                        <td>@icra.IcraTakipTar.ToString("dd.MM.yyyy")</td>
+                        <td>@icra.MahkemeAd</td>
+                        <td>@icra.IcraDosyaNo</td>
+                        <td>@((icra.AvukatAd + " " + icra.AvukatSoyad).Trim())</td>
+                        <td class="text-end pe-4 no-print">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                                    <li>
+                                        <a class="dropdown-item updateBtn py-2" href="javascript:void(0);" data-id="@icra.IcraId">
+                                            <i class="bi bi-pencil me-2 text-primary"></i>Güncelle
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider my-1"></li>
+                                    <li>
+                                        <a class="dropdown-item text-danger deleteBtn py-2" href="javascript:void(0);" data-id="@icra.IcraId">
+                                            <i class="bi bi-trash me-2"></i>Sil
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Kart Altı: Sayfalama ve Alt Bilgiler -->
+    <div class="card-footer bg-white border-top py-3 px-4">
+        <div class="row align-items-center g-3">
+            <div class="col-md-4 d-flex align-items-center gap-2">
+                <label for="icraPageSize" class="form-label mb-0 small text-muted">Sayfada</label>
+                <select id="icraPageSize" class="form-select form-select-sm border-light bg-light" style="width: auto;">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+                <span class="small text-muted">kayıt göster</span>
+            </div>
+
+            <div class="col-md-4 text-center text-muted small">
+                <span id="icraTableInfo"></span>
+            </div>
+
+            <div class="col-md-4 d-flex justify-content-end align-items-center gap-3">
+                <div class="text-muted small">
+                    Toplam: <strong id="icraTotalRecordCount">@Model.Count()</strong> |
+                    Sayfa: <strong id="icraCurrentPageNum">1</strong> / <strong id="icraTotalPagesNum">1</strong>
+                </div>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0" id="icraPaginationNav"></ul>
+                </nav>
+            </div>
         </div>
     </div>
 </div>
@@ -103,6 +132,15 @@
 @Html.Partial("_IcraModals", new Entity.Dto.IcraDto())
 
 @section Scripts {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Excel ve PDF Dışa Aktarım CDN Kütüphaneleri -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+    <script src="~/Scripts/common.js"></script>
     <script src="~/Scripts/crud.js?v=1.4"></script>
     <script src="~/Scripts/Icra/icraValidation.js?v=1.1"></script>
     <script src="~/Scripts/Icra/tablePagination.js"></script>
@@ -181,7 +219,7 @@
                 $(this).attr("placeholder", "gg.aa.yyyy");
             });
 
-            // Otomatik ' E.' tamamlama (2026/1234 girildiğinde blur anında tamamlar)
+            // Otomatik ' E.' tamamlama
             $(document).on("blur", "input[name='IcraDosyaNo'], #IcraDosyaNo, #createIcraDosyaNo", function () {
                 var val = $(this).val().trim();
                 if (/^(19|20)\d{2}\/\d{1,7}$/.test(val)) {
@@ -189,9 +227,9 @@
                 }
             });
 
-            // İcra tablosu sayfalama
+            // İcra tablosu sayfalama ve tekli arama başlatma
             if (typeof initIcraTablePagination === "function") {
-                initIcraTablePagination("icraTable", "icraPageSize", "icraPaginationNav", "icraTableInfo");
+                initIcraTablePagination("icraTable", "icraPageSize", "icraPaginationNav", "icraTableInfo", "globalSearchInput");
             }
 
             // CREATE MODAL kademeli seçim dinleyicileri
@@ -275,6 +313,101 @@
 
             // initCrud Çağrısı
             initCrud("Icra", ["IcraId", "MahkemeId", "IcraDosyaNo", "IcraTakipTar"], crudConfig);
+
+            // Arama İkonu Tıklama Mantığı
+            $("#searchTriggerBtn").on("click", function (e) {
+                e.stopPropagation();
+                $("#searchWrapper").toggleClass("expanded");
+                if ($("#searchWrapper").hasClass("expanded")) {
+                    $("#globalSearchInput").focus();
+                }
+            });
+
+            $("#globalSearchInput").on("click", function (e) {
+                e.stopPropagation();
+            });
+
+            $(document).on("click", function () {
+                if ($("#globalSearchInput").val().trim() === "") {
+                    $("#searchWrapper").removeClass("expanded");
+                }
+            });
+
+            // --------------------------------------------------------------------------
+            // DIŞA AKTAR BUTONLARI (EXCEL, PDF, YAZDIR)
+            // --------------------------------------------------------------------------
+
+            // 1. EXCEL
+            $("#btnExportExcel").on("click", function () {
+                var data = [];
+                var headers = ["Musteri", "Urun", "Borc Tutari", "Icra Takip Tarihi", "Mahkeme", "Icra Dosya No", "Avukat"];
+                data.push(headers);
+
+                $("#icraTable tbody tr:visible").each(function () {
+                    var $tds = $(this).find("td");
+                    if ($tds.length > 1) {
+                        data.push([
+                            $tds.eq(0).text().trim(),
+                            $tds.eq(1).text().trim(),
+                            $tds.eq(2).text().trim(),
+                            $tds.eq(3).text().trim(),
+                            $tds.eq(4).text().trim(),
+                            $tds.eq(5).text().trim(),
+                            $tds.eq(6).text().trim()
+                        ]);
+                    }
+                });
+
+                var wb = XLSX.utils.book_new();
+                var ws = XLSX.utils.aoa_to_sheet(data);
+                XLSX.utils.book_append_sheet(wb, ws, "IcraTakip");
+                XLSX.writeFile(wb, "Icra_Takip_Listesi.xlsx");
+            });
+
+            // 2. YAZDIR
+            $("#btnPrint").on("click", function () {
+                window.print();
+            });
+
+            // 3. PDF (Landscape A4 Formatında)
+            $("#btnExportPdf").on("click", function () {
+                try {
+                    var { jsPDF } = window.jspdf;
+                    var doc = new jsPDF('l', 'mm', 'a4');
+
+                    var headers = [["Musteri", "Urun", "Borc Tutari", "Icra Takip Tarihi", "Mahkeme", "Icra Dosya No", "Avukat"]];
+                    var body = [];
+
+                    $("#icraTable tbody tr:visible").each(function () {
+                        var $tds = $(this).find("td");
+                        if ($tds.length > 1) {
+                            body.push([
+                                $tds.eq(0).text().trim(),
+                                $tds.eq(1).text().trim(),
+                                $tds.eq(2).text().trim(),
+                                $tds.eq(3).text().trim(),
+                                $tds.eq(4).text().trim(),
+                                $tds.eq(5).text().trim(),
+                                $tds.eq(6).text().trim()
+                            ]);
+                        }
+                    });
+
+                    doc.autoTable({
+                        head: headers,
+                        body: body,
+                        startY: 15,
+                        theme: 'grid',
+                        headStyles: { fillColor: [1, 83, 139] },
+                        styles: { fontSize: 9, cellPadding: 3 }
+                    });
+
+                    doc.save("Icra_Takip_Listesi.pdf");
+                } catch (err) {
+                    console.error("PDF Oluşturma Hatası:", err);
+                    alert("PDF indirilirken bir sorun oluştu.");
+                }
+            });
         });
     </script>
 }
