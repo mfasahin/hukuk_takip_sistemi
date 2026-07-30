@@ -1,22 +1,20 @@
 ﻿@model IEnumerable<Presentation.Models.MusteriModel>
 @{
-    ViewBag.Title = "Müşteri Listesi";
+    ViewBag.Title = "Müşteriler";
 }
 
-<!-- Sayfa Üst Başlık Alanı -->
-<div class="d-flex justify-content-between align-items-center mb-3" style="max-width: 1250px; margin: 0 auto;">
-    <h2 class="fw-bold m-0 text-dark">Müşteriler</h2>
-</div>
+<!-- Halkbank Mavisi Çerçeveli Kart Yapısı -->
+<div class="card outlined-card my-4">
+    <!-- Çizginin üstünde duran başlık -->
+    <span class="outlined-card-title">Müşteriler</span>
 
-<!-- Ana Tablo Kartı -->
-<div class="card border-0 shadow rounded-3">
-    <!-- Kart Üst Barı: Sol Tarafa Dışa Aktar Butonları, Sağ Tarafa Arama & Ekleme -->
-    <div class="card-header bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
+    <!-- Kart Üst Barı -->
+    <div class="card-header bg-transparent border-0 pt-4 pb-2 px-4 d-flex justify-content-between align-items-center">
 
-        <!-- Sol Taraf: Excel, PDF ve Yazdır Buton Grubu -->
+        <!-- Sol Taraf: Dışa Aktar Buton Grubu -->
         <div class="d-flex align-items-center gap-2">
             <span class="text-muted small fw-medium me-1">Dışa Aktar:</span>
-            <div class="btn-group btn-group-sm shadow-sm" role="group" aria-label="Dışa Aktar">
+            <div class="btn-group btn-group-sm shadow-sm" role="group">
                 <button type="button" class="btn btn-outline-light text-dark border border-light-subtle bg-white hover-elevate" id="btnExportExcel" title="Excel'e Aktar">
                     <i class="bi bi-file-earmark-excel text-success me-1"></i> Excel
                 </button>
@@ -29,9 +27,9 @@
             </div>
         </div>
 
-        <!-- Sağ Taraf: Animasyonlu Ekleme ve Arama Butonları -->
+        <!-- Sağ Taraf: Arama ve Ekleme Butonları -->
         <div class="d-flex align-items-center gap-2">
-            <!-- 1. Arama Çubuğu -->
+            <!-- 1. Animasyonlu Arama Çubuğu -->
             <div class="expandable-search" id="searchWrapper">
                 <button type="button" class="search-btn" id="searchTriggerBtn">
                     <i class="bi bi-search"></i>
@@ -39,7 +37,7 @@
                 <input type="text" id="globalSearchInput" class="search-input" placeholder="Müşteri ara..." autocomplete="off" />
             </div>
 
-            <!-- 2. Müşteri Ekle Butonu -->
+            <!-- 2. Animasyonlu Ekleme Butonu -->
             <button type="button" class="btn btn-success expandable-btn d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createModal">
                 <i class="bi bi-plus-lg fs-5"></i>
                 <span class="btn-text">Yeni Müşteri Ekle</span>
@@ -53,42 +51,34 @@
         <table class="table table-striped align-middle mb-0" id="musteriTable">
             <thead class="table-light text-secondary small text-uppercase">
                 <tr>
-                    <th class="ps-4">Müşteri Numarası</th>
-                    <th>Müşteri Adı</th>
-                    <th>Müşteri Soyadı</th>
-                    <th>TC Kimlik Numarası</th>
-                    <th>Vergi Kimlik Numarası</th>
-                    <th>Müşteri E-Posta</th>
-                    <th>Müşteri Telefon Numarası</th>
-                    <th class="text-end pe-4 no-print">İşlemler</th>
+                    <th class="ps-4">MÜŞTERİ NUMARASI</th>
+                    <th>MÜŞTERİ ADI</th>
+                    <th>MÜŞTERİ SOYADI</th>
+                    <th>TC KİMLİK NUMARASI</th>
+                    <th>VERGİ KİMLİK NUMARASI</th>
+                    <th>MÜŞTERİ E-POSTA</th>
+                    <th>MÜŞTERİ TELEFON NUMARASI</th>
+                    <th class="text-end pe-4 no-print">İŞLEMLER</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var musteri in Model)
+                @foreach (var item in Model)
                 {
                     <tr>
-                        <td class="ps-4">@musteri.MustNo</td>
-                        <td>@musteri.MustAd</td>
-                        <td>@musteri.MustSoyad</td>
-                        <td>@musteri.MustKimlikNo</td>
-                        <td>@musteri.MustVknNo</td>
-                        <td>@musteri.MustEposta</td>
-                        <td>@musteri.MustTelNo</td>
+                        <td class="ps-4 fw-medium">@item.MustNo</td>
+                        <td>@item.MustAd</td>
+                        <td>@item.MustSoyad</td>
+                        <td>@(string.IsNullOrEmpty(item.MustKimlikNo) ? "-" : item.MustKimlikNo)</td>
+                        <td>@(string.IsNullOrEmpty(item.MustVknNo) ? "-" : item.MustVknNo)</td>
+                        <td>@item.MustEposta</td>
+                        <td>@item.MustTelNo</td>
                         <td class="text-end pe-4 no-print">
                             <div class="dropdown">
                                 <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
                                 <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-                                    <li>
-                                        <a class="dropdown-item updateBtn py-2" href="javascript:void(0);" data-id="@musteri.MusteriId">
-                                            <i class="bi bi-pencil me-2 text-primary"></i>Güncelle
-                                        </a>
-                                    </li>
+                                    <li><a class="dropdown-item updateBtn py-2" href="javascript:void(0);" data-id="@item.MusteriId"><i class="bi bi-pencil me-2 text-primary"></i>Güncelle</a></li>
                                     <li><hr class="dropdown-divider my-1"></li>
-                                    <li>
-                                        <a class="dropdown-item text-danger deleteBtn py-2" href="javascript:void(0);" data-id="@musteri.MusteriId">
-                                            <i class="bi bi-trash me-2"></i>Sil
-                                        </a>
-                                    </li>
+                                    <li><a class="dropdown-item text-danger deleteBtn py-2" href="javascript:void(0);" data-id="@item.MusteriId"><i class="bi bi-trash me-2"></i>Sil</a></li>
                                 </ul>
                             </div>
                         </td>
@@ -98,12 +88,12 @@
         </table>
     </div>
 
-    <!-- Kart Altı: Sayfalama ve Alt Bilgiler -->
-    <div class="card-footer bg-white border-top py-3 px-4">
+    <!-- Kart Altı Sayfalama Barı -->
+    <div class="card-footer bg-transparent border-top py-3 px-4">
         <div class="row align-items-center g-3">
             <div class="col-md-4 d-flex align-items-center gap-2">
-                <label for="pageSizeSelect" class="form-label mb-0 small text-muted">Sayfada</label>
-                <select id="pageSizeSelect" class="form-select form-select-sm border-light bg-light" style="width: auto;">
+                <label for="musteriPageSize" class="form-label mb-0 small text-muted">Sayfada</label>
+                <select id="musteriPageSize" class="form-select form-select-sm border-light bg-light" style="width: auto;">
                     <option value="5">5</option>
                     <option value="10" selected>10</option>
                     <option value="25">25</option>
@@ -111,18 +101,16 @@
                 </select>
                 <span class="small text-muted">kayıt göster</span>
             </div>
-
             <div class="col-md-4 text-center text-muted small">
-                <span id="tableInfo"></span>
+                <span id="musteriTableInfo"></span>
             </div>
-
             <div class="col-md-4 d-flex justify-content-end align-items-center gap-3">
                 <div class="text-muted small">
-                    Toplam: <strong id="totalRecordCount">@Model.Count()</strong> |
-                    Sayfa: <strong id="currentPageNum">1</strong> / <strong id="totalPagesNum">1</strong>
+                    Toplam: <strong id="musteriTotalRecordCount">@Model.Count()</strong> |
+                    Sayfa: <strong id="musteriCurrentPageNum">1</strong> / <strong id="musteriTotalPagesNum">1</strong>
                 </div>
                 <nav>
-                    <ul class="pagination pagination-sm mb-0" id="paginationNav"></ul>
+                    <ul class="pagination pagination-sm mb-0" id="musteriPaginationNav"></ul>
                 </nav>
             </div>
         </div>
@@ -147,7 +135,8 @@
 
     <script>
         $(document).ready(function () {
-            initTablePagination("musteriTable", "pageSizeSelect", "paginationNav", "tableInfo", "globalSearchInput");
+            // ID'ler Html elemanları ile eşleştirildi
+            initTablePagination("musteriTable", "musteriPageSize", "musteriPaginationNav", "musteriTableInfo", "globalSearchInput");
 
             initCrud("Musteri",
                 ["MusteriId", "MustNo", "MustAd", "MustSoyad", "MustKimlikNo", "MustVknNo", "MustEposta", "MustTelNo"],
@@ -172,10 +161,6 @@
                     $("#searchWrapper").removeClass("expanded");
                 }
             });
-
-            // --------------------------------------------------------------------------
-            // DIŞA AKTAR BUTONLARI
-            // --------------------------------------------------------------------------
 
             // 1. EXCEL
             $("#btnExportExcel").on("click", function () {
@@ -209,16 +194,15 @@
                 window.print();
             });
 
-            // 3. PDF (Tamamen Düzeltilmiş AutoTable Mantığı)
+            // 3. PDF
             $("#btnExportPdf").on("click", function () {
                 try {
                     var { jsPDF } = window.jspdf;
-                    var doc = new jsPDF('l', 'mm', 'a4'); // Yatay (Landscape) format
+                    var doc = new jsPDF('l', 'mm', 'a4');
 
                     var headers = [["Musteri No", "Musteri Adi", "Musteri Soyadi", "TC Kimlik No", "Vergi No", "E-Posta", "Telefon"]];
                     var body = [];
 
-                    // Sadece o an ekranda/filtrede görünen satırları al
                     $("#musteriTable tbody tr:visible").each(function () {
                         var $tds = $(this).find("td");
                         if ($tds.length > 1) {
@@ -239,7 +223,7 @@
                         body: body,
                         startY: 15,
                         theme: 'grid',
-                        headStyles: { fillColor: [1, 83, 139] }, // Halkbank mavi tonu
+                        headStyles: { fillColor: [1, 83, 139] },
                         styles: { fontSize: 9, cellPadding: 3 }
                     });
 

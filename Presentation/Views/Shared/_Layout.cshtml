@@ -1,59 +1,87 @@
-﻿<!DOCTYPE html>
+﻿@using Core
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewBag.Title</title>
 
-    <!-- 1. Önce Bootstrap CSS -->
+    <!-- Bootstrap CSS & Icons -->
     <link href="~/Content/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
-    <!-- 2. Sonra Özel CSS (Bootstrap'i ezesin diye en alta koyuyoruz) -->
-    <link href="~/Content/Site.css?v=1.2" rel="stylesheet" />
+    <!-- Özel CSS -->
+    <link href="~/Content/Site.css?v=3.0" rel="stylesheet" />
 
-    <!-- jQuery ve Bootstrap JS (Head içinde veya body sonunda olabilir) -->
+    <!-- jQuery ve Bootstrap JS -->
     <script src="~/Content/jquery/jquery-4.0.0.min.js"></script>
     <script src="~/Content/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Select2 CSS & Bootstrap 5 Teması -->
+    <!-- Select2 & SweetAlert2 -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
-
-    <!-- Select2 JS (jQuery'den sonra yüklenmelidir) -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <!-- SweetAlert2 CSS & JS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="~/Scripts/common.js"></script>
-
     <script src="~/Scripts/crud.js"></script>
 </head>
 <body>
+    @{
+        // Core katmanından dinamik kullanıcı bilgisi alınıyor
+        string kullaniciDisplay = CurrentUser.KullaniciAd;
+        string ilkHarf = !string.IsNullOrEmpty(kullaniciDisplay) ? kullaniciDisplay.Substring(0, 1).ToUpper() : "U";
+    }
 
-    <!-- Sidebar + Content -->
-    <div class="container-fluid p-0">
-        <div class="row g-0">
-            <!-- Sidebar -->
-            <div class="col-md-2">
-                @Html.Partial("_Sidebar")
-            </div>
+    <!-- Layout Kapsayıcısı -->
+    <div class="app-layout">
+        <!-- 1. SOL SIDEBAR -->
+        <aside class="sidebar-wrapper">
+            @Html.Partial("_Sidebar")
+        </aside>
 
-            <!-- Main Content -->
-            <div class="col-md-10 p-3 body-content">
+        <!-- 2. SAĞ İÇERİK ALANI -->
+        <main class="main-content-wrapper">
+
+            <!-- Üst Header Barı -->
+            <header class="main-header">
+                <div class="header-inner d-flex justify-content-between align-items-center py-3 px-4">
+
+                    <!-- Sol Taraf: Portal Adı ve Tarih -->
+                    <div class="header-left">
+                        <h6 class="fw-bold mb-0 text-dark" style="font-size: 1.05rem;">Halkbank Hukuk Takip Sistemi</h6>
+                        <small class="text-muted" style="font-size: 0.8rem;">@DateTime.Now.ToString("dd MMMM yyyy, dddd")</small>
+                    </div>
+
+                    <!-- Sağ Taraf: Kullanıcı Profili -->
+                    <div class="header-right d-flex align-items-center">
+                        <div class="d-flex align-items-center gap-2 user-profile-static">
+                            <div class="avatar-circle fw-bold d-flex align-items-center justify-content-center rounded-circle">
+                                @ilkHarf
+                            </div>
+                            <span class="fw-semibold text-dark small">@kullaniciDisplay</span>
+                        </div>
+                    </div>
+
+                </div>
+            </header>
+
+            <!-- İçerik Alanı -->
+            <div class="page-body-container px-4 py-3">
                 @RenderBody()
-                <hr />
             </div>
-        </div>
+
+        </main>
     </div>
 
+    <!-- Scriptler -->
     <script>
         $(document).ready(function () {
+            // Çıkış Yap Mantığı
             $(document).on("click", "#btnLogout", function (e) {
                 e.preventDefault();
-
                 showConfirmModal("Oturumunuz kapatılacaktır. Emin misiniz?", function () {
                     $.ajax({
                         url: '/Kullanici/Logout',
@@ -73,8 +101,6 @@
             });
         });
     </script>
-
-
 
     @RenderSection("scripts", required: false)
 </body>

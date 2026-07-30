@@ -42,6 +42,7 @@ namespace Presentation.Controllers
             }
 
             Session["KullaniciId"] = kullanici.KULLANICI_ID;
+            Session["KullaniciAd"] = kullanici.KULLANICI_AD;
 
             return RedirectToAction("Index", "Musteri");
         }

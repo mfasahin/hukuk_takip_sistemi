@@ -17,6 +17,19 @@ namespace Core
             }
         }
 
+        // Kullanıcı Adı Bilgisi (Örn: "admin")
+        public static string KullaniciAd
+        {
+            get
+            {
+                var session = HttpContext.Current?.Session;
+                if (session != null && session["KullaniciAd"] != null)
+                    return session["KullaniciAd"].ToString();
+
+                return HttpContext.Current?.User?.Identity?.Name;
+            }
+        }
+
         public static bool IsLoggedIn => UserId.HasValue;
     }
 }
