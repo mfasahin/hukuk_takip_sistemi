@@ -65,13 +65,13 @@
                 @foreach (var icra in Model)
                 {
                     <tr>
-                        <td class="ps-4">@((icra.MusteriAd + " " + icra.MusteriSoyad).Trim())</td>
+                        <td class="ps-4">@((icra.MusteriNo + "-" + icra.MusteriAd + " " + icra.MusteriSoyad).Trim())</td>
                         <td>@icra.UrunAd</td>
                         <td class="fw-semibold text-dark">@icra.BorcTutar.ToString("N2") ₺</td>
                         <td>@icra.IcraTakipTar.ToString("dd.MM.yyyy")</td>
                         <td>@icra.MahkemeAd</td>
                         <td>@icra.IcraDosyaNo</td>
-                        <td>@((icra.AvukatAd + " " + icra.AvukatSoyad).Trim())</td>
+                        <td class="ps-4">@((icra.AvukatAd + " " + icra.AvukatSoyad).Trim())</td>
                         <td class="text-end pe-4 no-print">
                             <div class="dropdown">
                                 <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>

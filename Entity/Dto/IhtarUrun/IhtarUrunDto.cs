@@ -7,8 +7,10 @@ namespace Entity.Dto
         public Guid IhtarUrunId { get; set; }
         public Guid IhtarId { get; set; }
         public Guid UrunId { get; set; }
-        public string UrunAd { get; set; }  
+        public string UrunAd { get; set; }
+        public string MusteriNo { get; set; }
         public string MusteriAd { get; set; }
+        public string MusteriSoyad { get; set; }
         public DateTime IhtarTarih { get; set; }
 
         public decimal BorcTutar {  get; set; }

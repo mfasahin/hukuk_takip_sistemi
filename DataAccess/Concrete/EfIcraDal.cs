@@ -22,8 +22,10 @@ namespace DataAccess.Concrete
                    select new IcraDto
                    {
                        IcraId = ic.ICRA_ID,
+                       MusteriNo = musteri.MUST_NO,
                        MusteriId = musteri.MUSTERI_ID,
-                       MusteriAd = musteri.MUST_AD + " " + musteri.MUST_SOYAD,
+                       MusteriAd = musteri.MUST_AD,
+                       MusteriSoyad = musteri.MUST_SOYAD,
                        IhtarUrunId = ic.IHTAR_URUN_ID,
                        MahkemeId = ic.MAHKEME_ID,
                        MahkemeAd = mahkeme.MAHKEME_AD,
@@ -34,6 +36,7 @@ namespace DataAccess.Concrete
                        IhtarTarih = ihtar.IHTAR_TAR_ZMN,
                        BorcTutar = ihtar.BORC_TUTAR,
                        AvukatAd = avukat.AVKT_AD,
+                       AvukatSoyad = avukat.AVKT_SOYAD,
                        SilTarZmn = ic.SIL_TAR_ZMN,
                        GrsTarZmn = ic.GRS_TAR_ZMN
                    };
@@ -69,6 +72,7 @@ namespace DataAccess.Concrete
                         select new MusteriDto
                         {
                             MusteriId = musteri.MUSTERI_ID,
+                            MusteriNo = musteri.MUST_NO,
                             MustAd = musteri.MUST_AD,
                             MustSoyad = musteri.MUST_SOYAD
                         })

@@ -160,6 +160,7 @@ namespace Presentation.Controllers
                 musteri.MUST_TEL_NO = model.MustTelNo;
 
                 _musteriService.Update(musteri);
+
                 return Json(new { success = true });
             }
             catch (Exception ex)

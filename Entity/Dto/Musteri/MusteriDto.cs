@@ -5,6 +5,7 @@ namespace Entity.Dto
     public class MusteriDto
     {
         public Guid MusteriId { get; set; }
+        public string MusteriNo { get; set; }
         public string MustAd { get; set; }
         public string MustSoyad { get; set; }
 

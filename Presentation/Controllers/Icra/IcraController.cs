@@ -39,7 +39,7 @@ namespace Presentation.Controllers
                 .Select(m => new SelectListItem
                 {
                     Value = m.MusteriId.ToString(),
-                    Text = m.MustAd + " " + m.MustSoyad
+                    Text = m.MusteriId + " " + m.MustAd + " " + m.MustSoyad
                 }).ToList();
 
             ViewBag.AvukatList = _avukatService.GetAll()
